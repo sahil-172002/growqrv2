@@ -19,139 +19,153 @@ export const Hero: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
-    // Reset layout
-    gsap.set(text2Ref.current, { opacity: 0, pointerEvents: "none" });
-    gsap.set(text3Ref.current, { opacity: 0, scale: 0.8, filter: "blur(20px)" });
-    gsap.set(warpPortalRef.current, { opacity: 0, scale: 0, z: -500 });
+    // Use gsap.context for proper cleanup and scoping in React
+    const ctx = gsap.context(() => {
+      // Reset layout
+      gsap.set(text2Ref.current, { opacity: 0, pointerEvents: "none" });
+      gsap.set(text3Ref.current, { opacity: 0, scale: 0.8, filter: "blur(20px)" });
+      gsap.set(warpPortalRef.current, { opacity: 0, scale: 0, z: -500 });
 
-    // MASTER TIMELINE
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "+=3500",
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-      }
-    });
+      // Force Text 1 visible initially
+      gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)" });
 
-    // --- PHASE 1: ENTERING THE PORTAL ---
-    tl.to(tunnelRef.current, {
-      scale: 3,
-      z: 500,
-      rotateZ: 45,
-      opacity: 0,
-      duration: 2,
-      ease: "power1.inOut"
-    }, "start");
+      // MASTER TIMELINE
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=3500",
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true, // Handle resize better
+        }
+      });
 
-    tl.to(text1Ref.current, {
-      opacity: 0,
-      scale: 1.2,
-      filter: "blur(20px)",
-      duration: 1
-    }, "start");
+      // --- PHASE 1: ENTERING THE PORTAL ---
+      tl.to(tunnelRef.current, {
+        scale: 3,
+        z: 500,
+        rotateZ: 45,
+        opacity: 0,
+        duration: 2,
+        ease: "power1.inOut"
+      }, "start");
 
-    // --- PHASE 2: DATA ALIGNMENT ---
-    tl.to(text2Ref.current, {
-      opacity: 1,
-      pointerEvents: "auto",
-      duration: 1
-    }, "-=1");
+      tl.to(text1Ref.current, {
+        opacity: 0,
+        scale: 1.2,
+        filter: "blur(20px)",
+        duration: 1
+      }, "start");
 
-    tl.fromTo(".t2-noise-bg",
-      { opacity: 0.2, scale: 1.5, filter: "blur(4px)" },
-      { opacity: 0.05, scale: 1, filter: "blur(10px)", duration: 2 },
-      "<"
-    );
-
-    tl.fromTo(".t2-waveform",
-      { scaleY: 2, opacity: 0.5 },
-      { scaleY: 0.1, opacity: 1, duration: 2 },
-      "<"
-    );
-
-    tl.fromTo(".t2-signal-text",
-      { y: 50, opacity: 0, filter: "blur(10px)" },
-      { y: 0, opacity: 1, filter: "blur(0px)", duration: 1 },
-      "<0.5"
-    );
-
-    tl.fromTo(".t2-pillar",
-      { y: 100, opacity: 0 },
-      { y: 0, opacity: 1, stagger: 0.2, duration: 1, ease: "back.out(1.7)" },
-      "-=1"
-    );
-
-    // --- PHASE 3: THE ARTIFACT FLY-THROUGH ---
-    tl.to(".t2-pillar-bg", {
-      opacity: 0,
-      scale: 0.9,
-      duration: 0.5
-    }, "fly");
-
-    tl.to(text2Ref.current, {
-      opacity: 0,
-      scale: 1.2,
-      filter: "blur(20px)",
-      pointerEvents: "none",
-      duration: 1
-    }, "fly");
-
-    tl.fromTo(warpPortalRef.current,
-      { scale: 0.1, opacity: 0, z: -200, rotateZ: 0 },
-      {
-        scale: 5,
+      // --- PHASE 2: DATA ALIGNMENT ---
+      tl.to(text2Ref.current, {
         opacity: 1,
-        z: 400,
-        rotateZ: 180,
+        pointerEvents: "auto",
+        duration: 1
+      }, "-=1");
+
+      tl.fromTo(".t2-noise-bg",
+        { opacity: 0.2, scale: 1.5, filter: "blur(4px)" },
+        { opacity: 0.05, scale: 1, filter: "blur(10px)", duration: 2 },
+        "<"
+      );
+
+      tl.fromTo(".t2-waveform",
+        { scaleY: 2, opacity: 0.5 },
+        { scaleY: 0.1, opacity: 1, duration: 2 },
+        "<"
+      );
+
+      tl.fromTo(".t2-signal-text",
+        { y: 50, opacity: 0, filter: "blur(10px)" },
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 1 },
+        "<0.5"
+      );
+
+      tl.fromTo(".t2-pillar",
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, stagger: 0.2, duration: 1, ease: "back.out(1.7)" },
+        "-=1"
+      );
+
+      // --- PHASE 3: THE ARTIFACT FLY-THROUGH ---
+      tl.to(".t2-pillar-bg", {
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.5
+      }, "fly");
+
+      tl.to(text2Ref.current, {
+        opacity: 0,
+        scale: 1.2,
+        filter: "blur(20px)",
+        pointerEvents: "none",
+        duration: 1
+      }, "fly");
+
+      tl.fromTo(warpPortalRef.current,
+        { scale: 0.1, opacity: 0, z: -200, rotateZ: 0 },
+        {
+          scale: 5,
+          opacity: 1,
+          z: 400,
+          rotateZ: 180,
+          duration: 2,
+          ease: "power2.in"
+        },
+        "fly"
+      ).to(warpPortalRef.current, { opacity: 0, duration: 0.5 }, ">-0.5");
+
+      tl.to(".t2-artifact-1", {
+        scale: 8,
+        z: 600,
+        x: -200,
+        rotateY: 180,
+        rotateZ: 90,
+        opacity: 0,
         duration: 2,
         ease: "power2.in"
-      },
-      "fly"
-    ).to(warpPortalRef.current, { opacity: 0, duration: 0.5 }, ">-0.5");
+      }, "fly");
 
-    tl.to(".t2-artifact-1", {
-      scale: 8,
-      z: 600,
-      x: -200,
-      rotateY: 180,
-      rotateZ: 90,
-      opacity: 0,
-      duration: 2,
-      ease: "power2.in"
-    }, "fly");
+      tl.to(".t2-artifact-2", {
+        scale: 6,
+        z: 800,
+        rotateX: 360,
+        rotateY: 360,
+        opacity: 0,
+        duration: 2,
+        ease: "power2.in"
+      }, "fly+=0.1");
 
-    tl.to(".t2-artifact-2", {
-      scale: 6,
-      z: 800,
-      rotateX: 360,
-      rotateY: 360,
-      opacity: 0,
-      duration: 2,
-      ease: "power2.in"
-    }, "fly+=0.1");
+      tl.to(".t2-artifact-3", {
+        scale: 8,
+        z: 600,
+        x: 200,
+        rotateY: -180,
+        rotateZ: -90,
+        opacity: 0,
+        duration: 2,
+        ease: "power2.in"
+      }, "fly+=0.2");
 
-    tl.to(".t2-artifact-3", {
-      scale: 8,
-      z: 600,
-      x: 200,
-      rotateY: -180,
-      rotateZ: -90,
-      opacity: 0,
-      duration: 2,
-      ease: "power2.in"
-    }, "fly+=0.2");
+      tl.to(text3Ref.current, {
+        opacity: 1,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.5,
+        ease: "power2.out"
+      }, "-=1.0");
 
-    tl.to(text3Ref.current, {
-      opacity: 1,
-      scale: 1,
-      filter: "blur(0px)",
-      duration: 1.5,
-      ease: "power2.out"
-    }, "-=1.0");
+    }, containerRef); // Scope to container
 
+    // Delayed refresh to handle initial load layout shifts
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
+    return () => ctx.revert(); // Cleanup
   }, []);
 
   // Mouse Parallax (Optimized for desktop only ideally, but keeps logic simple)

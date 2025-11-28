@@ -23,46 +23,51 @@ export default function App() {
   return (
     <main className="bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden">
       <Navbar />
-      
+
       <Hero />
       <TruthReveal />
-      <Challenge />
-      
-      {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
-      <SolutionsGrid />
+      {/* HIDDEN SECTIONS */}
+      {false && (
+        <>
+          <Challenge />
 
-      {/* SECTION 5: ECOSYSTEM (Neural Network) */}
-      <Ecosystem />
+          {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
+          <SolutionsGrid />
 
-      {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
-      <UnifiedShowcase />
+          {/* SECTION 5: ECOSYSTEM (Neural Network) */}
+          <Ecosystem />
 
-      <TechEngine />
+          {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
+          <UnifiedShowcase />
 
-      {/* CTA Section */}
-      <section className="py-32 bg-gradient-to-r from-orange to-[#FF8C5F] relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <Reveal width="100%">
-            <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 font-montreal">Your Readiness. <br />Your Opportunity.</h2>
-            <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">The future doesn't wait. Start building your Q-Profile today.</p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="px-10 py-5 bg-white text-orange rounded-full text-xl font-bold hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all">I Am an Individual</button>
-              <button className="px-10 py-5 bg-black/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-full text-xl font-bold hover:bg-black/20 hover:-translate-y-1 transition-all">I Represent an Organization</button>
+          <TechEngine />
+
+          {/* CTA Section */}
+          <section className="py-32 bg-gradient-to-r from-orange to-[#FF8C5F] relative overflow-hidden">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+            <div className="container mx-auto px-6 text-center relative z-10">
+              <Reveal width="100%">
+                <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 font-montreal">Your Readiness. <br />Your Opportunity.</h2>
+                <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">The future doesn't wait. Start building your Q-Profile today.</p>
+                <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                  <button className="px-10 py-5 bg-white text-orange rounded-full text-xl font-bold hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all">I Am an Individual</button>
+                  <button className="px-10 py-5 bg-black/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-full text-xl font-bold hover:bg-black/20 hover:-translate-y-1 transition-all">I Represent an Organization</button>
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
-        </div>
-      </section>
+          </section>
 
-      {/* Global Vision */}
-      <section className="py-32 bg-gray-900 text-center">
-        <div className="container mx-auto px-6">
-          <Reveal width="100%">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 font-montreal">One Identity. One Network. One Future.</h2>
-            <p className="text-white/50 text-lg">From India to the world. From hidden to hired.</p>
-          </Reveal>
-        </div>
-      </section>
+          {/* Global Vision */}
+          <section className="py-32 bg-gray-900 text-center">
+            <div className="container mx-auto px-6">
+              <Reveal width="100%">
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 font-montreal">One Identity. One Network. One Future.</h2>
+                <p className="text-white/50 text-lg">From India to the world. From hidden to hired.</p>
+              </Reveal>
+            </div>
+          </section>
+        </>
+      )}
 
       <Footer />
     </main>

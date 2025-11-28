@@ -11,48 +11,53 @@ export const TruthReveal: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current || !textContainerRef.current) return;
 
-    // Pin the section
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "+=3500",
-        pin: true,
-        scrub: 1,
-      }
-    });
+    // Use gsap.context for proper cleanup
+    const ctx = gsap.context(() => {
+      // Pin the section
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=2000", // Reduced from 3500 to 2000 to remove gap
+          pin: true,
+          scrub: 1,
+        }
+      });
 
-    const lines = textContainerRef.current.children;
-    const slide3 = lines[2] as HTMLElement;
-    const bgs = slide3.querySelectorAll(".slide3-bg");
-    const fgs = slide3.querySelectorAll(".slide3-fg");
+      const lines = textContainerRef.current!.children;
+      const slide3 = lines[2] as HTMLElement;
+      const bgs = slide3.querySelectorAll(".slide3-bg");
+      const fgs = slide3.querySelectorAll(".slide3-fg");
 
-    // --- SLIDE 1 ---
-    tl.fromTo(lines[0], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
-      .to(lines[0], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 })
+      // --- SLIDE 1 ---
+      tl.fromTo(lines[0], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
+        .to(lines[0], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 })
 
-      // --- SLIDE 2 ---
-      .fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
-      .to(lines[1], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
+        // --- SLIDE 2 ---
+        .fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
+        .to(lines[1], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
 
-    // --- SLIDE 3 ---
-    tl.set(slide3, { opacity: 1 });
+      // --- SLIDE 3 ---
+      tl.set(slide3, { opacity: 1 });
 
-    tl.fromTo(bgs[0], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" });
-    tl.fromTo(fgs[0], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
+      tl.fromTo(bgs[0], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" });
+      tl.fromTo(fgs[0], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
 
-    tl.fromTo(bgs[1], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
-    tl.fromTo(fgs[1], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
+      tl.fromTo(bgs[1], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
+      tl.fromTo(fgs[1], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
 
-    tl.fromTo(bgs[2], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
-    tl.fromTo(fgs[2], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
+      tl.fromTo(bgs[2], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
+      tl.fromTo(fgs[2], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
 
-    tl.to({}, { duration: 1 });
-    tl.to(slide3, { opacity: 0, y: -50, filter: 'blur(20px)', duration: 1 });
+      tl.to({}, { duration: 1 });
+      tl.to(slide3, { opacity: 0, y: -50, filter: 'blur(20px)', duration: 1 });
 
-    // --- SLIDE 4 ---
-    tl.fromTo(lines[3], { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)" });
+      // --- SLIDE 4 ---
+      tl.fromTo(lines[3], { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)" });
 
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
