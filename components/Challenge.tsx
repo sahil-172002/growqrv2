@@ -229,7 +229,7 @@ export const Challenge: React.FC = () => {
                      <span className="text-sm font-bold tracking-[0.2em] uppercase">The Education Gap</span>
                   </div>
 
-                  <h2 className="arch-title text-6xl md:text-8xl font-black tracking-tighter text-black mb-8 leading-[0.9]">
+                  <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
                      DEGREES ≠ <br />
                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-red-500">READINESS.</span>
                   </h2>
@@ -252,7 +252,7 @@ export const Challenge: React.FC = () => {
                      <span className="text-sm font-bold tracking-[0.2em] uppercase">The Urban Blind Spot</span>
                   </div>
 
-                  <h2 className="arch-title text-6xl md:text-8xl font-black tracking-tighter text-black mb-8 leading-[0.9]">
+                  <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
                      CITIES <br />
                      FLYING <br />
                      <span className="text-gray-400">BLIND.</span>
@@ -276,7 +276,7 @@ export const Challenge: React.FC = () => {
                      <span className="text-sm font-bold tracking-[0.2em] uppercase">The Infrastructure</span>
                   </div>
 
-                  <h2 className="arch-title text-6xl md:text-8xl font-black tracking-tighter text-black mb-8 leading-[0.9]">
+                  <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
                      THE <br />
                      CIVIC <br />
                      <span className="text-orange">OS.</span>

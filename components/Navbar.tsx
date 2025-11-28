@@ -29,18 +29,13 @@ export const Navbar: React.FC = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isScrolled || isMobileMenuOpen
-          ? 'bg-white/90 backdrop-blur-xl border-b border-gray-100 py-3 shadow-sm'
-          : 'bg-transparent py-4 md:py-6'
+        ? 'bg-white/90 backdrop-blur-xl border-b border-gray-100 py-3 shadow-sm'
+        : 'bg-transparent py-4 md:py-6'
         }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center relative z-50">
         {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-orange/10 rounded-lg flex items-center justify-center">
-            <QrCode className="text-orange w-5 h-5 md:w-6 md:h-6" />
-          </div>
-          <span className="text-lg md:text-xl font-bold text-black tracking-tight font-montreal">GrowQR.ai</span>
-        </div>
+        <img src="/logo.webp" alt="logo" className="h-8" />
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
