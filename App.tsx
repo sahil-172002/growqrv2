@@ -25,7 +25,10 @@ export default function App() {
       <Navbar />
 
       <Hero />
+      <Ecosystem />
       <TruthReveal />
+
+
       {/* HIDDEN SECTIONS */}
       {false && (
         <>
@@ -35,7 +38,7 @@ export default function App() {
           <SolutionsGrid />
 
           {/* SECTION 5: ECOSYSTEM (Neural Network) */}
-          <Ecosystem />
+
 
           {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
           <UnifiedShowcase />

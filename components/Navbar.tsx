@@ -3,13 +3,23 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, QrCode } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Visible if at the very top or at the very bottom
+      if (currentScrollY < 10 || (windowHeight + currentScrollY >= documentHeight - 50)) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -28,9 +38,10 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isScrolled || isMobileMenuOpen
-        ? 'bg-white/90 backdrop-blur-xl border-b border-gray-100 py-3 shadow-sm'
-        : 'bg-transparent py-4 md:py-6'
+      className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${isVisible || isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        } ${window.scrollY > 10 || isMobileMenuOpen
+          ? 'bg-white/90 backdrop-blur-xl border-b border-gray-100 py-3 shadow-sm'
+          : 'bg-transparent py-4 md:py-6'
         }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center relative z-50">

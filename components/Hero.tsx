@@ -1,9 +1,95 @@
 
-import React, { useRef, useLayoutEffect, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useRef, useLayoutEffect, useEffect, useState } from 'react';
+import { ArrowRight, QrCode } from 'lucide-react';
+
+// Live Data Component for Animated Numbers
+const LiveDataStream = () => {
+  const [score, setScore] = useState(850);
+  const [bars, setBars] = useState<number[]>(Array(16).fill(50));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Fluctuate score rapidly
+      setScore(prev => {
+        const change = Math.floor(Math.random() * 21) - 10; // -10 to +10
+        return Math.min(999, Math.max(800, prev + change));
+      });
+
+      // Animate bars
+      setBars(Array(16).fill(0).map(() => Math.random() * 100));
+    }, 80); // Fast updates
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="absolute bottom-6 left-0 w-full flex flex-col items-center justify-center z-20 pointer-events-none">
+      {/* Label */}
+      <div className="flex items-center gap-2 mb-1">
+        <div className="flex gap-0.5">
+          <span className="w-0.5 h-2 bg-orange/80 animate-pulse"></span>
+          <span className="w-0.5 h-3 bg-orange/60 animate-pulse delay-75"></span>
+          <span className="w-0.5 h-1.5 bg-orange/40 animate-pulse delay-150"></span>
+        </div>
+        <span className="text-[9px] font-mono text-white/60 tracking-[0.2em] uppercase font-bold">Live Q-Score</span>
+      </div>
+
+      {/* Score Display */}
+      <div className="flex items-baseline gap-1 relative">
+        <span className="font-mono text-4xl font-black text-white tracking-tighter shadow-orange/20 drop-shadow-lg">
+          {score}
+        </span>
+        <span className="text-[10px] font-mono text-white/40 font-bold">/ 1000</span>
+      </div>
+
+      {/* Frequency Visualizer */}
+      <div className="flex items-end justify-center gap-[2px] h-4 mt-1 w-24 opacity-60">
+        {bars.map((h, i) => (
+          <div key={i}
+            className="w-[2px] bg-gradient-to-t from-white/10 to-white rounded-full transition-all duration-75 ease-linear"
+            style={{
+              height: `${h}%`,
+              opacity: Math.max(0.3, h / 100)
+            }}
+          ></div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// New Premium Background Component
+const HeroBackground = React.forwardRef<HTMLDivElement>((props, ref) => (
+  <div ref={ref} className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none bg-gray-50/30 transform-gpu origin-center">
+
+    {/* Ambient Floating Gradients - Boosted Visibility */}
+    <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-orange/15 rounded-full blur-[100px] mix-blend-multiply animate-[float_18s_ease-in-out_infinite]" />
+    <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-blue-200/30 rounded-full blur-[80px] mix-blend-multiply animate-[float_22s_ease-in-out_infinite_reverse]" />
+    <div className="absolute top-[20%] left-[20%] w-[40vw] h-[40vw] bg-purple-100/40 rounded-full blur-[90px] mix-blend-multiply animate-pulse-slow" />
+
+    {/* Tech Grid Overlay - Sharper & More Visible */}
+    <div
+      className="absolute inset-0 opacity-[0.6]"
+      style={{
+        backgroundImage: `radial-gradient(#9ca3af 1.2px, transparent 1.2px)`,
+        backgroundSize: '24px 24px',
+        maskImage: 'radial-gradient(circle at center, black 45%, transparent 90%)'
+      }}
+    ></div>
+
+    {/* Subtle Noise Texture for Cinematic Polish */}
+    <div className="absolute inset-0 opacity-[0.04]"
+      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E")` }}>
+    </div>
+
+    {/* Vignette */}
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(255,255,255,0.9)_100%)]"></div>
+  </div>
+));
 
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null); // Ref for background fade out
   const sceneRef = useRef<HTMLDivElement>(null);
   const tunnelRef = useRef<HTMLDivElement>(null);
   const warpPortalRef = useRef<HTMLDivElement>(null);
@@ -12,6 +98,10 @@ export const Hero: React.FC = () => {
   const text1Ref = useRef<HTMLDivElement>(null);
   const text2Ref = useRef<HTMLDivElement>(null);
   const text3Ref = useRef<HTMLDivElement>(null);
+
+  // Intro Element Refs
+  const introCardRef = useRef<HTMLDivElement>(null);
+  const introBadgeRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const gsap = (window as any).gsap;
@@ -52,11 +142,36 @@ export const Hero: React.FC = () => {
         ease: "power1.inOut"
       }, "start");
 
-      tl.to(text1Ref.current, {
+      tl.to(text1Ref.current.querySelectorAll('h2, p, .absolute.bottom-2'), { // Animate text elements only
         opacity: 0,
-        scale: 1.2,
-        filter: "blur(20px)",
-        duration: 1
+        y: -50,
+        filter: "blur(10px)",
+        duration: 0.8,
+        stagger: 0.1
+      }, "start");
+
+      // --- QR CARD PARTICLE DISINTEGRATION EFFECT ---
+      // 1. Main Card: Implodes/Sucked into tunnel
+      tl.to(introCardRef.current, {
+        scale: 0,
+        z: 500, // Move into depth
+        rotateZ: 180, // Spin
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.in"
+      }, "start");
+
+      // 2. Particles: Explode outward (simulating disintegration)
+      tl.to(".qr-shard", {
+        x: (i) => (i % 2 === 0 ? -200 : 200) * (Math.random() + 0.5), // Scatter X
+        y: (i) => (i < 2 ? -200 : 200) * (Math.random() + 0.5), // Scatter Y
+        z: (i) => Math.random() * 500, // Scatter Z
+        rotateX: () => Math.random() * 360,
+        rotateY: () => Math.random() * 360,
+        opacity: 0,
+        scale: 0,
+        duration: 1.2,
+        ease: "power2.out"
       }, "start");
 
       // --- PHASE 2: DATA ALIGNMENT ---
@@ -191,9 +306,12 @@ export const Hero: React.FC = () => {
   return (
     <div ref={containerRef} className="relative h-[100dvh] bg-white text-black overflow-hidden perspective-1000">
 
+      {/* BACKGROUND LAYER */}
+      <HeroBackground ref={bgRef} />
+
       {/* 3D SCENE CONTAINER */}
       <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden pointer-events-none">
-        <div ref={sceneRef} className="relative w-[300px] h-[300px] md:w-[600px] md:h-[600px] transform-style-3d scale-75 md:scale-100">
+        <div ref={sceneRef} className="relative w-[350px] h-[350px] md:w-[750px] md:h-[750px] transform-style-3d scale-75 md:scale-100">
 
           {/* THE TUNNEL / ECOSYSTEM CORE (Slide 1) */}
           <div ref={tunnelRef} className="absolute inset-0 transform-style-3d">
@@ -238,21 +356,76 @@ export const Hero: React.FC = () => {
       <div className="relative z-10 container mx-auto px-6 h-full">
 
         {/* SLIDE 1: INTRO */}
-        <div ref={text1Ref} className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div ref={text1Ref} className="absolute inset-0 flex flex-col items-center justify-center text-center pt-24">
           {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 mb-8 animate-fade-in-up">
             <span className="w-2 h-2 rounded-full bg-orange animate-pulse"></span>
             <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">System Online</span>
           </div> */}
 
-          <h1 className="text-6xl md:text-9xl font-semibold font-black tracking-tighter text-black mb-6 leading-[0.9]">
-            ONE <span className="text-orange">QR.</span><br />
-            INFINITE<br />
-            WORLD.
-          </h1>
+          {/* Dynamic 3D QR Hero Element */}
+          <div ref={introCardRef} className="relative z-20 mb-10 md:mb-12 group cursor-pointer animate-float perspective-1000">
 
-          <p className="text-xl md:text-2xl text-gray-500 max-w-2xl mx-auto font-light leading-relaxed">
-            Enter the first ecosystem where your talent is visible, verified, and valuable.
-          </p>
+            {/* Particle Shards for Scroll Effect (Hidden initially) */}
+            {[...Array(8)].map((_, i) => (
+              <div key={`shard-${i}`}
+                className="qr-shard absolute inset-0 bg-orange/80 backdrop-blur-sm rounded-xl z-0"
+                style={{
+                  transform: `scale(0.8) translateZ(-10px)`,
+                  opacity: 1 // Visible but hidden behind card
+                }}
+              ></div>
+            ))}
+
+            <div className="relative w-56 h-72 md:w-80 md:h-96 transform-style-3d">
+              {/* Ambient Glow */}
+              <div className="absolute inset-0 bg-orange/30 blur-[60px] rounded-full animate-pulse-slow"></div>
+
+              {/* Main Gradient Card */}
+              <div className="relative w-full h-full bg-gradient-to-br from-[#FF6A2F] to-[#FF8C5F] rounded-[2.5rem] flex items-center justify-center shadow-[0_20px_60px_rgba(255,106,47,0.35)] transform transition-transform duration-500 hover:scale-105 hover:rotate-1">
+
+                {/* Glass Inner Frame */}
+                <div className="absolute inset-[6px] bg-white/10 backdrop-blur-md rounded-[2.2rem] border border-white/25 flex flex-col items-center overflow-hidden">
+
+                  {/* Unified ID Badge (Top Edge) - CENTERED */}
+                  <div className="absolute top-5 left-0 w-full flex justify-center z-30 pointer-events-none">
+                    <div ref={introBadgeRef} className="w-full flex justify-center">
+                      <div className="bg-orange px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 pointer-events-auto">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        <span className="text-[10px] font-bold tracking-widest text-white uppercase font-montreal">
+                          Unified ID
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Scanning Laser */}
+                  <div className="absolute top-0 left-0 w-full h-2 bg-white/80 shadow-[0_0_20px_rgba(255,255,255,0.9)] animate-[scan_3s_ease-in-out_infinite] z-20"></div>
+
+                  {/* QR Code Section (Top) */}
+                  <div className="flex-1 w-full flex items-center justify-center pt-8">
+                    <QrCode className="w-28 h-28 md:w-40 md:h-40 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
+                  </div>
+
+                  {/* Live Data Animation (Bottom Section) */}
+                  <div className="h-28 w-full relative z-20">
+                    <LiveDataStream />
+                  </div>
+
+                  {/* Subtle Grid Pattern Overlay */}
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full max-w-[1200px] mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl text-gray-900 font-light leading-tight font-montreal tracking-tight text-balance">
+              One QR. <span className="text-orange font-semibold">Infinite</span> <span className="text-black font-semibold">impact.</span>
+            </h2>
+          </div>
 
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 text-sm">
             <span>Dive In</span>
