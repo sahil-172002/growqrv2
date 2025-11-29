@@ -45,10 +45,9 @@ export const TruthReveal: React.FC = () => {
       });
 
       // --- SLIDE 1 EXIT ---
-      pinTl.fromTo(lines[0],
-        { opacity: 1, y: 0, filter: 'blur(0px)' },
-        { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 }
-      );
+      // Target the inner <p> tag to avoid conflict with entryTl which animates the parent div
+      const slide1Text = lines[0].querySelector('p');
+      pinTl.to(slide1Text, { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
 
       // --- SLIDE 2 ---
       pinTl.fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
