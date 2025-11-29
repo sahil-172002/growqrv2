@@ -9,7 +9,8 @@ import { UnifiedShowcase } from './components/UnifiedShowcase'; // NEW IMPORT
 import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
 import { Reveal } from './components/ui/Reveal';
-import { Ecosystem } from './components/Ecosystem'
+import { Ecosystem } from './components/Ecosystem';
+import { Calltoaction } from './components/Calltoaction';
 
 
 export default function App() {
@@ -25,8 +26,11 @@ export default function App() {
       <Navbar />
 
       <Hero />
-      <Ecosystem />
       <TruthReveal />
+      <Ecosystem />
+
+      {/* <UnifiedShowcase /> */}
+      {/* <Calltoaction /> */}
 
 
       {/* HIDDEN SECTIONS */}

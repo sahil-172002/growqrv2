@@ -11,49 +11,63 @@ export const TruthReveal: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current || !textContainerRef.current) return;
 
-    // Use gsap.context for proper cleanup
     const ctx = gsap.context(() => {
-      // Pin the section
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=2000", // Reduced from 3500 to 2000 to remove gap
-          pin: true,
-          scrub: 1,
-        }
-      });
-
       const lines = textContainerRef.current!.children;
       const slide3 = lines[2] as HTMLElement;
       const bgs = slide3.querySelectorAll(".slide3-bg");
       const fgs = slide3.querySelectorAll(".slide3-fg");
 
-      // --- SLIDE 1 ---
-      tl.fromTo(lines[0], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
-        .to(lines[0], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 })
+      // 1. Entry Timeline (Zoom Landing) - Uses scroll momentum
+      const entryTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom", // Start when top of section hits bottom of viewport
+          end: "top top",      // End when top of section hits top of viewport
+          scrub: 1,
+        }
+      });
 
-        // --- SLIDE 2 ---
-        .fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
+      // Animate Slide 1 "Landing" during the scroll up
+      entryTl.fromTo(lines[0],
+        { opacity: 0, scale: 3, filter: 'blur(10px)', z: 100 },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', z: 0, duration: 1, ease: "power2.out" }
+      );
+
+      // 2. Pinning Timeline (Content) - Starts after landing
+      const pinTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=3500",
+          pin: true,
+          scrub: 1,
+        }
+      });
+
+      // --- SLIDE 1 EXIT ---
+      pinTl.to(lines[0], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
+
+      // --- SLIDE 2 ---
+      pinTl.fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
         .to(lines[1], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
 
       // --- SLIDE 3 ---
-      tl.set(slide3, { opacity: 1 });
+      pinTl.set(slide3, { opacity: 1 });
 
-      tl.fromTo(bgs[0], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" });
-      tl.fromTo(fgs[0], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
+      pinTl.fromTo(bgs[0], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" });
+      pinTl.fromTo(fgs[0], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
 
-      tl.fromTo(bgs[1], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
-      tl.fromTo(fgs[1], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
+      pinTl.fromTo(bgs[1], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
+      pinTl.fromTo(fgs[1], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
 
-      tl.fromTo(bgs[2], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
-      tl.fromTo(fgs[2], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
+      pinTl.fromTo(bgs[2], { scale: 2, opacity: 0 }, { scale: 1.2, opacity: 0.15, duration: 1, ease: "power4.out" }, "+=0.5");
+      pinTl.fromTo(fgs[2], { y: 40, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.8 }, "<0.1");
 
-      tl.to({}, { duration: 1 });
-      tl.to(slide3, { opacity: 0, y: -50, filter: 'blur(20px)', duration: 1 });
+      pinTl.to({}, { duration: 1 });
+      pinTl.to(slide3, { opacity: 0, y: -50, filter: 'blur(20px)', duration: 1 });
 
       // --- SLIDE 4 ---
-      tl.fromTo(lines[3], { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)" });
+      pinTl.fromTo(lines[3], { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)" });
 
     }, containerRef);
 
@@ -61,7 +75,7 @@ export const TruthReveal: React.FC = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="bg-white h-[100dvh] flex items-center justify-center relative overflow-hidden">
+    <section ref={containerRef} className="bg-white h-[100dvh] flex items-center justify-center relative overflow-hidden z-20 shadow-[0_-50px_100px_rgba(0,0,0,0.1)]">
       <div className="container mx-auto px-6 max-w-7xl text-center relative z-10">
 
         <div ref={textContainerRef} className="relative h-[600px] flex items-center justify-center">
