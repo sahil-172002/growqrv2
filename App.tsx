@@ -15,6 +15,14 @@ import { Calltoaction } from './components/Calltoaction';
 
 export default function App() {
   useLayoutEffect(() => {
+    // Force scroll to top on reload
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    }
+
     // Register GSAP plugins globally if needed, though usually accessed via window
     if (typeof window !== 'undefined' && (window as any).gsap && (window as any).ScrollTrigger) {
       (window as any).gsap.registerPlugin((window as any).ScrollTrigger);

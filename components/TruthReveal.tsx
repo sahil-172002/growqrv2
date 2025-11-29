@@ -45,7 +45,10 @@ export const TruthReveal: React.FC = () => {
       });
 
       // --- SLIDE 1 EXIT ---
-      pinTl.to(lines[0], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
+      pinTl.fromTo(lines[0],
+        { opacity: 1, y: 0, filter: 'blur(0px)' },
+        { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 }
+      );
 
       // --- SLIDE 2 ---
       pinTl.fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
