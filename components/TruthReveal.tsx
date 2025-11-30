@@ -13,7 +13,7 @@ export const TruthReveal: React.FC = () => {
 
     const ctx = gsap.context(() => {
       const lines = textContainerRef.current!.children;
-      const slide3 = lines[2] as HTMLElement;
+      const slide3 = lines[1] as HTMLElement;
       const bgs = slide3.querySelectorAll(".slide3-bg");
       const fgs = slide3.querySelectorAll(".slide3-fg");
 
@@ -38,20 +38,16 @@ export const TruthReveal: React.FC = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=3500",
+          end: "+=2500",
           pin: true,
           scrub: 1,
         }
       });
 
       // --- SLIDE 1 EXIT ---
-      // Target the inner <p> tag to avoid conflict with entryTl which animates the parent div
-      const slide1Text = lines[0].querySelector('p');
+      // Target the inner <p> tags to avoid conflict with entryTl which animates the parent div
+      const slide1Text = lines[0].querySelectorAll('p');
       pinTl.to(slide1Text, { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
-
-      // --- SLIDE 2 ---
-      pinTl.fromTo(lines[1], { opacity: 0, y: 30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
-        .to(lines[1], { opacity: 0, y: -30, filter: 'blur(10px)', duration: 1, delay: 0.5 });
 
       // --- SLIDE 3 ---
       pinTl.set(slide3, { opacity: 1 });
@@ -69,7 +65,7 @@ export const TruthReveal: React.FC = () => {
       pinTl.to(slide3, { opacity: 0, y: -50, filter: 'blur(20px)', duration: 1 });
 
       // --- SLIDE 4 ---
-      pinTl.fromTo(lines[3], { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)" });
+      pinTl.fromTo(lines[2], { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)" });
 
     }, containerRef);
 
@@ -82,17 +78,13 @@ export const TruthReveal: React.FC = () => {
 
         <div ref={textContainerRef} className="relative h-[600px] flex items-center justify-center">
 
-          {/* SLIDE 1 */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 px-4">
+          {/* SLIDE 1 (Merged) */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 px-4 text-center">
             <p className="text-3xl md:text-7xl md:leading-tight font-light text-black font-montreal">
-              The world runs on talent.
+              The world runs on <span className="text-orange font-medium">talent.</span>
             </p>
-          </div>
-
-          {/* SLIDE 2 */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 px-4">
-            <p className="text-3xl md:text-7xl md:leading-tight font-bold text-black font-montreal">
-              But <span className="text-orange">70%</span> of it is invisible.
+            <p className="text-3xl md:text-7xl md:leading-tight font-light text-black font-montreal mt-2 md:mt-4">
+              But <span className="text-orange font-medium">70%</span> of it is invisible.
             </p>
           </div>
 

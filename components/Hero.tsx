@@ -1,6 +1,7 @@
-
 import React, { useRef, useLayoutEffect, useEffect, useState } from 'react';
-import { ArrowRight, QrCode, Activity, Briefcase, Gift, Map, Zap, Award, Share2, LayoutDashboard, Globe, User, FileText, Shield, Code, Database, Cpu, Layers } from 'lucide-react';
+import { ArrowRight, QrCode, Activity, Briefcase, Gift, Map, Zap, Award, Share2, LayoutDashboard, Globe, User, FileText, Shield, Code, Database, Cpu, Layers, Fingerprint, Wifi } from 'lucide-react';
+import { EcoToken3D, CompactIDCard3D } from './EcoToken3D';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // Live Data Component for Animated Numbers
 const LiveDataStream = () => {
@@ -86,35 +87,33 @@ const HeroBackground = React.forwardRef<HTMLDivElement>((props, ref) => (
 
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null); // Ref for background fade out
+  const bgRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const tunnelRef = useRef<HTMLDivElement>(null);
-
-  // Text Refs
   const text1Ref = useRef<HTMLDivElement>(null);
-
-  // Intro Element Refs
   const introCardRef = useRef<HTMLDivElement>(null);
   const introBadgeRef = useRef<HTMLDivElement>(null);
-
-  // Ecosystem Refs
   const ecosystemRef = useRef<HTMLDivElement>(null);
-  const ecosystemNodesRef = useRef<HTMLDivElement>(null);
 
-  // The 9 specific features for Ecosystem
+  // The 9 specific features
   const features = [
-    { label: "Live Q-Score", icon: <Activity size={32} /> },
-    { label: "Smart Hiring", icon: <Briefcase size={32} /> },
-    { label: "Instant Rewards", icon: <Gift size={32} /> },
-    { label: "Skill Pathways", icon: <Map size={32} /> },
-    { label: "Opportunity Flood", icon: <Zap size={32} /> },
-    { label: "Verified Upskilling", icon: <Award size={32} /> },
-    { label: "Social Branding", icon: <Share2 size={32} /> },
-    { label: "Skill Dashboard", icon: <LayoutDashboard size={32} /> },
-    { label: "Global Benchmark", icon: <Globe size={32} /> }
+    { label: "Live Q-Score", icon: Activity },
+    { label: "Smart Hiring", icon: Briefcase },
+    { label: "Quick Rewards", icon: Gift },
+    { label: "Skill Pathways", icon: Map },
+    { label: "Opportunity", icon: Zap },
+    { label: "Upskilling", icon: Award },
+    { label: "Branding", icon: Share2 },
+    { label: "Dashboard", icon: LayoutDashboard },
+    { label: "Global Benchmark", icon: Globe }
   ];
 
-  // Icons for Orbiting Cards
+  // Prepare Grid Items (8 surrounding features)
+  const gridFeatures = features.slice(0, 8);
+
+  // We will iterate 0..8 (9 items). Index 4 is Hub.
+  const totalGridItems = Array.from({ length: 9 });
+
   const orbitIcons = [
     <User size={16} />,
     <FileText size={16} />,
@@ -132,23 +131,23 @@ export const Hero: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
-    // Use gsap.context for proper cleanup and scoping in React
     const ctx = gsap.context(() => {
-      // Reset layout
-
-      // Force Text 1 visible initially
-      gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)" });
+      // INITIAL STATE
+      // Ensure all nodes start hidden and pushed back DEEP
+      gsap.set(".eco-token-wrapper", { opacity: 0, z: -2000, scale: 0.5 });
+      gsap.set(".eco-hub-wrapper", { opacity: 0, z: -2500, scale: 0, rotateY: 720 });
+      gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto" });
 
       // MASTER TIMELINE
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=4500", // Increased scroll distance for smoother spacing
+          end: "+=4500",
           pin: true,
           scrub: 1,
           anticipatePin: 1,
-          invalidateOnRefresh: true, // Handle resize better
+          invalidateOnRefresh: true,
         }
       });
 
@@ -162,30 +161,32 @@ export const Hero: React.FC = () => {
         ease: "power1.inOut"
       }, "start");
 
-      tl.to(text1Ref.current.querySelectorAll('h2, p, .absolute.bottom-2'), { // Animate text elements only
+      tl.to(text1Ref.current.querySelectorAll('h2, p, .absolute.bottom-2'), {
         opacity: 0,
         y: -50,
         filter: "blur(10px)",
         duration: 0.8,
-        stagger: 0.1
+        stagger: 0.1,
       }, "start");
 
-      // --- QR CARD PARTICLE DISINTEGRATION EFFECT ---
-      // 1. Main Card: Implodes/Sucked into tunnel
+      // DISABLE POINTER EVENTS ON TEXT CONTAINER TO ALLOW CLICK-THROUGH TO NEXT SLIDE
+      tl.set(text1Ref.current, { pointerEvents: "none" }, "start+=0.5");
+
+      // --- QR CARD DISINTEGRATION ---
       tl.to(introCardRef.current, {
         scale: 0,
-        z: 500, // Move into depth
-        rotateZ: 180, // Spin
+        z: 500,
+        rotateZ: 180,
         opacity: 0,
+        pointerEvents: "none", // CRITICAL: Disable clicks on outgoing card
         duration: 1.5,
         ease: "power2.in"
       }, "start");
 
-      // 2. Particles: Explode outward (simulating disintegration)
       tl.to(".qr-shard", {
-        x: (i) => (i % 2 === 0 ? -200 : 200) * (Math.random() + 0.5), // Scatter X
-        y: (i) => (i < 2 ? -200 : 200) * (Math.random() + 0.5), // Scatter Y
-        z: (i) => Math.random() * 500, // Scatter Z
+        x: (i) => (i % 2 === 0 ? -200 : 200) * (Math.random() + 0.5),
+        y: (i) => (i < 2 ? -200 : 200) * (Math.random() + 0.5),
+        z: (i) => Math.random() * 500,
         rotateX: () => Math.random() * 360,
         rotateY: () => Math.random() * 360,
         opacity: 0,
@@ -195,7 +196,6 @@ export const Hero: React.FC = () => {
       }, "start");
 
       // --- PHASE 2: TRANSITION TO ECOSYSTEM ---
-      // 1. Tunnel Expansion (Morphing into Ecosystem Space)
       tl.to(tunnelRef.current, {
         scale: 4,
         z: 800,
@@ -204,10 +204,8 @@ export const Hero: React.FC = () => {
         ease: "power2.inOut"
       }, "start+=0.5");
 
-      // 2. Intro Card Transformation -> Disappears into Energy (Data Stream)
-      // Step A: Anticipation (Glitch/Shake)
       tl.to(introCardRef.current, {
-        x: "+=5", y: "+=5", // Jitter
+        x: "+=5", y: "+=5",
         scale: 0.9,
         duration: 0.2,
         yoyo: true,
@@ -215,113 +213,86 @@ export const Hero: React.FC = () => {
         ease: "none"
       }, "start+=0.5");
 
-      // Step B: Stream into Tunnel
       tl.to(introCardRef.current, {
         scale: 0,
         opacity: 0,
-        z: 200, // Move slightly in
+        z: 200,
         duration: 0.5,
         ease: "power2.in"
       }, "start+=1.0");
 
       tl.to(".qr-shard", {
-        x: (i) => (Math.random() - 0.5) * 100, // Narrow scatter X (Stream)
-        y: (i) => (Math.random() - 0.5) * 100, // Narrow scatter Y (Stream)
-        z: (i) => 800 + Math.random() * 500, // Deep into tunnel
-        rotateZ: () => Math.random() * 360, // Spin while streaming
+        x: (i) => (Math.random() - 0.5) * 100,
+        y: (i) => (Math.random() - 0.5) * 100,
+        z: (i) => 800 + Math.random() * 500,
+        rotateZ: () => Math.random() * 360,
         opacity: 0,
-        scale: (i) => 0.5 + Math.random() * 0.5, // Varied sizes
+        scale: (i) => 0.5 + Math.random() * 0.5,
         duration: 1.5,
         ease: "power2.in"
       }, "start+=1.0");
 
-      // --- GAP: Tunnel Travel (1.0 to 1.5) ---
+      // --- GAP: Tunnel Travel ---
 
-      // 3. Ecosystem Reveal (Fades in AFTER gap)
       tl.fromTo(ecosystemRef.current,
-        { scale: 0.8, opacity: 0, z: -200 }, // Start slightly smaller and further back
-        { scale: 1.2, opacity: 1, z: 0, duration: 2, ease: "power2.out" }, // Scale increased to 1.2 (20% zoom)
-        "start+=1.5" // Zero gap (was 1.8)
+        { scale: 0.8, opacity: 0, z: -200 },
+        { scale: 1, opacity: 1, z: 0, duration: 1.5, ease: "power2.out" },
+        "start+=1.5"
       );
 
-      // 4. Central Hub Rebirth (Pop in with Multi-Flip)
-      tl.fromTo(".eco-hub",
-        { scale: 0, rotateY: 720, rotateX: 60, z: -100, opacity: 0 }, // 2 Full spins + Tilt
-        { scale: 1, rotateY: 0, rotateX: 0, z: 0, opacity: 1, duration: 1.5, ease: "back.out(1.7)" },
-        "start+=1.7"
+      // --- NEW 3D THROW ANIMATION (CINEMATIC) ---
+
+      // 1. Central Hub: Flies straight in from DEEP space with a clean spin
+      tl.fromTo(".eco-hub-wrapper",
+        { scale: 0.2, z: -2500, opacity: 0, rotateY: 720 },
+        { scale: 1, z: 0, opacity: 1, rotateY: 0, duration: 2.5, ease: "power3.out" },
+        "start+=1.8"
       );
 
-      // 5. Nodes Expansion (Explosion Effect) - FIXED CIRCULAR LAYOUT
-      tl.fromTo(".eco-node",
-        { scale: 0, x: 0, y: 0, opacity: 0 },
+      // 2. Surrounding Tokens: Tumble in from different directions based on grid pos
+      // We assume order: 0,1,2 (Top), 3 (Mid-L), 4 (Mid-R), 5,6,7 (Bot) - Excludes Hub
+      tl.fromTo(".eco-token-wrapper",
         {
-          scale: 1,
-          opacity: 1,
-          x: (i) => {
-            const angle = (i * (360 / features.length)) - 90;
-            const rad = (angle * Math.PI) / 180;
-            return Math.cos(rad) * 220; // Fixed Radius 220
-          },
           y: (i) => {
-            const angle = (i * (360 / features.length)) - 90;
-            const rad = (angle * Math.PI) / 180;
-            return Math.sin(rad) * 220; // Fixed Radius 220
+            if (i < 3) return -800; // Top row
+            if (i > 4) return 800;  // Bottom row
+            return 0; // Middle row
           },
-          duration: 1.5,
-          stagger: 0.05,
-          ease: "back.out(1.7)"
+          x: (i) => {
+            if (i === 3) return -900; // Middle Left
+            if (i === 4) return 900;  // Middle Right
+            return 0;
+          },
+          z: -2000,
+          opacity: 0,
+          scale: 0.2,
+          rotateX: (i) => i < 3 ? 360 : (i > 4 ? -360 : 0), // Full Flip top/bottom
+          rotateY: (i) => (i === 3 || i === 4) ? 360 : (Math.random() - 0.5) * 180 // Flip middle sides
+        },
+        {
+          y: 0, x: 0, z: 0, opacity: 1, scale: 1, rotateX: 0, rotateY: 0,
+          duration: 2.5,
+          stagger: { amount: 0.8, from: "center" }, // Increased stagger for cinematic pacing
+          ease: "back.out(0.6)" // Soft back out for landing
         },
         "start+=1.9"
       );
 
-      // 6. Lines Expansion - MATCHING RADIUS
-      tl.fromTo(".eco-line",
-        { width: 0, opacity: 0 },
-        { width: 220, opacity: 0.4, duration: 1.5, ease: "power2.out" }, // Exact match to node radius
-        "start+=1.9"
-      );
+    }, containerRef);
 
-
-      // CONTINUOUS ROTATION (Independent of Scroll)
-      gsap.to(ecosystemNodesRef.current, {
-        rotation: 360,
-        duration: 60,
-        repeat: -1,
-        ease: "none"
-      });
-
-      gsap.to(".eco-node-inner", {
-        rotation: -360,
-        duration: 60,
-        repeat: -1,
-        ease: "none"
-      });
-
-    }, containerRef); // Scope to container
-
-    // Delayed refresh to handle initial load layout shifts
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 100);
-
-    return () => ctx.revert(); // Cleanup
+    setTimeout(() => { ScrollTrigger.refresh(); }, 100);
+    return () => ctx.revert();
   }, []);
 
-  // Mouse Parallax (Optimized for desktop only ideally, but keeps logic simple)
+  // Mouse Parallax
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!sceneRef.current || window.innerWidth < 768) return; // Disable on mobile
+      if (!sceneRef.current || window.innerWidth < 768) return;
       const { innerWidth, innerHeight } = window;
       const x = (e.clientX / innerWidth - 0.5) * 15;
       const y = (e.clientY / innerHeight - 0.5) * 15;
-
       const gsap = (window as any).gsap;
-      gsap.to(sceneRef.current, {
-        rotateY: x,
-        rotateX: y,
-        duration: 1,
-        ease: "power2.out"
-      });
+      gsap.to(sceneRef.current, { rotateY: x, rotateX: y, duration: 1, ease: "power2.out" });
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
@@ -329,102 +300,86 @@ export const Hero: React.FC = () => {
 
   return (
     <div ref={containerRef} className="relative h-[100dvh] bg-white text-black overflow-hidden perspective-1000">
-
-      {/* BACKGROUND LAYER */}
       <HeroBackground ref={bgRef} />
 
-      {/* 3D SCENE CONTAINER */}
       <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden pointer-events-none">
-        <div ref={sceneRef} className="relative w-[350px] h-[350px] md:w-[750px] md:h-[750px] transform-style-3d scale-75 md:scale-100">
+        <div ref={sceneRef} className="relative w-full h-full flex items-center justify-center transform-style-3d">
 
-          {/* THE TUNNEL / ECOSYSTEM CORE (Slide 1) */}
-          {/* THE TUNNEL / ECOSYSTEM CORE (Slide 1) */}
-          <div ref={tunnelRef} className="absolute inset-0 transform-style-3d">
-            {/* Ring 1 - Outer */}
-            <div className="orbit-ring absolute top-0 left-0 w-full h-full border border-gray-200 rounded-full animate-spin-slow opacity-60"></div>
+          {/* TUNNEL (Slide 1) */}
+          <div ref={tunnelRef} className="absolute inset-0 transform-style-3d flex items-center justify-center">
+            <div className="relative w-[600px] h-[600px] transform-style-3d">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={`tunnel-ring-${i}`}
+                  className={`orbit-ring absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-gray-200/40 ${i % 2 === 0 ? 'border-dashed' : 'border-solid'}`}
+                  style={{
+                    width: `${60 + i * 20}%`,
+                    height: `${60 + i * 20}%`,
+                    transform: `translateZ(${-i * 300}px)`,
+                    opacity: 0.6 - (i * 0.1)
+                  }}
+                ></div>
+              ))}
 
-            {/* Ring 2 - Middle */}
-            <div className="orbit-ring absolute top-[15%] left-[15%] w-[70%] h-[70%] border border-orange/20 rounded-full animate-spin-slow animation-reverse opacity-80" style={{ animationDuration: '20s' }}></div>
+              <div className="orbit-ring absolute top-0 left-0 w-full h-full border border-gray-200 rounded-full animate-spin-slow opacity-60"></div>
+              <div className="orbit-ring absolute top-[15%] left-[15%] w-[70%] h-[70%] border border-orange/20 rounded-full animate-spin-slow animation-reverse opacity-80" style={{ animationDuration: '20s' }}></div>
+              <div className="orbit-ring absolute top-[30%] left-[30%] w-[40%] h-[40%] border-2 border-orange/40 rounded-full animate-pulse-slow"></div>
 
-            {/* Ring 3 - Inner Core */}
-            <div className="orbit-ring absolute top-[30%] left-[30%] w-[40%] h-[40%] border-2 border-orange/40 rounded-full animate-pulse-slow"></div>
-
-            {/* Floating Particles/Nodes */}
-            {orbitIcons.map((icon, i) => (
-              <div key={i}
-                className="absolute w-8 h-8 md:w-12 md:h-12 bg-white shadow-xl rounded-xl flex items-center justify-center border border-gray-100"
-                style={{
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 45}deg) translate(140px) rotate(-${i * 45}deg) translateZ(${i * 10}px) translateX(-50%) translateY(-50%)`,
-                }}
-              >
-                <div className="text-gray-400">
-                  {icon}
+              {orbitIcons.map((icon, i) => (
+                <div key={i}
+                  className="absolute w-8 h-8 md:w-12 md:h-12 bg-white shadow-xl rounded-xl flex items-center justify-center border border-gray-100"
+                  style={{
+                    top: '50%',
+                    left: '50%',
+                    transform: `rotate(${i * 45}deg) translate(140px) rotate(-${i * 45}deg) translateZ(${i * 10}px) translateX(-50%) translateY(-50%)`,
+                  }}
+                >
+                  <div className="text-gray-400">{icon}</div>
                 </div>
-              </div>
-            ))}
-
-            {/* Central Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] md:w-[200px] h-[150px] md:h-[200px] bg-orange/5 blur-3xl rounded-full"></div>
+              ))}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] md:w-[200px] h-[150px] md:h-[200px] bg-orange/5 blur-3xl rounded-full"></div>
+            </div>
           </div>
 
-          {/* ECOSYSTEM CONTAINER (Slide 2) */}
-          <div ref={ecosystemRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0">
+          {/* ECOSYSTEM GRID (Slide 2 - 3x3 HUB LAYOUT) */}
+          <div ref={ecosystemRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0 pointer-events-none">
 
-            {/* Background Rings */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="absolute w-[500px] h-[500px] border border-gray-100/30 rounded-full"></div>
-              <div className="absolute w-[700px] h-[700px] border border-dashed border-gray-100/30 rounded-full opacity-50 animate-[spin_60s_linear_infinite]"></div>
-            </div>
+            {/* Background Decoration */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-transparent pointer-events-none -z-10"></div>
 
-            {/* Central Hub - Small Ecosystem QR (New) */}
-            <div className="absolute z-20 w-32 h-32 flex items-center justify-center eco-hub opacity-0">
-              <div className="relative w-full h-full group cursor-pointer">
-                <div className="absolute inset-0 bg-orange/40 blur-2xl rounded-full animate-pulse-slow"></div>
-                <div className="relative w-full h-full bg-gradient-to-br from-orange to-[#FF8C5F] rounded-2xl flex items-center justify-center shadow-2xl">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-white/50 shadow-[0_0_15px_rgba(255,255,255,0.8)] animate-[scan_2s_ease-in-out_infinite]"></div>
-                  <QrCode className="w-16 h-16 text-white relative z-10 drop-shadow-md" strokeWidth={2} />
-                </div>
-              </div>
-            </div>
+            {/* THE 3x3 GRID - Increased Gaps */}
+            <div className="grid grid-cols-3 gap-12 md:gap-20 p-8 transform-style-3d pointer-events-auto items-center justify-items-center">
 
-            {/* Rotating Nodes System */}
-            <div ref={ecosystemNodesRef} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              {features.map((feat, i) => {
-                const angle = (i * (360 / features.length)) - 90;
-                return (
-                  <React.Fragment key={i}>
-                    {/* Connecting Line */}
-                    <div
-                      className="eco-line absolute top-1/2 left-1/2 h-[2px] bg-gradient-to-r from-orange to-transparent origin-left z-0"
-                      style={{ transform: `rotate(${angle}deg)` }}
-                    ></div>
+              {totalGridItems.map((_, index) => {
+                const isHub = index === 4;
+                const randomDelay = Math.random() * 2;
 
-                    {/* Node Wrapper (Will be positioned by GSAP) */}
-                    <div className="eco-node absolute top-1/2 left-1/2 w-16 h-16 -ml-8 -mt-8 flex items-center justify-center z-10">
-                      {/* Counter-Rotating Inner to keep content upright */}
-                      <div className="eco-node-inner w-full h-full flex flex-col items-center justify-center relative">
-
-                        {/* Icon Circle - INCREASED SIZE */}
-                        <div className="w-16 h-16 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-lg group cursor-pointer hover:scale-110 hover:border-orange transition-all duration-300">
-                          <div className="text-gray-400 group-hover:text-orange transition-colors">
-                            {feat.icon}
-                          </div>
-                        </div>
-
-                        {/* Label */}
-                        <div className="text-center bg-white/80 backdrop-blur-sm px-2 py-1 rounded-md absolute top-full mt-2 whitespace-nowrap">
-                          <h4 className="font-bold text-xs text-black">{feat.label}</h4>
-                        </div>
-
+                if (isHub) {
+                  return (
+                    <div key={`hub-${index}`} className="eco-hub-wrapper transform-style-3d z-20">
+                      <div className="animate-float" style={{ animationDelay: '0s' }}>
+                        <CompactIDCard3D />
                       </div>
                     </div>
-                  </React.Fragment>
+                  );
+                }
+
+                // For tokens, get feature from gridFeatures
+                const featureIndex = index < 4 ? index : index - 1;
+                const feat = gridFeatures[featureIndex];
+
+                if (!feat) return null; // Safety check
+
+                return (
+                  <div key={`token-${index}`} className="eco-token-wrapper transform-style-3d">
+                    <div className="animate-float" style={{ animationDelay: `${randomDelay}s` }}>
+                      <EcoToken3D label={feat.label} icon={feat.icon} size={130} />
+                    </div>
+                  </div>
                 );
               })}
-            </div>
 
+            </div>
           </div>
 
         </div>
@@ -435,21 +390,15 @@ export const Hero: React.FC = () => {
 
         {/* SLIDE 1: INTRO */}
         <div ref={text1Ref} className="absolute inset-0 flex flex-col items-center justify-center text-center pt-24 pointer-events-auto">
-          {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 mb-8 animate-fade-in-up">
-            <span className="w-2 h-2 rounded-full bg-orange animate-pulse"></span>
-            <span className="text-xs font-bold tracking-widest text-gray-500 uppercase">System Online</span>
-          </div> */}
-
           {/* Dynamic 3D QR Hero Element */}
           <div ref={introCardRef} className="relative z-20 mb-10 md:mb-12 group cursor-pointer animate-float perspective-1000">
 
-            {/* Particle Shards for Scroll Effect (Hidden initially) */}
             {[...Array(8)].map((_, i) => (
               <div key={`shard-${i}`}
                 className="qr-shard absolute inset-0 bg-orange/80 backdrop-blur-sm rounded-xl z-0"
                 style={{
                   transform: `scale(0.8) translateZ(-10px)`,
-                  opacity: 1 // Visible but hidden behind card
+                  opacity: 1
                 }}
               ></div>
             ))}
@@ -459,40 +408,39 @@ export const Hero: React.FC = () => {
               <div className="absolute inset-0 bg-orange/30 blur-[60px] rounded-full animate-pulse-slow"></div>
 
               {/* Main Gradient Card */}
-              <div className="relative w-full h-full bg-gradient-to-br from-[#FF6A2F] to-[#FF8C5F] rounded-[2.5rem] flex items-center justify-center shadow-[0_20px_60px_rgba(255,106,47,0.35)] transform transition-transform duration-500 hover:scale-105 hover:rotate-1">
+              {/* UPDATED: Richer orange gradient (to-#E65100) and stronger shadow for polished look */}
+              <div className="relative w-full h-full bg-gradient-to-br from-[#FF6A2F] to-[#E65100] rounded-[2.5rem] flex items-center justify-center shadow-[0_20px_60px_rgba(255,106,47,0.5)] transform transition-transform duration-500 hover:scale-105 hover:rotate-1 border border-orange-500/30">
 
                 {/* Glass Inner Frame */}
                 <div className="absolute inset-[6px] bg-white/10 backdrop-blur-md rounded-[2.2rem] border border-white/25 flex flex-col items-center overflow-hidden">
 
-                  {/* Unified ID Badge (Top Edge) - CENTERED */}
+                  {/* Unified ID Badge - FIXED WIDTH */}
                   <div className="absolute top-5 left-0 w-full flex justify-center z-30 pointer-events-none">
-                    <div ref={introBadgeRef} className="w-full flex justify-center">
+                    <div ref={introBadgeRef} className="flex justify-center">
                       <div className="bg-orange px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 pointer-events-auto">
-                        <span className="relative flex h-2 w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                        </span>
-                        <span className="text-[10px] font-bold tracking-widest text-white uppercase font-montreal">
-                          Unified ID
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                          </span>
+                          <span className="text-[10px] font-bold tracking-widest text-white uppercase font-montreal">
+                            Unified ID
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Scanning Laser */}
                   <div className="absolute top-0 left-0 w-full h-2 bg-white/80 shadow-[0_0_20px_rgba(255,255,255,0.9)] animate-[scan_3s_ease-in-out_infinite] z-20"></div>
 
-                  {/* QR Code Section (Top) */}
                   <div className="flex-1 w-full flex items-center justify-center pt-8">
                     <QrCode className="w-28 h-28 md:w-40 md:h-40 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
                   </div>
 
-                  {/* Live Data Animation (Bottom Section) */}
                   <div className="h-28 w-full relative z-20">
                     <LiveDataStream />
                   </div>
 
-                  {/* Subtle Grid Pattern Overlay */}
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
                 </div>
               </div>
@@ -511,6 +459,7 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
+        <div ref={(el) => { if (el) (window as any).finalExitRef = el }} className="fixed inset-0 bg-white pointer-events-none opacity-0 z-50 mix-blend-overlay"></div>
 
       </div>
     </div>

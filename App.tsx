@@ -9,7 +9,7 @@ import { UnifiedShowcase } from './components/UnifiedShowcase'; // NEW IMPORT
 import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
 import { Reveal } from './components/ui/Reveal';
-import { Ecosystem } from './components/Ecosystem';
+import { Qscore } from './components/Qscore';
 import { Calltoaction } from './components/Calltoaction';
 
 
@@ -35,10 +35,9 @@ export default function App() {
 
       <Hero />
       <TruthReveal />
-      <Ecosystem />
+      <Qscore />
 
-      {/* <UnifiedShowcase /> */}
-      {/* <Calltoaction /> */}
+      <Calltoaction />
 
 
       {/* HIDDEN SECTIONS */}
@@ -49,9 +48,10 @@ export default function App() {
           {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
           <SolutionsGrid />
 
-          {/* SECTION 5: ECOSYSTEM (Neural Network) */}
+          <Challenge />
+          <SolutionsGrid />
 
-
+          <UnifiedShowcase />
           {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
           <UnifiedShowcase />
 
