@@ -243,6 +243,7 @@ export const Hero: React.FC = () => {
       // --- NEW 3D THROW ANIMATION (CINEMATIC) ---
 
       // 1. Central Hub: Flies straight in from DEEP space with a clean spin
+      // UPDATED: Lands at 0 to show Orange Side (Now Front Face)
       tl.fromTo(".eco-hub-wrapper",
         { scale: 0.2, z: -2500, opacity: 0, rotateY: 720 },
         { scale: 1, z: 0, opacity: 1, rotateY: 0, duration: 2.5, ease: "power3.out" },

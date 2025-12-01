@@ -10,6 +10,8 @@ import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
 import { Reveal } from './components/ui/Reveal';
 import { Qscore } from './components/Qscore';
+import { QscoreGrid } from './components/QscoreGrid';
+import { CircularFeatures } from './components/CircularFeatures';
 import { Calltoaction } from './components/Calltoaction';
 
 
@@ -36,6 +38,8 @@ export default function App() {
       <Hero />
       <TruthReveal />
       <Qscore />
+      <QscoreGrid />
+      <CircularFeatures />
 
       <Calltoaction />
 

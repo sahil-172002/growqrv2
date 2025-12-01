@@ -75,9 +75,53 @@ const use360Rotation = (idleSpeed = 0.05, enableSpin = false) => {
 // ============================================================================
 // 1. COMPACT ID CARD (The Central Hub)
 // ============================================================================
+// --- MINI DATA STREAM (For Card Back) ---
+const MiniDataStream = () => {
+    const [score, setScore] = useState(850);
+    const [bars, setBars] = useState<number[]>(Array(12).fill(50));
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setScore(Math.floor(Math.random() * (99 - 65) + 65));
+            setBars(Array(12).fill(0).map(() => Math.random() * 100));
+        }, 150);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="flex flex-col items-center justify-center w-full mt-4">
+            {/* Label */}
+            <div className="flex items-center gap-1 mb-1 opacity-80">
+                <span className="text-[8px] font-mono text-white tracking-[0.2em] uppercase font-bold">Q-Score</span>
+            </div>
+
+            {/* Score Display */}
+            <div className="flex items-baseline gap-1 relative mb-2">
+                <span className="font-mono text-3xl font-black text-white tracking-tighter drop-shadow-md">
+                    {score}
+                </span>
+                <span className="text-[8px] font-mono text-white/60 font-bold">/ 100</span>
+            </div>
+
+            {/* Frequency Visualizer */}
+            <div className="flex items-end justify-center gap-[2px] h-3 w-16 opacity-80">
+                {bars.map((h, i) => (
+                    <div key={i}
+                        className="w-[2px] bg-white rounded-full transition-all duration-75 ease-linear"
+                        style={{
+                            height: `${h}%`,
+                            opacity: Math.max(0.4, h / 100)
+                        }}
+                    ></div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 export const CompactIDCard3D: React.FC = () => {
-    // ENABLED CONTINUOUS SPIN for Hub
-    const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0.04, true);
+    // DISABLED CONTINUOUS SPIN for Hub (User Request)
+    const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0.04, false);
 
     // Dimensions
     const width = "150px";
@@ -88,12 +132,15 @@ export const CompactIDCard3D: React.FC = () => {
 
     const shadowScale = useTransform(smoothRotateX, (v) => 1 - Math.abs(Math.sin(v * Math.PI / 180)) * 0.2);
 
-    // Score Animation Logic
+    // Score Animation Logic (Front Face)
     const [score, setScore] = useState(1);
+    const [bars, setBars] = useState<number[]>(Array(12).fill(50));
+
     useEffect(() => {
         const interval = setInterval(() => {
             setScore(prev => (prev >= 100 ? 1 : prev + 1));
-        }, 40); // Speed of count
+            setBars(Array(12).fill(0).map(() => Math.random() * 100));
+        }, 150); // Speed of count
         return () => clearInterval(interval);
     }, []);
 
@@ -135,32 +182,13 @@ export const CompactIDCard3D: React.FC = () => {
                     />
                 ))}
 
-                {/* --- BACK FACE (ORANGE - RESTORED BRANDING) --- */}
-                <div
-                    className="absolute inset-0 border border-orange-600 bg-orange"
-                    style={{
-                        borderRadius: radius,
-                        transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
-                        backfaceVisibility: 'visible',
-                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)'
-                    }}
-                >
-                    <div className="w-full h-full flex flex-col items-center justify-center p-6 text-white">
-                        <div className="relative mb-6">
-                            <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
-                            <QrCode size={70} className="relative text-white/90 drop-shadow-md" />
-                        </div>
-                        <div className="text-3xl font-bold font-mono tracking-tighter mb-2 subpixel-antialiased">GrowQR</div>
-                        <div className="px-3 py-1 bg-white/10 rounded-full border border-white/20 text-[9px] font-mono tracking-widest backdrop-blur-sm subpixel-antialiased">SECURE_V4</div>
-                    </div>
-                </div>
-
-                {/* --- FRONT FACE (GRAY - ANIMATED SCORE) --- */}
+                {/* --- BACK FACE (LIGHT GRAY THEME - SAME CONTENT) --- */}
                 <div
                     className="absolute inset-0 border border-gray-300 overflow-hidden"
                     style={{
                         borderRadius: radius,
-                        transform: "translateZ(1px)",
+                        transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
+                        backfaceVisibility: 'visible',
                         background: 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)',
                         boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)"
                     }}
@@ -168,32 +196,63 @@ export const CompactIDCard3D: React.FC = () => {
                     <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                     <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent opacity-60 pointer-events-none z-30 mix-blend-overlay"></div>
 
-                    <div className="relative z-10 w-full h-full p-4 flex flex-col items-center justify-center gap-6">
-
-                        {/* Header Label */}
-                        <div className="text-center">
-                            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400">LIVE SCORE</span>
+                    {/* Removed scale-x-[-1] as it was causing double-mirroring (inversion) */}
+                    <div className="w-full h-full flex flex-col items-center justify-center p-4 text-gray-800">
+                        <div className="relative mb-2">
+                            <div className="absolute inset-0 bg-orange/5 blur-xl rounded-full"></div>
+                            {/* QR Code in Dark Gray/Black */}
+                            <QrCode size={100} className="relative text-gray-800 drop-shadow-sm" />
                         </div>
 
-                        {/* Score Display */}
-                        <div className="flex flex-col items-center">
-                            <span className="text-7xl font-black font-mono tracking-tighter leading-none text-black drop-shadow-sm">{score}</span>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="w-full px-4">
-                            <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
-                                <div
-                                    className="h-full bg-orange transition-all duration-75 ease-linear shadow-[0_0_8px_rgba(255,106,47,0.5)]"
-                                    style={{ width: `${score}%` }}
-                                ></div>
+                        {/* Mini Data Stream (Dark Theme Version) */}
+                        <div className="flex flex-col items-center justify-center w-full mt-4">
+                            {/* Label */}
+                            <div className="flex items-center gap-1 mb-1 opacity-60">
+                                <span className="text-[8px] font-mono text-gray-600 tracking-[0.2em] uppercase font-bold">Q-Score</span>
                             </div>
-                            <div className="flex justify-between mt-2 px-1">
-                                <span className="text-[8px] font-bold text-gray-400 font-mono">0</span>
-                                <span className="text-[8px] font-bold text-gray-400 font-mono">100</span>
+
+                            {/* Score Display */}
+                            <div className="flex items-baseline gap-1 relative mb-2">
+                                <span className="font-mono text-3xl font-black text-gray-900 tracking-tighter drop-shadow-sm">
+                                    {score}
+                                </span>
+                                <span className="text-[8px] font-mono text-gray-500 font-bold">/ 100</span>
+                            </div>
+
+                            {/* Frequency Visualizer (Dark Bars) */}
+                            <div className="flex items-end justify-center gap-[2px] h-3 w-16 opacity-60">
+                                {bars.map((h, i) => (
+                                    <div key={i}
+                                        className="w-[2px] bg-gray-800 rounded-full transition-all duration-75 ease-linear"
+                                        style={{
+                                            height: `${h}%`,
+                                            opacity: Math.max(0.4, h / 100)
+                                        }}
+                                    ></div>
+                                ))}
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                {/* --- FRONT FACE (ORANGE - QR CODE) --- */}
+                <div
+                    className="absolute inset-0 border border-orange-600 bg-orange"
+                    style={{
+                        borderRadius: radius,
+                        transform: "translateZ(1px)",
+                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)'
+                    }}
+                >
+                    <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white">
+                        <div className="relative mb-2">
+                            <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
+                            {/* Increased QR Code Size */}
+                            <QrCode size={100} className="relative text-white/90 drop-shadow-md" />
+                        </div>
+
+                        {/* New Mini Data Stream */}
+                        <MiniDataStream />
                     </div>
                 </div>
 
