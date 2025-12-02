@@ -82,11 +82,11 @@ const use360Rotation = (idleSpeed = 0.05, enableSpin = false, forceFlip = false)
 
 interface MatrixTokenProps {
     label: string;
-    icon: React.ElementType;
+    icon: any; // Relaxed type to fix lint error
     size?: number;
     color?: string;
     enableIdleSpin?: boolean;
-    forceFlip?: boolean; // New prop for global flip control
+    forceFlip?: boolean;
 }
 
 export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
@@ -143,42 +143,55 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
                         style={{
                             transform: `translateZ(${-i * layerSpacing}px)`,
                             zIndex: -i,
-                            filter: `brightness(${0.9 - (i * 0.03)})`
+                            filter: `brightness(${0.9 - (i * 0.02)})`
                         }}
                     />
                 ))}
 
                 {/* --- BACK FACE (Orange) --- */}
                 <div
-                    className="absolute inset-0 bg-orange border border-orange-600 rounded-full"
+                    className="absolute inset-0 bg-orange border border-orange-600 rounded-full overflow-hidden"
                     style={{
                         transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
                         backfaceVisibility: 'visible',
-                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)'
+                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)',
+                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.2)"
                     }}
                 >
-                    <div className="w-full h-full flex items-center justify-center transform scale-x-[-1]">
-                        <Hexagon size={size * 0.4} className="text-white/20" />
+                    <div className="absolute inset-0 opacity-[0.1] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 opacity-50 pointer-events-none z-30"></div>
+
+                    <div className="w-full h-full flex items-center justify-center">
+                        <div className="relative z-10 w-full h-full p-4 flex flex-col items-center justify-center gap-2">
+                            <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0 backdrop-blur-sm">
+                                <Icon size={18} className="relative z-10 text-white" />
+                            </div>
+                            <span className="text-[10px] font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md">
+                                {label}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                {/* --- FRONT FACE (White/Glass) --- */}
+                {/* --- FRONT FACE (Lighter Gray/Premium) --- */}
                 <div
                     className="absolute inset-0 border border-white/60 overflow-hidden rounded-full"
                     style={{
                         transform: "translateZ(1px)",
                         background: 'linear-gradient(135deg, #F9FAFB 0%, #E5E7EB 100%)',
-                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.6)"
+                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)"
                     }}
                 >
                     <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                     <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-transparent opacity-70 pointer-events-none z-30 mix-blend-overlay"></div>
 
-                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-2">
-                        <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm mb-1 group-hover:scale-110 transition-transform">
-                            <Icon size={16} className="text-orange" />
+                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-2 gap-1">
+                        {/* Icon Container */}
+                        <div className="w-10 h-10 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0">
+                            <div className="absolute inset-0 bg-orange/10"></div>
+                            <Icon size={18} className="relative z-10 text-orange" />
                         </div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-gray-600 text-center leading-tight subpixel-antialiased w-full px-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-gray-600 text-center leading-tight subpixel-antialiased w-full px-1 font-poppins">
                             {label}
                         </span>
                     </div>

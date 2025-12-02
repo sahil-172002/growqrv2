@@ -1,6 +1,7 @@
 import React, { useRef, useLayoutEffect, useEffect, useState } from 'react';
 import { ArrowRight, QrCode, Activity, Briefcase, Gift, Map, Zap, Award, Share2, LayoutDashboard, Globe, User, FileText, Shield, Code, Database, Cpu, Layers, Fingerprint, Wifi } from 'lucide-react';
-import { EcoToken3D, CompactIDCard3D } from './EcoToken3D';
+import { CompactIDCard3D } from './EcoToken3D';
+import { MatrixToken3D } from './MatrixToken3D';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // Live Data Component for Animated Numbers
@@ -108,11 +109,20 @@ export const Hero: React.FC = () => {
     { label: "Global Benchmark", icon: Globe }
   ];
 
-  // Prepare Grid Items (8 surrounding features)
-  const gridFeatures = features.slice(0, 8);
+  // Add CSS for beam animation
+  const beamStyle = `
+      @keyframes beam-flow {
+          0% { background-position: 100% 0; }
+          100% { background-position: -100% 0; }
+      }
+      .beam-gradient {
+          background: linear-gradient(90deg, transparent 0%, rgba(255, 106, 47, 0.2) 20%, rgba(255, 106, 47, 0.8) 50%, rgba(255, 106, 47, 0.2) 80%, transparent 100%);
+          background-size: 200% 100%;
+          animation: beam-flow 3s linear infinite;
+      }
+  `;
 
-  // We will iterate 0..8 (9 items). Index 4 is Hub.
-  const totalGridItems = Array.from({ length: 9 });
+
 
   const orbitIcons = [
     <User size={16} />,
@@ -131,23 +141,44 @@ export const Hero: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // INITIAL STATE
-      // Ensure all nodes start hidden and pushed back DEEP
-      gsap.set(".eco-token-wrapper", { opacity: 0, z: -2000, scale: 0.5 });
-      gsap.set(".eco-hub-wrapper", { opacity: 0, z: -2500, scale: 0, rotateY: 720 });
-      gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto" });
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // MASTER TIMELINE
+    const ctx = gsap.context(() => {
+      // Cache DOM queries for performance
+      const textElements = text1Ref.current?.querySelectorAll('h2, p, .absolute.bottom-2');
+      const qrShards = gsap.utils.toArray(".qr-shard");
+      const ecoHubWrapper = gsap.utils.toArray(".eco-hub-wrapper");
+      const featureNodes = gsap.utils.toArray(".feature-node");
+      const beams = gsap.utils.toArray(".feature-beam");
+
+      // INITIAL STATE with GPU acceleration
+      gsap.set(".eco-token-wrapper", { opacity: 0, z: -2000, scale: 0.5, force3D: true });
+      gsap.set(ecoHubWrapper, { opacity: 0, z: -2500, scale: 0, rotateY: 720, force3D: true });
+      gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto", force3D: true });
+
+      // MASTER TIMELINE with performance optimizations
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=4500",
+          end: "+=3900",  // Balanced: slide 1 not too fast, exit still visible
           pin: true,
-          scrub: 1,
+          scrub: prefersReducedMotion ? 0 : 1, // Instant for reduced motion
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          fastScrollEnd: true, // Performance optimization
+          preventOverlaps: true, // Prevent animation conflicts
+
+          // Fix for scroll-back glitches
+          onLeave: () => {
+            // Ensure exit animation completes cleanly
+            gsap.set(ecosystemRef.current, { clearProps: "all" });
+          },
+          onEnterBack: () => {
+            // Reset and refresh when scrolling back
+            ScrollTrigger.refresh();
+          }
         }
       });
 
@@ -158,16 +189,20 @@ export const Hero: React.FC = () => {
         rotateZ: 45,
         opacity: 0,
         duration: 2,
-        ease: "power1.inOut"
+        ease: "power1.inOut",
+        force3D: true
       }, "start");
 
-      tl.to(text1Ref.current.querySelectorAll('h2, p, .absolute.bottom-2'), {
-        opacity: 0,
-        y: -50,
-        filter: "blur(10px)",
-        duration: 0.8,
-        stagger: 0.1,
-      }, "start");
+      if (textElements) {
+        tl.to(textElements, {
+          opacity: 0,
+          y: -50,
+          filter: "blur(10px)",
+          duration: 0.8,
+          stagger: 0.1,
+          force3D: true
+        }, "start");
+      }
 
       // DISABLE POINTER EVENTS ON TEXT CONTAINER TO ALLOW CLICK-THROUGH TO NEXT SLIDE
       tl.set(text1Ref.current, { pointerEvents: "none" }, "start+=0.5");
@@ -178,12 +213,13 @@ export const Hero: React.FC = () => {
         z: 500,
         rotateZ: 180,
         opacity: 0,
-        pointerEvents: "none", // CRITICAL: Disable clicks on outgoing card
+        pointerEvents: "none",
         duration: 1.5,
-        ease: "power2.in"
+        ease: "power2.in",
+        force3D: true
       }, "start");
 
-      tl.to(".qr-shard", {
+      tl.to(qrShards, {
         x: (i) => (i % 2 === 0 ? -200 : 200) * (Math.random() + 0.5),
         y: (i) => (i < 2 ? -200 : 200) * (Math.random() + 0.5),
         z: (i) => Math.random() * 500,
@@ -192,7 +228,8 @@ export const Hero: React.FC = () => {
         opacity: 0,
         scale: 0,
         duration: 1.2,
-        ease: "power2.out"
+        ease: "power2.out",
+        force3D: true
       }, "start");
 
       // --- PHASE 2: TRANSITION TO ECOSYSTEM ---
@@ -201,7 +238,8 @@ export const Hero: React.FC = () => {
         z: 800,
         opacity: 0,
         duration: 2,
-        ease: "power2.inOut"
+        ease: "power2.inOut",
+        force3D: true
       }, "start+=0.5");
 
       tl.to(introCardRef.current, {
@@ -210,7 +248,8 @@ export const Hero: React.FC = () => {
         duration: 0.2,
         yoyo: true,
         repeat: 3,
-        ease: "none"
+        ease: "none",
+        force3D: true
       }, "start+=0.5");
 
       tl.to(introCardRef.current, {
@@ -218,10 +257,11 @@ export const Hero: React.FC = () => {
         opacity: 0,
         z: 200,
         duration: 0.5,
-        ease: "power2.in"
+        ease: "power2.in",
+        force3D: true
       }, "start+=1.0");
 
-      tl.to(".qr-shard", {
+      tl.to(qrShards, {
         x: (i) => (Math.random() - 0.5) * 100,
         y: (i) => (Math.random() - 0.5) * 100,
         z: (i) => 800 + Math.random() * 500,
@@ -229,55 +269,131 @@ export const Hero: React.FC = () => {
         opacity: 0,
         scale: (i) => 0.5 + Math.random() * 0.5,
         duration: 1.5,
-        ease: "power2.in"
+        ease: "power2.in",
+        force3D: true
       }, "start+=1.0");
 
-      // --- GAP: Tunnel Travel ---
+      // --- GAP: Tunnel Travel (REDUCED GAP) ---
 
       tl.fromTo(ecosystemRef.current,
         { scale: 0.8, opacity: 0, z: -200 },
-        { scale: 1, opacity: 1, z: 0, duration: 1.5, ease: "power2.out" },
-        "start+=1.5"
+        { scale: 1, opacity: 1, z: 0, duration: 1.5, ease: "power2.out", force3D: true },
+        "start+=1.2"  // Changed from 1.5 to 1.2 to reduce gap
       );
 
-      // --- NEW 3D THROW ANIMATION (CINEMATIC) ---
+      // --- NEW CIRCULAR EXPANSION ANIMATION ---
 
-      // 1. Central Hub: Flies straight in from DEEP space with a clean spin
-      // UPDATED: Lands at 0 to show Orange Side (Now Front Face)
-      tl.fromTo(".eco-hub-wrapper",
-        { scale: 0.2, z: -2500, opacity: 0, rotateY: 720 },
-        { scale: 1, z: 0, opacity: 1, rotateY: 0, duration: 2.5, ease: "power3.out" },
-        "start+=1.8"
+      // 1. Central Hub: Scales up from 0
+      tl.fromTo(ecoHubWrapper,
+        { scale: 0, opacity: 0, rotateY: 720 },
+        { scale: 1, opacity: 1, rotateY: 0, duration: 2, ease: "back.out(1.7)", force3D: true },
+        "start+=1.5"  // Changed from 1.8 to 1.5 to reduce gap
       );
 
-      // 2. Surrounding Tokens: Tumble in from different directions based on grid pos
-      // We assume order: 0,1,2 (Top), 3 (Mid-L), 4 (Mid-R), 5,6,7 (Bot) - Excludes Hub
-      tl.fromTo(".eco-token-wrapper",
+      // 2. Features: Expand from center (using cached queries)
+      featureNodes.forEach((node: any, i: number) => {
+        const angle = (i * (360 / features.length)) * (Math.PI / 180);
+        const radius = 255;
+        const tx = Math.cos(angle) * radius;
+        const ty = Math.sin(angle) * radius;
+
+        tl.fromTo(node,
+          { x: 0, y: 0, scale: 0, opacity: 0, rotateY: 180 },
+          {
+            x: tx, y: ty, scale: 1, opacity: 1, rotateY: 0,
+            duration: 3,
+            ease: "power2.out",
+            force3D: true
+          },
+          "start+=1.7"  // Changed from 2.0 to 1.7 to reduce gap
+        );
+      });
+
+      // BEAM EXPANSION (using cached queries)
+      tl.fromTo(beams,
+        { width: 0, opacity: 0 },
         {
-          y: (i) => {
-            if (i < 3) return -800; // Top row
-            if (i > 4) return 800;  // Bottom row
-            return 0; // Middle row
-          },
-          x: (i) => {
-            if (i === 3) return -900; // Middle Left
-            if (i === 4) return 900;  // Middle Right
-            return 0;
-          },
-          z: -2000,
+          width: 255,
+          opacity: 1,
+          duration: 3,
+          ease: "power2.out",
+          stagger: 0,
+          force3D: true
+        },
+        "start+=1.7"  // Changed from 2.0 to 1.7 to reduce gap
+      );
+
+      // Continuous Orbit with GPU acceleration
+      gsap.to(".ring-container", { rotation: 360, duration: 120, repeat: -1, ease: "none", force3D: true });
+      gsap.to(".feature-rotator", { rotation: -360, duration: 120, repeat: -1, ease: "none", force3D: true });
+
+      // === PREMIUM EXIT ANIMATION ===
+      // Give the ecosystem some time to be visible
+      tl.to({}, { duration: 2 }, "+=0.5");
+
+      // Phase 1: Beams fade out
+      tl.to(beams, {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.in"
+      }, "exit");
+
+      // Phase 2: Connection lines dissolve
+      tl.to(".connection-line", {
+        opacity: 0,
+        duration: 1.2,
+        ease: "power1.in"
+      }, "exit+=0.3");
+
+      // Phase 3: Feature nodes scatter and implode
+      featureNodes.forEach((node: any, i: number) => {
+        const angle = (i * (360 / features.length)) * (Math.PI / 180);
+
+        // First: Brief scatter outward
+        tl.to(node, {
+          x: `+=${Math.cos(angle) * 50}`,
+          y: `+=${Math.sin(angle) * 50}`,
+          scale: 1.1,
+          duration: 0.6,
+          ease: "power1.out",
+          force3D: true
+        }, `exit+=0.5+=${i * 0.05}`);
+
+        // Then: Implode to center with rotation
+        tl.to(node, {
+          x: 0,
+          y: 0,
+          scale: 0,
           opacity: 0,
-          scale: 0.2,
-          rotateX: (i) => i < 3 ? 360 : (i > 4 ? -360 : 0), // Full Flip top/bottom
-          rotateY: (i) => (i === 3 || i === 4) ? 360 : (Math.random() - 0.5) * 180 // Flip middle sides
-        },
-        {
-          y: 0, x: 0, z: 0, opacity: 1, scale: 1, rotateX: 0, rotateY: 0,
-          duration: 2.5,
-          stagger: { amount: 0.8, from: "center" }, // Increased stagger for cinematic pacing
-          ease: "back.out(0.6)" // Soft back out for landing
-        },
-        "start+=1.9"
-      );
+          rotateY: -180,
+          z: -400,
+          filter: "blur(10px)",
+          duration: 1.5,
+          ease: "power2.in",
+          force3D: true
+        }, `exit+=1.2+=${i * 0.06}`);
+      });
+
+      // Phase 4: Central hub collapses with dramatic rotation
+      tl.to(".eco-hub-wrapper", {
+        scale: 0,
+        opacity: 0,
+        rotateY: -540,
+        z: -600,
+        filter: "blur(15px)",
+        duration: 2,
+        ease: "expo.in",
+        force3D: true
+      }, "exit+=2");
+
+      // Phase 5: Background and container fade
+      tl.to(ecosystemRef.current, {
+        opacity: 0,
+        filter: "blur(20px)",
+        duration: 1.5,
+        ease: "power1.in",
+        force3D: true
+      }, "exit+=2.5");
 
     }, containerRef);
 
@@ -285,29 +401,60 @@ export const Hero: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  // Mouse Parallax
+  // Optimized Mouse Parallax with RAF and throttling
   useEffect(() => {
+    if (!sceneRef.current || window.innerWidth < 768) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return; // Skip parallax for reduced motion users
+
+    const gsap = (window as any).gsap;
+    if (!gsap) return;
+
+    let targetX = 0;
+    let targetY = 0;
+    let rafId: number;
+
     const handleMouseMove = (e: MouseEvent) => {
-      if (!sceneRef.current || window.innerWidth < 768) return;
+      // Calculate once per mouse move
       const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth - 0.5) * 15;
-      const y = (e.clientY / innerHeight - 0.5) * 15;
-      const gsap = (window as any).gsap;
-      gsap.to(sceneRef.current, { rotateY: x, rotateX: y, duration: 1, ease: "power2.out" });
+      targetX = (e.clientX / innerWidth - 0.5) * 15;
+      targetY = (e.clientY / innerHeight - 0.5) * 15;
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    // Use RAF for smooth, GPU-accelerated updates
+    const animate = () => {
+      if (sceneRef.current) {
+        gsap.to(sceneRef.current, {
+          rotateY: targetX,
+          rotateX: targetY,
+          duration: 1,
+          ease: "power2.out",
+          force3D: true,
+          overwrite: "auto" // Prevent animation stacking
+        });
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
     <div ref={containerRef} className="relative h-[100dvh] bg-white text-black overflow-hidden perspective-1000">
       <HeroBackground ref={bgRef} />
 
-      <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden pointer-events-none">
-        <div ref={sceneRef} className="relative w-full h-full flex items-center justify-center transform-style-3d">
+      <div className="absolute inset-0 flex items-center justify-center perspective-1000 overflow-hidden pointer-events-none will-animate">
+        <div ref={sceneRef} className="relative w-full h-full flex items-center justify-center transform-style-3d will-animate">
 
           {/* TUNNEL (Slide 1) */}
-          <div ref={tunnelRef} className="absolute inset-0 transform-style-3d flex items-center justify-center">
+          <div ref={tunnelRef} className="absolute inset-0 transform-style-3d flex items-center justify-center will-animate">
             <div className="relative w-[600px] h-[600px] transform-style-3d">
               {[...Array(6)].map((_, i) => (
                 <div
@@ -342,43 +489,74 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* ECOSYSTEM GRID (Slide 2 - 3x3 HUB LAYOUT) */}
-          <div ref={ecosystemRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0 pointer-events-none">
+          {/* ECOSYSTEM CIRCULAR LAYOUT (Slide 2) */}
+          <div ref={ecosystemRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0 pointer-events-none will-animate">
 
-            {/* Background Decoration */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-transparent pointer-events-none -z-10"></div>
 
-            {/* THE 3x3 GRID - Increased Gaps */}
-            <div className="grid grid-cols-3 gap-12 md:gap-20 p-8 transform-style-3d pointer-events-auto items-center justify-items-center">
 
-              {totalGridItems.map((_, index) => {
-                const isHub = index === 4;
-                const randomDelay = Math.random() * 2;
+            <style>{beamStyle}</style>
 
-                if (isHub) {
+            <div className="relative w-[800px] h-[800px] flex items-center justify-center transform-style-3d pointer-events-auto">
+
+              {/* Background Orbits */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                <div className="absolute w-[500px] h-[500px] border border-gray-300 rounded-full"></div>
+                <div className="absolute w-[700px] h-[700px] border border-dashed border-gray-300 rounded-full"></div>
+              </div>
+
+              {/* Central Hub */}
+              <div className="eco-hub-wrapper relative z-20 transform-style-3d">
+                <div className="">
+                  <CompactIDCard3D />
+                </div>
+              </div>
+
+              {/* Circular Features */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d ring-container">
+
+                {/* BEAMS LAYER */}
+                {features.map((_, i) => {
+                  const angleDeg = i * (360 / features.length);
                   return (
-                    <div key={`hub-${index}`} className="eco-hub-wrapper transform-style-3d z-20">
-                      <div className="animate-float" style={{ animationDelay: '0s' }}>
-                        <CompactIDCard3D />
+                    <div
+                      key={`beam-${i}`}
+                      className="feature-beam absolute top-1/2 left-1/2 h-[2px] origin-left beam-gradient"
+                      style={{
+                        width: 0, // Starts at 0, animates to 255
+                        transform: `translateY(-1px) rotate(${angleDeg}deg) translateZ(-10px)`,
+                        opacity: 0,
+                        boxShadow: '0 0 10px rgba(255, 106, 47, 0.4)'
+                      }}
+                    ></div>
+                  );
+                })}
+
+                {features.map((item, i) => (
+                  <div
+                    key={`feature-${i}`}
+                    className="feature-node absolute pointer-events-auto flex items-center justify-center"
+                    style={{
+                      width: 126,
+                      height: 126,
+                      left: '50%',
+                      top: '50%',
+                      marginLeft: -63,
+                      marginTop: -63
+                    }} // Perfectly centered origin
+                  >
+                    <div className="feature-rotator">
+                      <div className="matrix-token transform-style-3d">
+                        <MatrixToken3D
+                          label={item.label}
+                          icon={item.icon}
+                          size={126}
+                          enableIdleSpin={false}
+                        />
                       </div>
                     </div>
-                  );
-                }
-
-                // For tokens, get feature from gridFeatures
-                const featureIndex = index < 4 ? index : index - 1;
-                const feat = gridFeatures[featureIndex];
-
-                if (!feat) return null; // Safety check
-
-                return (
-                  <div key={`token-${index}`} className="eco-token-wrapper transform-style-3d">
-                    <div className="animate-float" style={{ animationDelay: `${randomDelay}s` }}>
-                      <EcoToken3D label={feat.label} icon={feat.icon} size={130} />
-                    </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
 
             </div>
           </div>

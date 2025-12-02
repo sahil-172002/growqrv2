@@ -3,8 +3,9 @@ import { motion, useSpring, useMotionValue, useAnimationFrame, useTransform } fr
 import { Hexagon, QrCode, Wifi, Fingerprint, Activity } from 'lucide-react';
 
 // --- SHARED 360° PHYSICS HOOK ---
-const use360Rotation = (idleSpeed = 0.05, enableSpin = false) => {
+const use360Rotation = (idleSpeed = 0.05, enableSpin = false, forceFlip = false, enableBreathing = true) => {
     const [isDragging, setIsDragging] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const lastMousePos = useRef({ x: 0, y: 0 });
 
     // Accumulative rotation values
@@ -18,13 +19,24 @@ const use360Rotation = (idleSpeed = 0.05, enableSpin = false) => {
     // Idle Animation loop
     useAnimationFrame((t, delta) => {
         if (!isDragging) {
-            // Continuous Spin (Conditional)
-            if (enableSpin) {
+            // 1. Check for Forced Flip or Hover -> Snap to 180 (Back Side)
+            if (forceFlip || isHovered) {
+                rotateY.set(180);
+                rotateX.set(0);
+            }
+            // 2. Continuous Spin (Conditional)
+            else if (enableSpin) {
                 rotateY.set(rotateY.get() + (delta * idleSpeed));
             }
-
-            // Gentle breathing tilt (Always active)
-            rotateX.set(Math.sin(t / 1500) * 5);
+            // 3. Idle Breathing (Default)
+            else if (enableBreathing) {
+                rotateY.set(0);
+                rotateX.set(Math.sin(t / 1500) * 5);
+            }
+            else {
+                rotateY.set(0);
+                rotateX.set(0);
+            }
         }
     });
 
@@ -69,7 +81,7 @@ const use360Rotation = (idleSpeed = 0.05, enableSpin = false) => {
         };
     }, [isDragging, rotateX, rotateY]);
 
-    return { isDragging, handleMouseDown, smoothRotateX, smoothRotateY };
+    return { isDragging, handleMouseDown, smoothRotateX, smoothRotateY, setIsHovered };
 };
 
 // ============================================================================
@@ -121,7 +133,7 @@ const MiniDataStream = () => {
 
 export const CompactIDCard3D: React.FC = () => {
     // DISABLED CONTINUOUS SPIN for Hub (User Request)
-    const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0.04, false);
+    const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0.04, false, false, false);
 
     // Dimensions
     const width = "150px";
@@ -267,29 +279,45 @@ export const CompactIDCard3D: React.FC = () => {
 // ============================================================================
 interface EcoToken3DProps {
     label: string;
-    icon: React.ElementType;
-    size?: number;
+    icon: any;
+    size?: number; // Fallback if width/height not provided
+    width?: number;
+    height?: number;
+    forceFlip?: boolean;
+    isActive?: boolean; // New prop for color transition
+    layout?: 'vertical' | 'icon-text' | 'text-icon';
 }
 
 export const EcoToken3D: React.FC<EcoToken3DProps> = ({
     label,
     icon: Icon,
     size = 120,
+    width,
+    height,
+    forceFlip = false,
+    isActive = false,
+    layout = 'vertical'
 }) => {
+    // Determine actual dimensions
+    const w = width || size;
+    const h = height || size;
+
     // DISABLED CONTINUOUS SPIN for Tokens
-    const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0, false);
+    const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY, setIsHovered } = use360Rotation(0, false, forceFlip);
 
     // REVERTED DEPTH: 8 (Thick)
     const depth = 8;
-    const radius = "24px";
+    const radius = "24px"; // Keep rounded corners
     const layerSpacing = 1;
 
     return (
         <div
-            className={`relative perspective-800 select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-            style={{ width: size, height: size }}
+            className={`eco-token-wrapper relative perspective-800 select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            style={{ width: w, height: h }}
             onMouseDown={handleMouseDown}
             onTouchStart={handleMouseDown}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             <motion.div
                 className="relative w-full h-full"
@@ -324,22 +352,33 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
                     />
                 ))}
 
-                {/* --- BACK FACE --- */}
+                {/* --- BACK FACE (Orange Theme) --- */}
                 <div
-                    className="absolute inset-0 bg-gray-200 border border-gray-300"
+                    className="absolute inset-0 border border-orange-600 overflow-hidden"
                     style={{
                         borderRadius: radius,
                         transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
                         backfaceVisibility: 'visible',
-                        background: 'linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%)'
+                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)',
+                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.2)"
                     }}
                 >
-                    <div className="w-full h-full flex items-center justify-center transform scale-x-[-1]">
-                        <Hexagon size={24} className="text-black/10" />
+                    <div className="absolute inset-0 opacity-[0.1] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 opacity-50 pointer-events-none z-30"></div>
+
+                    <div className="w-full h-full flex items-center justify-center">
+                        <div className={`relative z-10 w-full h-full p-4 flex items-center justify-center gap-3 ${layout === 'vertical' ? 'flex-col' : (layout === 'text-icon' ? 'flex-row' : 'flex-row-reverse')}`}>
+                            <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0 backdrop-blur-sm">
+                                <Icon size={18} className="relative z-10 text-white" />
+                            </div>
+                            <span className="text-[11px] font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md">
+                                {label}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                {/* --- FRONT FACE --- */}
+                {/* --- FRONT FACE (Static Gray) --- */}
                 <div
                     className="absolute inset-0 border border-white/60 overflow-hidden"
                     style={{
@@ -352,14 +391,39 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
                     <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                     <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-transparent opacity-70 pointer-events-none z-30 mix-blend-overlay"></div>
 
-                    <div className="relative z-10 w-full h-full p-4 flex flex-col items-center justify-center gap-2">
-                        <div className="w-12 h-12 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shadow-inner relative overflow-hidden group">
+                    <div className={`relative z-10 w-full h-full p-4 flex items-center justify-center gap-3 ${layout === 'vertical' ? 'flex-col' : (layout === 'text-icon' ? 'flex-row' : 'flex-row-reverse')}`}>
+                        <div className="w-10 h-10 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0">
                             <div className={`absolute inset-0 bg-orange/10`}></div>
-                            <Icon size={20} className="relative z-10 text-orange" />
+                            <Icon size={18} className="relative z-10 text-orange" />
                         </div>
-                        <span className="text-[11px] font-bold uppercase tracking-wide text-black text-center leading-tight subpixel-antialiased">
+                        <span className="text-[11px] font-bold uppercase tracking-wide text-gray-600 text-center leading-tight subpixel-antialiased">
                             {label}
                         </span>
+                    </div>
+                </div>
+
+                {/* --- ACTIVE OVERLAY (Orange Theme - Beam Controlled) --- */}
+                <div
+                    className="beam-active-overlay absolute inset-0 border border-orange-600 overflow-hidden pointer-events-none"
+                    style={{
+                        borderRadius: radius,
+                        transform: "translateZ(2px)", // Slightly above front face
+                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)',
+                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.2)"
+                    }}
+                >
+                    <div className="absolute inset-0 opacity-[0.1] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 opacity-50 z-30"></div>
+
+                    <div className="w-full h-full flex items-center justify-center">
+                        <div className={`relative z-10 w-full h-full p-4 flex items-center justify-center gap-3 ${layout === 'vertical' ? 'flex-col' : (layout === 'text-icon' ? 'flex-row' : 'flex-row-reverse')}`}>
+                            <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0 backdrop-blur-sm">
+                                <Icon size={18} className="relative z-10 text-white" />
+                            </div>
+                            <span className="text-[11px] font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md">
+                                {label}
+                            </span>
+                        </div>
                     </div>
                 </div>
 

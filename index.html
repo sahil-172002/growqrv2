@@ -32,7 +32,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
   <style>
     body {
@@ -40,6 +41,20 @@
       background-color: #FFFFFF;
       color: #000000;
       overflow-x: hidden;
+    }
+
+    /* GPU Acceleration for 3D transforms */
+    .transform-style-3d,
+    .perspective-1000,
+    .perspective-800 {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Performance hints for animated elements */
+    .will-animate {
+      will-change: transform, opacity;
     }
 
     .text-glow {
@@ -69,6 +84,31 @@
       -webkit-background-clip: text;
       color: transparent;
     }
+
+    /* Beam active overlay control (GSAP-driven, no React re-renders) */
+    .beam-active-overlay {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    /* Activated via GSAP class toggle */
+    .beam-active .beam-active-overlay,
+    .beam-is-active .beam-active-overlay {
+      opacity: 1 !important;
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
   <script>
     tailwind.config = {
@@ -95,6 +135,7 @@
           },
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
           },
           animation: {
             'spin-slow': 'spin 12s linear infinite',
@@ -104,12 +145,12 @@
           },
           keyframes: {
             float: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-20px)' },
+              '0%, 100%': { transform: 'translate3d(0, 0, 0)' },
+              '50%': { transform: 'translate3d(0, -20px, 0)' },
             },
             'fade-in-up': {
-              '0%': { opacity: '0', transform: 'translateY(20px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
+              '0%': { opacity: '0', transform: 'translate3d(0, 20px, 0)' },
+              '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
             }
           }
         }

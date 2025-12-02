@@ -23,6 +23,19 @@ export const CircularFeatures: React.FC = () => {
     const ringRef = useRef<HTMLDivElement>(null);
     const [allFlipped, setAllFlipped] = useState(false);
 
+    // Add CSS for beam animation
+    const beamStyle = `
+        @keyframes beam-flow {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        .beam-gradient {
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 106, 47, 0.2) 20%, rgba(255, 106, 47, 0.8) 50%, rgba(255, 106, 47, 0.2) 80%, transparent 100%);
+            background-size: 200% 100%;
+            animation: beam-flow 3s linear infinite;
+        }
+    `;
+
     useLayoutEffect(() => {
         const gsap = (window as any).gsap;
         const ScrollTrigger = (window as any).ScrollTrigger;
@@ -57,6 +70,16 @@ export const CircularFeatures: React.FC = () => {
                     x: tx, y: ty, scale: 1, rotationY: 0, opacity: 1, duration: 4, ease: "power2.out"
                 }, "expand");
             });
+
+            // BEAM EXPANSION
+            const beams = gsap.utils.toArray(".feature-beam");
+            tl.to(beams, {
+                width: 250, // Expand to full radius
+                opacity: 1,
+                duration: 4,
+                ease: "power2.out",
+                stagger: 0 // Sync with nodes
+            }, "expand");
 
             // 2. IDLE & FLIP TRIGGER PHASE (20% - 70% Scroll)
             ScrollTrigger.create({
@@ -99,6 +122,8 @@ export const CircularFeatures: React.FC = () => {
                 </h2>
             </div> */}
 
+            <style>{beamStyle}</style>
+
             <div className="relative w-full h-[500px] md:h-[900px] -mt-12 flex items-center justify-center perspective-1000">
                 <div className="scale-[0.4] sm:scale-[0.5] md:scale-[0.8] lg:scale-100 relative w-full h-full flex items-center justify-center transform-style-3d">
 
@@ -117,11 +142,29 @@ export const CircularFeatures: React.FC = () => {
 
                     {/* --- SINGLE RING --- */}
                     <div ref={ringRef} className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d">
+
+                        {/* BEAMS LAYER */}
+                        {features.map((_, i) => {
+                            const angleDeg = i * (360 / features.length);
+                            return (
+                                <div
+                                    key={`beam-${i}`}
+                                    className="feature-beam absolute top-1/2 left-1/2 h-[2px] origin-left beam-gradient"
+                                    style={{
+                                        width: 0, // Starts at 0, animates to 250
+                                        transform: `rotate(${angleDeg}deg) translateY(-50%) translateZ(-10px)`,
+                                        opacity: 0,
+                                        boxShadow: '0 0 10px rgba(255, 106, 47, 0.4)'
+                                    }}
+                                ></div>
+                            );
+                        })}
+
                         {features.map((item, i) => (
                             <div
                                 key={`feature-${i}`}
                                 className="feature-node absolute pointer-events-auto"
-                                style={{ left: '50%', top: '50%', marginLeft: '-45px', marginTop: '-45px' }}
+                                style={{ left: '50%', top: '50%', marginLeft: '-55px', marginTop: '-55px' }}
                             >
                                 <div className="feature-rotator">
                                     <MatrixToken3D

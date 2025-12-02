@@ -1,53 +1,38 @@
 import React, { useRef, useLayoutEffect, useState } from 'react';
 import {
-  Brain, Heart, Anchor, Cpu, Mic, Eye, RefreshCw, Search, Lightbulb, Trophy,
-  Activity, Zap, HeartHandshake, Timer, TrendingUp, Target, Rocket, ShieldCheck,
-  Flag, Shield, Network, Unlock, CheckCircle2, Scan, Puzzle, Smile, QrCode
+  Brain, Heart, RefreshCw, Lightbulb, Flag,
+  Shield, Scan, Timer, Mic, Trophy, QrCode
 } from 'lucide-react';
-import { MatrixToken3D } from './MatrixToken3D';
+import { EcoToken3D } from './EcoToken3D';
 
-// --- DATA: 25 Attributes ---
+// --- DATA: 10 Selected Attributes ---
 const attributes = [
-  // Inner Ring (10)
+  // Left Side
   { label: "Intelligence", icon: Brain },
   { label: "Emotion", icon: Heart },
-  { label: "Stability", icon: Anchor },
-  { label: "Cognition", icon: Cpu },
-  { label: "Verbal IQ", icon: Mic },
-  { label: "Clarity", icon: Eye },
   { label: "Adaptability", icon: RefreshCw },
-  { label: "Curiosity", icon: Search },
   { label: "Creativity", icon: Lightbulb },
-  { label: "Confidence", icon: Trophy },
-
-  // Outer Ring (15)
-  { label: "Stress", icon: Activity },
-  { label: "Energy", icon: Zap },
-  { label: "Empathy", icon: HeartHandshake },
-  { label: "Decision", icon: Timer },
-  { label: "Risk", icon: TrendingUp },
-  { label: "Attention", icon: Target },
-  { label: "Learning", icon: Rocket },
-  { label: "Trust", icon: ShieldCheck },
   { label: "Leadership", icon: Flag },
+
+  // Right Side
   { label: "Resilience", icon: Shield },
-  { label: "Connectivity", icon: Network },
-  { label: "Openness", icon: Unlock },
-  { label: "Discipline", icon: CheckCircle2 },
   { label: "Focus", icon: Scan },
-  { label: "Purpose", icon: Puzzle },
-  { label: "Happiness", icon: Smile },
+  { label: "Decision", icon: Timer },
+  { label: "Communication", icon: Mic },
+  { label: "Confidence", icon: Trophy },
 ];
 
 export const Qscore: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const innerRingRef = useRef<HTMLDivElement>(null);
-  const outerRingRef = useRef<HTMLDivElement>(null);
-  const [allFlipped, setAllFlipped] = useState(false);
+  // NOTE: Removed flippedIndices state - now using GSAP-driven class toggling for better performance
 
   // Split Data
-  const innerItems = attributes.slice(0, 10);
-  const outerItems = attributes.slice(10, 26);
+  const leftItems = attributes.slice(0, 5);
+  const rightItems = attributes.slice(5, 10);
+
+  // Layout Configuration
+  const xOffset = 420; // Increased distance for wider tiles
+  const ySpacing = 100; // Vertical spacing between items
 
   useLayoutEffect(() => {
     const gsap = (window as any).gsap;
@@ -55,78 +40,219 @@ export const Qscore: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const ctx = gsap.context(() => {
-      // --- SCROLL DRIVEN ANIMATION ---
+      // === PREMIUM SCROLL TIMELINE ===
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top center",
-          end: "bottom top",
-          scrub: 1.5,
+          end: "bottom center",  // Changed from 'bottom top' to trigger exit earlier
+          scrub: prefersReducedMotion ? 0 : 2,  // Slower for elegance
+          fastScrollEnd: true,
+          preventOverlaps: true,
         }
       });
 
-      const innerNodes = gsap.utils.toArray(".inner-node");
-      const outerNodes = gsap.utils.toArray(".outer-node");
+      // CACHE DOM QUERIES
+      const leftNodes = gsap.utils.toArray(".left-node");
+      const rightNodes = gsap.utils.toArray(".right-node");
+      const connections = gsap.utils.toArray(".connection-line");
+      const beams = gsap.utils.toArray(".beam-line");
+      const centralHub = document.querySelector(".qscore-hub");
 
-      // PRE-SET INITIAL STATE
-      gsap.set(innerNodes, { x: 0, y: 0, scale: 0, rotationY: 720, opacity: 0 });
-      gsap.set(outerNodes, { x: 0, y: 0, scale: 0, rotationY: -720, opacity: 0 });
-
-      // 1. EXPANSION (0% - 20% of Scroll)
-      // Inner Ring
-      innerNodes.forEach((node: any, i: number) => {
-        const angle = (i * (360 / innerItems.length)) * (Math.PI / 180);
-        const tx = Math.cos(angle) * 200;
-        const ty = Math.sin(angle) * 200;
-
-        tl.to(node, {
-          x: tx, y: ty, scale: 1, rotationY: 0, opacity: 1, duration: 4, ease: "power2.out"
-        }, "expand");
-      });
-
-      // Outer Ring
-      outerNodes.forEach((node: any, i: number) => {
-        const angle = (i * (360 / outerItems.length)) * (Math.PI / 180);
-        const tx = Math.cos(angle) * 330;
-        const ty = Math.sin(angle) * 330;
-
-        tl.to(node, {
-          x: tx, y: ty, scale: 1, rotationY: 0, opacity: 1, duration: 4, ease: "power2.out"
-        }, "expand");
-      });
-
-      // 2. IDLE & FLIP TRIGGER PHASE (20% - 70% Scroll)
-      // We use a separate ScrollTrigger for the state toggle to ensure it snaps cleanly
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "60% center", // Trigger Flip just before exit
-        end: "bottom top",
-        onEnter: () => setAllFlipped(true),
-        onLeaveBack: () => setAllFlipped(false),
-      });
-
-      // Spacer in the scrub timeline to hold position
-      tl.to({}, { duration: 4 });
-
-      // 3. EXIT ANIMATION (70% - 100% Scroll)
-      tl.to([...innerNodes, ...outerNodes], {
-        z: 1000,
-        scale: 2,
+      // === INITIAL STATE: Hidden in deep space ===
+      gsap.set([...leftNodes, ...rightNodes], {
+        x: 0,
+        y: 0,
+        scale: 0.3,
         opacity: 0,
-        rotationZ: (i: number) => (Math.random() - 0.5) * 90,
-        duration: 2,
-        stagger: { amount: 0.5, from: "center" },
-        ease: "power2.in"
+        rotateY: 180,  // Flipped
+        z: -500,       // Deep in space
+        force3D: true
+      });
+
+      gsap.set(centralHub, {
+        scale: 0,
+        opacity: 0,
+        rotateY: 720,  // Multiple spins
+        z: -800,
+        force3D: true
+      });
+
+      gsap.set(connections, {
+        attr: { d: "M 0 0 C 0 0 0 0 0 0" },
+        opacity: 0
+      });
+
+      gsap.set(beams, {
+        attr: { d: "M 0 0 C 0 0 0 0 0 0" },
+        opacity: 0,
+        strokeDasharray: 1000,
+        strokeDashoffset: 1000
+      });
+
+      // === PHASE 1: HEROIC HUB ENTRY (0-20% scroll) ===
+      tl.to(centralHub, {
+        scale: 1,
+        opacity: 1,
+        rotateY: 0,
+        z: 0,
+        duration: 3,
+        ease: "expo.out",  // Dramatic deceleration
+        force3D: true
+      }, "start");
+
+      // === PHASE 2: QUANTUM NODE MATERIALIZATION (20-60% scroll) ===
+      // Nodes spiral out in choreographed sequence
+      [...leftNodes, ...rightNodes].forEach((node: any, i: number) => {
+        const isLeft = i < 5;
+        const indexInSide = isLeft ? i : i - 5;
+        const targetY = (indexInSide - 2) * ySpacing;
+        const targetX = isLeft ? -xOffset : xOffset;
+
+        // Calculate spiral angle for dramatic entry
+        const spiralAngle = (i / 10) * 360;
+
+        tl.fromTo(node,
+          {
+            x: 0,
+            y: 0,
+            scale: 0.3,
+            opacity: 0,
+            rotateY: 180 + spiralAngle,  // Spiral rotation
+            z: -500,
+          },
+          {
+            x: targetX,
+            y: targetY,
+            scale: 1,
+            opacity: 1,
+            rotateY: 0,
+            z: 0,
+            duration: 4,
+            ease: "back.out(1.4)",  // Elastic overshoot
+            force3D: true
+          },
+          `start+=1.5+=${i * 0.15}`  // Staggered cascade
+        );
+      });
+
+      // === PHASE 3: CONNECTION DRAWING (40-70% scroll) ===
+      // Helper to set path data
+      const updatePaths = (index: number) => {
+        const isLeft = index < 5;
+        const indexInSide = isLeft ? index : index - 5;
+        const targetY = (indexInSide - 2) * ySpacing;
+        const targetX = isLeft ? -xOffset : xOffset;
+
+        const cp1x = targetX * 0.4;
+        const cp1y = 0;
+        const cp2x = targetX * 0.6;
+        const cp2y = targetY;
+        return `M 0 0 C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
+      };
+
+      // Connections draw themselves organically
+      connections.forEach((path: any, i: number) => {
+        const d = updatePaths(i);
+        tl.to(path, {
+          attr: { d },
+          opacity: 0.3,  // Slightly more visible
+          duration: 3,
+          ease: "power1.inOut",
+          stagger: 0.1
+        }, `start+=3+=${i * 0.1}`);
+      });
+
+      beams.forEach((path: any, i: number) => {
+        const d = updatePaths(i);
+        gsap.set(path, { attr: { d } });
+      });
+
+      // === CONTINUOUS BEAM LOOP (Runs independent of scroll) ===
+      const beamTl = gsap.timeline({
+        repeat: prefersReducedMotion ? 0 : -1,
+        delay: 1
+      });
+
+      const allTokens = [
+        ...gsap.utils.toArray(".left-node .eco-token-wrapper"),
+        ...gsap.utils.toArray(".right-node .eco-token-wrapper")
+      ];
+
+      for (let i = 0; i < 5; i++) {
+        const leftIdx = i;
+        const rightIdx = i + 5;
+
+        beamTl
+          .fromTo([beams[leftIdx], beams[rightIdx]],
+            {
+              strokeDasharray: "150 1000",
+              strokeDashoffset: 150,
+              opacity: 1
+            },
+            {
+              strokeDashoffset: -600,
+              duration: 2.5,
+              ease: "power2.inOut",
+            }
+          )
+          .add(() => {
+            if (allTokens[leftIdx]) {
+              (allTokens[leftIdx] as HTMLElement).classList.add('beam-active');
+            }
+            if (allTokens[rightIdx]) {
+              (allTokens[rightIdx] as HTMLElement).classList.add('beam-active');
+            }
+          }, "-=0.6")
+          .add(() => {
+            if (allTokens[leftIdx]) {
+              (allTokens[leftIdx] as HTMLElement).classList.remove('beam-active');
+            }
+            if (allTokens[rightIdx]) {
+              (allTokens[rightIdx] as HTMLElement).classList.remove('beam-active');
+            }
+          }, "+=0.3");
+      }
+
+      // === PHASE 4: IDLE PRESENCE (Brief pause) ===
+      tl.to({}, { duration: 2 });  // Reduced for more exit animation time
+
+      // === PHASE 5: GRAVITATIONAL COLLAPSE EXIT (85-100% scroll) ===
+      // Nodes implode back to center with rotation
+      [...leftNodes, ...rightNodes].forEach((node: any, i: number) => {
+        tl.to(node, {
+          x: 0,
+          y: 0,
+          scale: 0.2,
+          opacity: 0,
+          rotateY: -360,  // Spin as they collapse
+          z: -600,        // Recede into depth
+          duration: 3,
+          ease: "power2.in",
+          force3D: true
+        }, `exit+=${i * 0.08}`);  // Staggered implosion
+      });
+
+      // Hub collapses last with pulse
+      tl.to(centralHub, {
+        scale: 0,
+        opacity: 0,
+        rotateY: -720,
+        z: -1000,
+        duration: 2.5,
+        ease: "expo.in",
+        force3D: true
+      }, "exit+=1");
+
+      // Connections fade gracefully
+      tl.to(connections, {
+        opacity: 0,
+        duration: 2
       }, "exit");
-
-
-      // --- CONTINUOUS ORBIT ---
-      gsap.to(innerRingRef.current, { rotation: 360, duration: 60, repeat: -1, ease: "none" });
-      gsap.to(".inner-rotator", { rotation: -360, duration: 60, repeat: -1, ease: "none" });
-
-      gsap.to(outerRingRef.current, { rotation: -360, duration: 80, repeat: -1, ease: "none" });
-      gsap.to(".outer-rotator", { rotation: 360, duration: 80, repeat: -1, ease: "none" });
 
     }, containerRef);
 
@@ -136,29 +262,69 @@ export const Qscore: React.FC = () => {
   return (
     <section ref={containerRef} className="py-24 md:py-40 bg-white overflow-hidden relative min-h-[140vh]">
       <div className="max-w-7xl mx-auto px-6 text-center mb-4 relative z-20">
-        <h2 className="text-3xl md:text-5xl font-black mb-4 md:mb-6 text-black font-montreal">
-          25 Dimensions. <span className="text-orange">One Score.</span>
+        <h2 className="text-3xl md:text-5xl font-semibold mb-4 md:mb-6 text-black font-montreal">
+          25+ Core Dimensions. <span className="text-orange">One Score.</span>
         </h2>
-        {/* <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto">
-          From emotional intelligence to cognitive speed, we map the complete human potential matrix.
-        </p> */}
       </div>
 
-      <div className="relative w-full h-[500px] md:h-[900px] -mt-12 flex items-center justify-center perspective-1000">
-        <div className="scale-[0.4] sm:scale-[0.5] md:scale-[0.8] lg:scale-100 relative w-full h-full flex items-center justify-center transform-style-3d">
+      <div className="relative w-full h-[600px] md:h-[800px] -mt-12 flex items-center justify-center perspective-1000">
+        <div className="scale-[0.5] md:scale-[0.8] lg:scale-100 relative w-full h-full flex items-center justify-center transform-style-3d will-animate">
 
-          {/* Background Orbits */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="absolute w-[400px] h-[400px] border border-gray-100 rounded-full"></div>
-            <div className="absolute w-[660px] h-[660px] border border-dashed border-gray-100 rounded-full opacity-50"></div>
-          </div>
+          {/* SVG Connections Layer */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible">
+            {/* 
+                           We use a group with CSS transform to move the origin (0,0) to the center of the SVG.
+                           This matches the HTML layout where elements are positioned relative to the center.
+                        */}
+            <defs>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#FF6A2F" />
+                <stop offset="100%" stopColor="#FF9E80" />
+              </linearGradient>
+            </defs>
+            <g style={{ transform: 'translate(50%, 50%)' }}>
+              {/* Base Connections */}
+              {attributes.map((_, i) => (
+                <path
+                  key={`conn-${i}`}
+                  className="connection-line"
+                  d="M 0 0"
+                  fill="none"
+                  stroke="#FF6A2F"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  opacity="0.3"
+                />
+              ))}
+              {/* Beam Overlays */}
+              {attributes.map((_, i) => (
+                <path
+                  key={`beam-${i}`}
+                  className="beam-line"
+                  d="M 0 0"
+                  fill="none"
+                  stroke="url(#beamGrad)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  filter="url(#glow)"
+                />
+              ))}
+            </g>
+          </svg>
 
-          {/* --- CENTRAL HUB (UPDATED) --- */}
-          <div className="relative z-30 w-56 h-56 flex items-center justify-center">
-            <div className="relative w-full h-full group cursor-pointer animate-float">
+          {/* --- CENTRAL HUB --- */}
+          <div className="qscore-hub relative z-30 w-56 h-56 flex items-center justify-center">
+            <div className="relative w-full h-full group cursor-pointer will-animate">
               <div className="absolute inset-0 bg-orange/30 blur-[60px] rounded-full animate-pulse-slow"></div>
 
-              {/* Core Sphere - Standard Orange Branding */}
+              {/* Core Sphere */}
               <div className="relative w-full h-full bg-gradient-to-br from-[#FF6A2F] to-[#E65100] rounded-full flex items-center justify-center shadow-2xl border-4 border-orange-500/30">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 rounded-full"></div>
                 <div className="absolute inset-4 border border-white/20 rounded-full animate-spin-slow"></div>
@@ -168,51 +334,49 @@ export const Qscore: React.FC = () => {
                   <QrCode className="w-16 h-16 mb-2 drop-shadow-md" />
                   <span className="text-2xl font-black tracking-tight leading-none mb-1">Q-Core</span>
                   <span className="text-[10px] font-bold tracking-widest uppercase opacity-80 bg-white/20 px-2 py-0.5 rounded-full">
-                    25 Signals
+                    25+ Signals
                   </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* --- INNER RING --- */}
-          <div ref={innerRingRef} className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d">
-            {innerItems.map((item, i) => (
+          {/* --- LEFT NODES --- */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d z-20 will-animate">
+            {leftItems.map((item, i) => (
               <div
-                key={`inner-${i}`}
-                className="inner-node absolute pointer-events-auto"
-                style={{ left: '50%', top: '50%', marginLeft: '-45px', marginTop: '-45px' }}
+                key={`left-${i}`}
+                className="left-node absolute pointer-events-auto"
+                style={{ left: '50%', top: '50%', marginLeft: '-90px', marginTop: '-30px' }}
               >
-                <div className="inner-rotator">
-                  <MatrixToken3D
-                    label={item.label}
-                    icon={item.icon}
-                    size={90}
-                    enableIdleSpin={false}
-                    forceFlip={allFlipped} // Passed from Qscore state
-                  />
-                </div>
+                <EcoToken3D
+                  label={item.label}
+                  icon={item.icon}
+                  width={180}
+                  height={60}
+                  layout="icon-text"
+                  isActive={false} // Now controlled by GSAP via .beam-active class
+                />
               </div>
             ))}
           </div>
 
-          {/* --- OUTER RING --- */}
-          <div ref={outerRingRef} className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d">
-            {outerItems.map((item, i) => (
+          {/* --- RIGHT NODES --- */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d z-20 will-animate">
+            {rightItems.map((item, i) => (
               <div
-                key={`outer-${i}`}
-                className="outer-node absolute pointer-events-auto"
-                style={{ left: '50%', top: '50%', marginLeft: '-40px', marginTop: '-40px' }}
+                key={`right-${i}`}
+                className="right-node absolute pointer-events-auto"
+                style={{ left: '50%', top: '50%', marginLeft: '-90px', marginTop: '-30px' }}
               >
-                <div className="outer-rotator">
-                  <MatrixToken3D
-                    label={item.label}
-                    icon={item.icon}
-                    size={80}
-                    enableIdleSpin={false}
-                    forceFlip={allFlipped} // Passed from Qscore state
-                  />
-                </div>
+                <EcoToken3D
+                  label={item.label}
+                  icon={item.icon}
+                  width={180}
+                  height={60}
+                  layout="text-icon"
+                  isActive={false} // Now controlled by GSAP via .beam-active class
+                />
               </div>
             ))}
           </div>
