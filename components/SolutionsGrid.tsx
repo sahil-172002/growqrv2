@@ -1,6 +1,22 @@
 
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { User, Building, GraduationCap, Globe, ArrowRight } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from 'framer-motion';
+import {
+  Activity,
+  Zap,
+  Target,
+  PieChart,
+  ShieldCheck,
+  Clock,
+  Database,
+  QrCode,
+  Hexagon,
+  TrendingUp,
+  Users,
+  BookOpen,
+  BarChart3
+} from 'lucide-react';
 
 const solutions = [
   {
@@ -68,6 +84,7 @@ const solutions = [
 export const SolutionsGrid: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const visualPanelRef = useRef<HTMLDivElement>(null);
+  const visualizerRef = useRef<HTMLDivElement>(null);
   const [activeStage, setActiveStage] = useState(0);
 
   useLayoutEffect(() => {
@@ -76,56 +93,357 @@ export const SolutionsGrid: React.FC = () => {
 
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
-    // Pin the visualizer (Right Side) only on desktop
-    if (window.innerWidth >= 768) {
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom bottom",
-        pin: visualPanelRef.current,
-        scrub: 0.5,
+    const ctx = gsap.context(() => {
+      // Pin the visualizer (Right Side) only on desktop
+      if (window.innerWidth >= 768) {
+        ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          pin: visualPanelRef.current,
+          pinSpacing: false,
+        });
+      }
+
+      const slides = gsap.utils.toArray('.solution-slide');
+
+      // 1. Active Stage Logic
+      slides.forEach((slide: any, index: number) => {
+        ScrollTrigger.create({
+          trigger: slide,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => setActiveStage(index),
+          onEnterBack: () => setActiveStage(index),
+        });
       });
-    }
 
-    const slides = gsap.utils.toArray('.solution-slide');
+      // 2. SNAPPY TEXT ANIMATIONS (TruthReveal-style)
+      slides.forEach((slide: HTMLElement) => {
+        const anims = slide.querySelectorAll('.sg-anim');
 
-    // 1. Logic for Active Stage (Visualizer Update)
-    slides.forEach((slide: any, index: number) => {
-      ScrollTrigger.create({
-        trigger: slide,
-        start: "top 60%",
-        end: "bottom 60%",
-        onEnter: () => setActiveStage(index),
-        onEnterBack: () => setActiveStage(index),
-      });
-    });
+        // Set initial state
+        gsap.set(anims, {
+          y: 40,
+          opacity: 0,
+          filter: "blur(10px)"
+        });
 
-    // 2. Logic for Text Animations
-    slides.forEach((slide: HTMLElement) => {
-      const anims = slide.querySelectorAll('.sg-anim');
-      const tl = gsap.timeline({
-        scrollTrigger: {
+        ScrollTrigger.create({
           trigger: slide,
           start: "top 70%",
           end: "bottom 30%",
-          toggleActions: "play reverse play reverse"
-        }
+          onEnter: () => {
+            // Quick, snappy entrance
+            gsap.to(anims, {
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 0.6,
+              stagger: 0.05,
+              ease: "power4.out",
+              overwrite: true
+            });
+          },
+          onLeave: () => {
+            // Exit upward
+            gsap.to(anims, {
+              y: -30,
+              opacity: 0,
+              filter: "blur(10px)",
+              duration: 0.5,
+              stagger: 0.03,
+              ease: "power3.in",
+              overwrite: true
+            });
+          },
+          onEnterBack: () => {
+            // Re-enter quickly
+            gsap.to(anims, {
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 0.6,
+              stagger: 0.05,
+              ease: "power4.out",
+              overwrite: true
+            });
+          },
+          onLeaveBack: () => {
+            // Exit downward
+            gsap.to(anims, {
+              y: 40,
+              opacity: 0,
+              filter: "blur(10px)",
+              duration: 0.5,
+              stagger: 0.03,
+              ease: "power3.in",
+              overwrite: true
+            });
+          }
+        });
       });
 
-      tl.fromTo(anims,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" }
-      );
-    });
+    }, containerRef);
 
+    return () => ctx.revert();
   }, []);
+
+  // Enhanced 3D Flip - Showing TRUE side/thickness
+  useLayoutEffect(() => {
+    const gsap = (window as any).gsap;
+    if (!gsap || !visualizerRef.current) return;
+
+    // Dramatic side flip to showcase 3D thickness
+    gsap.fromTo(visualizerRef.current,
+      {
+        scale: 0.4,
+        opacity: 0,
+        z: -200,
+        rotateY: 120, // Show SIDE view (showcases depth/layers)
+        rotateX: -15,  // Slight top tilt
+      },
+      {
+        scale: 1,
+        opacity: 1,
+        z: 0,
+        rotateY: 0,
+        rotateX: 0,
+        duration: 1,
+        ease: "power3.out",
+        overwrite: true,
+        force3D: true
+      }
+    );
+  }, [activeStage]);
+
+  // --- 3D CARD COMPONENT (from MockupShowcase) ---
+  type MaterialType = 'glass' | 'matte' | 'dark' | 'orange';
+
+  interface MetricCardProps {
+    width: string;
+    height: string;
+    depth?: number;
+    radius?: string;
+    color?: string;
+    material?: MaterialType;
+    label: string;
+    subLabel?: string;
+    icon?: React.ComponentType<any>;
+    children?: React.ReactNode;
+    delay?: number;
+  }
+
+  const MetricCard3D: React.FC<MetricCardProps> = ({
+    width,
+    height,
+    depth = 12,
+    radius = "24px",
+    color = "#FF6A2F",
+    material = 'glass',
+    label,
+    subLabel,
+    icon: Icon,
+    children,
+    delay = 0
+  }) => {
+    const [isDragging, setIsDragging] = useState(false);
+    const lastMousePos = useRef({ x: 0, y: 0 });
+
+    const rotateX = useMotionValue(0);
+    const rotateY = useMotionValue(0);
+    const smoothRotateX = useSpring(rotateX, { stiffness: 150, damping: 20, mass: 1 });
+    const smoothRotateY = useSpring(rotateY, { stiffness: 150, damping: 20, mass: 1 });
+
+    // DISABLED: Auto-rotation removed so content remains readable
+    // useAnimationFrame((t) => {
+    //   if (!isDragging) {
+    //     const time = t + (delay * 1000);
+    //     rotateY.set(rotateY.get() + 0.05);
+    //     rotateX.set(Math.sin(time / 1500) * 8);
+    //   }
+    // });
+
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+      e.stopPropagation();
+      setIsDragging(true);
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      lastMousePos.current = { x: clientX, y: clientY };
+    };
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+        if (!isDragging) return;
+        const clientX = 'touches' in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+        const clientY = 'touches' in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+        const deltaX = clientX - lastMousePos.current.x;
+        const deltaY = clientY - lastMousePos.current.y;
+        rotateY.set(rotateY.get() + deltaX * 0.5);
+        rotateX.set(rotateX.get() - deltaY * 0.5);
+        lastMousePos.current = { x: clientX, y: clientY };
+      };
+      const handleMouseUp = () => setIsDragging(false);
+      if (isDragging) {
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchmove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('touchend', handleMouseUp);
+      }
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('touchmove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('touchend', handleMouseUp);
+      };
+    }, [isDragging, rotateX, rotateY]);
+
+    const getMaterialStyles = (isFront: boolean) => {
+      const base = {
+        glass: {
+          bg: isFront ? 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)' : '#D1D5DB',
+          border: 'border-white/50',
+          text: 'text-black',
+          subText: 'text-gray-400',
+          layer: 'bg-gray-300 border-gray-400',
+        },
+        matte: {
+          bg: isFront ? 'linear-gradient(135deg, #FFFFFF 0%, #F3F4F6 100%)' : '#E5E7EB',
+          border: 'border-gray-200',
+          text: 'text-gray-900',
+          subText: 'text-gray-500',
+          layer: 'bg-gray-200 border-gray-300',
+        },
+        dark: {
+          bg: isFront ? 'linear-gradient(135deg, #18181B 0%, #09090B 100%)' : '#18181B',
+          border: 'border-gray-700',
+          text: 'text-white',
+          subText: 'text-gray-400',
+          layer: 'bg-gray-800 border-gray-900',
+        },
+        orange: {
+          bg: isFront ? 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)' : '#C2410C',
+          border: 'border-orange-400',
+          text: 'text-white',
+          subText: 'text-orange-200',
+          layer: 'bg-orange-800 border-orange-900',
+        }
+      };
+      return base[material];
+    };
+
+    const style = getMaterialStyles(true);
+    const layerStyle = getMaterialStyles(false).layer;
+    const layerSpacing = 1;
+
+    return (
+      <div
+        className={`relative ${width} ${height} perspective-1000 cursor-grab active:cursor-grabbing select-none`}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleMouseDown}
+      >
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[20%] bg-black/30 blur-xl rounded-[100%] transition-all duration-300"
+          style={{
+            y: 60,
+            scale: useTransform(smoothRotateX, [-20, 20], [1.2, 0.8]),
+            opacity: useTransform(smoothRotateX, [-20, 20], [0.2, 0.4])
+          }}
+        />
+
+        <motion.div
+          className="relative w-full h-full"
+          style={{
+            rotateX: smoothRotateX,
+            rotateY: smoothRotateY,
+            transformStyle: "preserve-3d"
+          }}
+        >
+          {[...Array(depth)].map((_, i) => (
+            <div
+              key={i}
+              className={`absolute inset-0 border ${layerStyle}`}
+              style={{
+                borderRadius: radius,
+                transform: `translateZ(${-i * layerSpacing}px)`,
+                zIndex: -i,
+                filter: `brightness(${0.95 - (i * 0.015)
+
+                  })`
+              }}
+            />
+          ))}
+
+          <div
+            className={`absolute inset-0 ${style.bg} ${style.border} border`}
+            style={{
+              borderRadius: radius,
+              transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
+              backfaceVisibility: 'visible',
+              background: material === 'glass' ? 'linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%)' : undefined
+            }}
+          >
+            <div className="w-full h-full flex flex-col items-center justify-center p-6">
+              <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center mb-2">
+                <Hexagon size={20} className={material === 'dark' || material === 'orange' ? 'text-white/50' : 'text-black/20'} />
+              </div>
+              <div className={`text-[10px] font-bold tracking-widest uppercase ${style.subText}`}>
+                {label}
+              </div>
+              <div className={`text-[8px] font-mono mt-1 ${style.subText} opacity-50`}>
+                Q-SERIES GEN 2
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={`absolute inset-0 ${style.border} border overflow-hidden`}
+            style={{
+              borderRadius: radius,
+              transform: "translateZ(1px)",
+              background: style.bg,
+              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)"
+            }}
+          >
+            <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+
+            <div className="relative z-10 w-full h-full p-5 flex flex-col justify-between">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center border border-white/40 shadow-sm ${material === 'dark' ? 'bg-white/10' : 'bg-white/60'}`}
+                  >
+                    {Icon && <Icon size={16} {...(material === 'orange' || material === 'dark' ? { className: 'text-white' } : { color })} />}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`text-[9px] font-bold uppercase tracking-wider ${style.subText}`}>{subLabel || 'MODULE'}</span>
+                    <span className={`text-sm font-bold leading-tight ${style.text}`}>{label}</span>
+                  </div>
+                </div>
+                <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse ${material === 'orange' ? 'bg-white' : 'bg-green-500'}`}></div>
+              </div>
+
+              <div className="flex-1 flex flex-col justify-center py-2">
+                {children}
+              </div>
+
+              <div className={`pt-3 border-t ${material === 'dark' ? 'border-white/10' : 'border-black/5'} flex justify-between items-center text-[9px] font-mono ${style.subText}`}>
+                <span>ID: {Math.floor(Math.random() * 9000) + 1000}</span>
+                <QrCode size={12} className="opacity-50" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
 
   const render3DObject = (stage: number, scale = 1) => {
     switch (stage) {
-      case 0: // Individual
+      case 0: // Individual - ORIGINAL (user approved)
         return (
           <div className="relative w-48 h-48 md:w-64 md:h-64 animate-[spinEntry_1s_ease-out_forwards]" style={{ transform: `scale(${scale})` }}>
-            <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,106,47,0.5),rgba(0,0,0,0.9))] shadow-[0_0_60px_rgba(255,106,47,0.4)] animate-float"></div>
+            <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,106,47,0.5),rgba(0,0,0,0.9))] shadow-[0_0_60px_rgba(255,106,47,0.4)]"></div>
             <div className="absolute inset-[-20px] rounded-full border border-orange/30 border-t-transparent animate-[spin_3s_linear_infinite]"></div>
             <div className="absolute inset-[-40px] rounded-full border border-orange/10 border-b-transparent animate-[spin_5s_linear_infinite_reverse]"></div>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -133,141 +451,225 @@ export const SolutionsGrid: React.FC = () => {
             </div>
           </div>
         );
-      case 1: // Employer
+
+
+      case 1: // EMPLOYERS - Team Metrics Dashboard
         return (
-          <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center animate-fade-in-up" style={{ transform: `scale(${scale})` }}>
-            <div className="relative w-full h-full animate-float">
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-gray-700 via-black to-gray-900 shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md"
-                style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.3),transparent_70%)]"></div>
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-white/10"></div>
+          <MetricCard3D
+            width="w-[300px]"
+            height="h-[200px]"
+            depth={14}
+            material="dark"
+            label="Team Pulse"
+            subLabel="EMPLOYER"
+            icon={Users}
+            color="#10B981"
+          >
+            <div className="flex flex-col gap-3">
+              {/* Team Size */}
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-gray-400">Team Size</span>
+                <span className="text-white font-bold">47</span>
               </div>
-              <div
-                className="absolute inset-[-10px] bg-white/5 blur-xl -z-10"
-                style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
-              ></div>
-              <div className="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                <Building size={scale * 60} className="text-white drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]" />
+              {/* Skill Match */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-gray-400">Skill Match</span>
+                  <span className="text-green-400">87%</span>
+                </div>
+                <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-full bg-green-500 w-[87%]"></div>
+                </div>
+              </div>
+              {/* Culture Fit */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-gray-400">Culture Fit</span>
+                  <span className="text-blue-400">94%</span>
+                </div>
+                <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-full bg-blue-500 w-[94%]"></div>
+                </div>
               </div>
             </div>
-          </div>
+          </MetricCard3D>
         );
-      case 2: // Institute
+
+      case 2: // INSTITUTES - Skills Progression
         return (
-          <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center animate-fade-in-up" style={{ transform: `scale(${scale})` }}>
-            <div className="relative w-36 h-44 md:w-48 md:h-56 animate-float">
-              <div
-                className="absolute inset-0 bg-gradient-to-tr from-[#E65100] via-[#F57C00] to-orange/40 backdrop-blur-md border-l border-b border-white/20"
-                style={{ clipPath: 'polygon(0 25%, 50% 50%, 50% 100%, 0 75%)' }}
-              ></div>
-              <div
-                className="absolute inset-0 bg-gradient-to-tl from-[#BF360C] via-[#E65100] to-orange/30 backdrop-blur-md border-r border-b border-white/20"
-                style={{ clipPath: 'polygon(50% 50%, 100% 25%, 100% 75%, 50% 100%)' }}
-              ></div>
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-white/60 via-orange/20 to-orange/10 backdrop-blur-lg border-t border-white/40"
-                style={{ clipPath: 'polygon(0 25%, 50% 0, 100% 25%, 50% 50%)' }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_3s_infinite]"></div>
+          <MetricCard3D
+            width="w-[280px]"
+            height="h-[240px]"
+            depth={16}
+            material="matte"
+            label="Skills Growth"
+            subLabel="INSTITUTE"
+            icon={BookOpen}
+            color="#FF6A2F"
+          >
+            <div className="flex flex-col h-full justify-between">
+              {/* Progress Bars */}
+              <div className="space-y-2">
+                {['Technical', 'Analytical', 'Leadership'].map((skill, i) => (
+                  <div key={skill}>
+                    <div className="flex justify-between text-[9px] mb-1">
+                      <span className="text-gray-500">{skill}</span>
+                      <span className="text-gray-900 font-bold">{85 + i * 5}%</span>
+                    </div>
+                    <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-orange to-red-500"
+                        style={{ width: `${85 + i * 5}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-[20%] w-20 h-20 bg-white/80 blur-2xl rounded-full animate-pulse"></div>
-              <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                <GraduationCap size={scale * 70} className="text-white drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]" />
+              {/* Footer Stats */}
+              <div className="flex justify-between items-center pt-2">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-black">567</div>
+                  <div className="text-[8px] text-gray-400">STUDENTS</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">94%</div>
+                  <div className="text-[8px] text-gray-400">PLACED</div>
+                </div>
               </div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-8 bg-orange/20 blur-xl rounded-full"></div>
             </div>
-          </div>
+          </MetricCard3D>
         );
-      case 3: // Smart City
+
+      case 3: // SMART CITIES - Live City Dashboard
         return (
-          <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center animate-fade-in-up" style={{ transform: `scale(${scale})` }}>
-            <div className="relative w-36 h-48 md:w-48 md:h-64 animate-float">
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-gray-800 via-black to-gray-900 backdrop-blur-md border-l border-white/10"
-                style={{ clipPath: 'polygon(0 10%, 50% 30%, 50% 100%, 0 80%)' }}
-              >
-                <div className="absolute bottom-0 w-full h-[2px] bg-orange/50 shadow-[0_0_10px_#FF6A2F] animate-[scanVertical_4s_ease-in-out_infinite]"></div>
+          <MetricCard3D
+            width="w-[320px]"
+            height="h-[260px]"
+            depth={12}
+            material="dark"
+            label="City Metrics"
+            subLabel="SMART CITY"
+            icon={BarChart3}
+            color="#6366F1"
+          >
+            <div className="flex flex-col gap-2">
+              {/* Top Metrics */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-indigo-900/30 rounded p-2 border border-indigo-500/30">
+                  <div className="text-[8px] text-gray-400 mb-1">POPULATION</div>
+                  <div className="text-indigo-400 text-sm font-bold font-mono">1.2M</div>
+                </div>
+                <div className="bg-green-900/30 rounded p-2 border border-green-500/30">
+                  <div className="text-[8px] text-gray-400 mb-1">SKILL INDEX</div>
+                  <div className="text-green-400 text-sm font-bold font-mono">8.4</div>
+                </div>
               </div>
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-gray-700 via-gray-900 to-black backdrop-blur-md border-r border-white/10"
-                style={{ clipPath: 'polygon(50% 30%, 100% 10%, 100% 80%, 50% 100%)' }}
-              ></div>
-              <div
-                className="absolute inset-0 bg-gradient-to-b from-gray-600 via-gray-800 to-gray-900 border-t border-white/30"
-                style={{ clipPath: 'polygon(0 10%, 50% 0, 100% 10%, 50% 30%)' }}
-              ></div>
-              <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-40 h-20 border border-orange/30 rounded-full transform rotate-x-60 animate-pulse-slow"></div>
-              <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-                <Globe size={scale * 60} className="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+
+              {/* Heat Map Grid */}
+              <div className="grid grid-cols-8 gap-0.5 p-2 bg-gray-800/30 rounded">
+                {[...Array(32)].map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-2 rounded-sm ${i % 4 === 0
+                      ? 'bg-indigo-500'
+                      : i % 3 === 0
+                        ? 'bg-orange/70'
+                        : 'bg-gray-700/50'
+                      }`}
+                  ></div>
+                ))}
               </div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-8 bg-black/40 blur-xl rounded-full"></div>
+
+              {/* Live Status */}
+              <div className="flex items-center justify-between text-[9px]">
+                <span className="text-gray-400">LIVE SYNC</span>
+                <div className="flex items-center gap-1">
+                  <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-green-400 font-mono">ACTIVE</span>
+                </div>
+              </div>
             </div>
-          </div>
+          </MetricCard3D>
         );
       default: return null;
     }
-  }
+  };
 
   return (
-    <section ref={containerRef} className="bg-white relative border-t border-gray-100">
-      <div className="flex flex-col md:flex-row">
+    <section ref={containerRef} className="relative border-t border-gray-100 overflow-hidden">
+      {/* Premium Ambient Background - Left Side */}
+      <div className="absolute inset-0 md:w-1/2 pointer-events-none z-0">
+        {/* Floating Gradient Orbs (Hero-style) */}
+        <div className={`absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] rounded-full blur-[120px] mix-blend-multiply transition-all duration-1000 ${activeStage === 0 || activeStage === 2 ? 'bg-orange/20' : 'bg-blue-200/20'
+          } animate-[float_18s_ease-in-out_infinite]`} />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[35vw] h-[35vw] bg-purple-100/25 rounded-full blur-[100px] mix-blend-multiply animate-[float_22s_ease-in-out_infinite_reverse]" />
+        <div className={`absolute top-1/2 left-1/3 w-[30vw] h-[30vw] rounded-full blur-[90px] mix-blend-multiply transition-all duration-1000 ${activeStage % 2 === 0 ? 'bg-orange/15' : 'bg-indigo-100/20'
+          } animate-pulse-slow`} />
+      </div>
+
+      <div className="flex flex-col md:flex-row relative">
 
         {/* LEFT: Scrollable Content */}
-        <div className="w-full md:w-1/2 bg-gray-50">
+        <div className="w-full md:w-1/2 relative z-10 bg-white/80 backdrop-blur-sm scroll-smooth snap-y snap-mandatory md:snap-none overflow-y-auto md:overflow-visible">
           {solutions.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div key={item.id} className="solution-slide min-h-[90vh] md:min-h-screen flex flex-col justify-center px-6 md:px-20 border-b border-gray-100 last:border-0 relative overflow-hidden py-12 md:py-0">
+              <div key={item.id} className="solution-slide min-h-[100vh] flex flex-col justify-center px-6 md:px-20 border-b border-gray-100/50 last:border-0 relative overflow-hidden py-20 md:py-0 snap-start snap-always">
 
-                {/* Background Number */}
-                <span className="absolute -right-4 top-10 md:top-20 text-[6rem] md:text-[10rem] font-black text-gray-100/50 pointer-events-none select-none">0{index + 1}</span>
+                {/* Ambient Glow Effect on Active Slide */}
+                {activeStage === index && (
+                  <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-32 ${item.color === 'orange' ? 'bg-orange' : 'bg-black'
+                    } blur-sm animate-pulse`}></div>
+                )}
 
                 {/* Mobile Visualizer Injection */}
-                <div className="md:hidden w-full flex justify-center mb-8 sg-anim">
+                <div className="md:hidden w-full flex justify-center mb-12 sg-anim">
                   <div className="w-64 h-64 flex items-center justify-center">
                     {render3DObject(index, 0.7)}
                   </div>
                 </div>
 
-                <div className="sg-anim inline-flex items-center gap-2 mb-4 md:mb-6 border-l-4 border-black pl-4">
-                  <div className="p-2 rounded-lg bg-white border border-gray-200">
-                    <Icon size={20} className="text-black" />
+                <div className="sg-anim inline-flex items-center gap-3 mb-4 md:mb-6 border-l-4 border-black pl-4">
+                  <div className={`p-2 rounded-lg border shadow-sm ${activeStage === index ? 'bg-black border-black text-white' : 'bg-white border-gray-200 text-black'
+                    } transition-all duration-500`}>
+                    <Icon size={18} />
                   </div>
                   <span className="text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-gray-500">
                     {item.label}
                   </span>
                 </div>
 
-                <h2 className="sg-anim text-4xl md:text-6xl font-black tracking-tight text-black mb-4 leading-[0.95] font-montreal">
+                <h2 className="sg-anim text-4xl md:text-6xl font-black tracking-tighter text-black mb-3 leading-[0.95] font-montreal">
                   {item.title}
                 </h2>
 
-                <h3 className="sg-anim text-lg md:text-xl font-bold mb-6 md:mb-8 text-gray-700">
+                <h3 className="sg-anim text-lg md:text-xl font-bold mb-5 md:mb-6 text-gray-600">
                   {item.subtitle}
                 </h3>
 
-                <p className="sg-anim text-lg md:text-xl text-gray-600 font-medium leading-relaxed mb-8 md:mb-10 max-w-lg">
+                <p className="sg-anim text-base md:text-lg text-gray-500 font-medium leading-relaxed mb-8 max-w-lg">
                   {item.description}
                 </p>
 
-                <div className="sg-anim grid grid-cols-1 gap-4 md:gap-6 mb-8 md:mb-10">
+                <div className="sg-anim grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-8 md:mb-10">
                   {item.features.map((feature, i) => (
-                    <div key={i} className="flex gap-4 group">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 transition-transform group-hover:scale-110 bg-orange shadow-md shadow-orange/20">
+                    <div key={i} className="flex gap-3 group items-start">
+                      <div className="w-5 h-5 mt-0.5 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-black bg-orange shadow-md shadow-orange/20">
                         {i + 1}
                       </div>
                       <div>
-                        <h4 className="font-bold text-black text-base md:text-lg">{feature.title}</h4>
-                        <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
+                        <h4 className="font-bold text-black text-sm md:text-base leading-tight mb-0.5">{feature.title}</h4>
+                        <p className="text-xs text-gray-500 leading-relaxed">{feature.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <button className="sg-anim group flex items-center gap-3 font-bold border-b-2 border-black pb-2 w-fit transition-all text-black hover:text-orange hover:border-orange">
-                  Explore Solution <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                <button className="sg-anim group relative px-8 py-4 bg-orange text-white rounded-full text-base font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,106,47,0.6)] hover:scale-105 w-fit">
+                  <span className="relative z-10 flex items-center gap-2">
+                    Explore Solution
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </button>
               </div>
             );
@@ -276,37 +678,115 @@ export const SolutionsGrid: React.FC = () => {
 
         {/* RIGHT: Holographic Projector (Pinned - Desktop Only) */}
         <div ref={visualPanelRef} className="hidden md:flex w-1/2 h-screen sticky top-0 bg-gray-900 items-center justify-center overflow-hidden relative">
+          {/* Enhanced Background with Gradients */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 to-gray-950"></div>
+
+          {/* Rotating Ambient Orbs */}
+          <div className={`absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-[120px] transition-all duration-1000 ${activeStage === 0 || activeStage === 2 ? 'bg-orange/20' : 'bg-blue-400/15'
+            } animate-[float_20s_ease-in-out_infinite]`}></div>
+          <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-purple-400/10 rounded-full blur-[100px] animate-[float_25s_ease-in-out_infinite_reverse]"></div>
+
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
           <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-gray-950 to-transparent"></div>
 
+          {/* Enhanced Visualization Container */}
           <div className="relative w-[500px] h-[500px] flex items-center justify-center perspective-1000">
+            {/* Pulsing Rings */}
             <div className="absolute inset-0 border border-white/5 rounded-full animate-[spin_30s_linear_infinite]"></div>
             <div className="absolute inset-12 border border-white/5 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
-            <div className="relative transform-style-3d">
+
+            {/* Glow Effect Behind Active Tile */}
+            <div className={`absolute inset-0 rounded-full blur-3xl transition-all duration-1000 ${activeStage === 0 || activeStage === 2 ? 'bg-orange/20' : 'bg-white/10'
+              } animate-pulse`}></div>
+
+            <div ref={visualizerRef} className="relative transform-style-3d">
               {render3DObject(activeStage)}
             </div>
+
             <div className="absolute -bottom-24 flex flex-col items-center animate-fade-in-up">
               <span className="text-xs font-mono text-gray-500 tracking-[0.5em] uppercase mb-2">ACTIVE_MATRIX</span>
-              <div className={`text-3xl font-bold tracking-widest ${activeStage === 0 || activeStage === 2 ? 'text-orange' : 'text-white'
+              <div className={`text-3xl font-bold tracking-widest transition-all duration-500 ${activeStage === 0 || activeStage === 2 ? 'text-orange' : 'text-white'
                 }`}>
                 {solutions[activeStage].label.toUpperCase()}
               </div>
             </div>
           </div>
 
-          <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+          {/* Animated Progress Line & Dots */}
+          <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-6 items-center">
+            {/* Animated Progress Line */}
+            <div className="absolute top-0 bottom-0 w-px bg-gray-800 -z-10">
+              <div
+                className={`absolute top-0 left-0 w-full bg-gradient-to-b transition-all duration-700 ${activeStage === 0 || activeStage === 2 ? 'from-orange to-orange/50' : 'from-white to-white/50'
+                  }`}
+                style={{ height: `${((activeStage + 1) / solutions.length) * 100}%` }}
+              ></div>
+            </div>
+
             {solutions.map((item, i) => (
-              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${activeStage === i ?
-                  (item.color === 'orange' ? 'bg-orange h-8' :
-                    'bg-white h-8')
+              <div key={i} className={`relative transition-all duration-500 ${activeStage === i ? 'scale-125' : 'scale-100 opacity-50'
+                }`}>
+                <div className={`w-3 h-3 rounded-full transition-all duration-300 ${activeStage === i ?
+                  (item.color === 'orange' ? 'bg-orange shadow-[0_0_15px_#FF6A2F] ring-4 ring-orange/30' :
+                    'bg-white shadow-[0_0_15px_white] ring-4 ring-white/30')
                   : 'bg-gray-700'
-                }`}></div>
+                  }`}></div>
+                {activeStage === i && (
+                  <div className="absolute left-6 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-bold tracking-widest text-white/50 uppercase animate-fade-in">
+                    {item.id}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
 
       </div>
+
+      {/* Premium Custom Keyframe Animations */}
+      <style>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translate(0px, 0px);
+          }
+          33% {
+            transform: translate(30px, -30px);
+          }
+          66% {
+            transform: translate(-20px, 20px);
+          }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+          }
+        }
+        
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateX(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.5s ease-out;
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 4s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 };

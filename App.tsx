@@ -13,6 +13,8 @@ import { Qscore } from './components/Qscore';
 // import { CircularFeatures } from './components/CircularFeatures';
 // import { Ecosystem } from './components/Ecosystem';
 import { Calltoaction } from './components/Calltoaction';
+import { MockupShowcase } from './components/MockupShowcase';
+
 
 
 export default function App() {
@@ -38,6 +40,15 @@ export default function App() {
       <Hero />
       <TruthReveal />
       <Qscore />
+      {/* <MockupShowcase /> */}
+
+      {/* <Challenge /> */}
+      <SolutionsGrid />
+      <UnifiedShowcase />
+
+      <TechEngine />
+
+
       {/* <Ecosystem /> */}
       {/* <CircularFeatures /> */}
 
@@ -52,8 +63,7 @@ export default function App() {
           {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
           <SolutionsGrid />
 
-          <Challenge />
-          <SolutionsGrid />
+
 
           <UnifiedShowcase />
           {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}

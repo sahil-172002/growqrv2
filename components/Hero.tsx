@@ -109,7 +109,7 @@ export const Hero: React.FC = () => {
     { label: "Global Benchmark", icon: Globe }
   ];
 
-  // Add CSS for beam animation
+  // Add CSS for beam animation and gentle float
   const beamStyle = `
       @keyframes beam-flow {
           0% { background-position: 100% 0; }
@@ -119,6 +119,17 @@ export const Hero: React.FC = () => {
           background: linear-gradient(90deg, transparent 0%, rgba(255, 106, 47, 0.2) 20%, rgba(255, 106, 47, 0.8) 50%, rgba(255, 106, 47, 0.2) 80%, transparent 100%);
           background-size: 200% 100%;
           animation: beam-flow 3s linear infinite;
+      }
+      @keyframes gentle-float {
+          0%, 100% {
+              transform: translateY(0px);
+          }
+          50% {
+              transform: translateY(-6px);
+          }
+      }
+      .animate-gentle-float {
+          animation: gentle-float 8s ease-in-out infinite;
       }
   `;
 
@@ -568,7 +579,7 @@ export const Hero: React.FC = () => {
         {/* SLIDE 1: INTRO */}
         <div ref={text1Ref} className="absolute inset-0 flex flex-col items-center justify-center text-center pt-24 pointer-events-auto">
           {/* Dynamic 3D QR Hero Element */}
-          <div ref={introCardRef} className="relative z-20 mb-10 md:mb-12 group cursor-pointer animate-float perspective-1000">
+          <div ref={introCardRef} className="relative z-20 mb-10 md:mb-12 group cursor-pointer animate-gentle-float perspective-1000">
 
             {[...Array(8)].map((_, i) => (
               <div key={`shard-${i}`}

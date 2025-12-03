@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { ArrowRight, Map, GraduationCap, Activity, AlertCircle, ScanLine, Ban, CheckCircle2, Cpu } from 'lucide-react';
+import { ArrowRight, Map, GraduationCap, Activity, AlertCircle, ScanLine, Ban, CheckCircle2, Cpu, User, Building } from 'lucide-react';
 
 export const Challenge: React.FC = () => {
    const containerRef = useRef<HTMLDivElement>(null);
@@ -97,34 +97,103 @@ export const Challenge: React.FC = () => {
                   {/* Viewport */}
                   <div className="flex-1 relative flex items-center justify-center p-8 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white to-gray-50">
 
-                     {/* STAGE 0: THE RIGID CONTAINER (Skill Mismatch) */}
+                     {/* STAGE 0: INDIVIDUALS - Invisible Potential */}
                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${activeStage === 0 ? 'opacity-100' : 'opacity-0 scale-90 blur-sm'}`}>
 
-                        {/* The Rigid Box (Job Req) */}
-                        <div className="relative w-64 h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden bg-white/50">
-                           <div className="absolute top-2 left-2 text-[10px] font-mono text-gray-400">JOB_REQ_FRAME_V1</div>
-                           <div className="absolute top-2 right-2 text-[10px] font-mono text-red-400 animate-pulse">ERROR_OVERFLOW</div>
+                        {/* The Person (Faded) */}
+                        <div className="relative w-64 h-64 flex items-center justify-center">
+                           <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center opacity-40">
+                              <User size={60} className="text-white" />
+                           </div>
 
-                           {/* The Fluid Talent (Organic Blob) */}
-                           {/* This blob animates to show it doesn't fit the box */}
-                           <div className="w-48 h-48 bg-gradient-to-br from-orange/80 to-red-500/80 blur-md rounded-[40%_60%_70%_30%/40%_50%_60%_50%] animate-[morph_8s_ease-in-out_infinite] mix-blend-multiply opacity-80 relative z-10"></div>
+                           {/* Hidden Skills (Floating around but invisible) */}
+                           <div className="absolute top-0 left-0 w-12 h-12 rounded-full bg-orange/20 blur-md animate-pulse"></div>
+                           <div className="absolute bottom-0 right-0 w-16 h-16 rounded-full bg-orange/20 blur-md animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                           <div className="absolute top-1/2 right-0 w-10 h-10 rounded-full bg-orange/20 blur-md animate-pulse" style={{ animationDelay: '1s' }}></div>
 
-                           {/* Spilling Effect */}
-                           <div className="absolute -right-4 w-12 h-12 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>
-
-                           {/* Scanner Line (Failing) */}
-                           <div className="absolute top-0 w-full h-1 bg-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-[scan_2s_linear_infinite]"></div>
+                           {/* Question Marks */}
+                           <div className="absolute -top-4 -right-4 text-4xl text-gray-300 animate-pulse">?</div>
+                           <div className="absolute -bottom-4 -left-4 text-3xl text-gray-300 animate-pulse" style={{ animationDelay: '0.5s' }}>?</div>
                         </div>
 
                         {/* Warning Label */}
-                        <div className="absolute bottom-12 flex items-center gap-3 bg-red-50 border border-red-100 px-4 py-2 rounded-lg shadow-sm animate-pulse">
-                           <Ban className="w-4 h-4 text-red-500" />
-                           <span className="text-xs font-bold text-red-500 uppercase tracking-wide">Protocol Mismatch</span>
+                        <div className="absolute bottom-12 flex items-center gap-3 bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg shadow-sm">
+                           <AlertCircle className="w-4 h-4 text-gray-400" />
+                           <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unverified Talent</span>
                         </div>
                      </div>
 
-                     {/* STAGE 1: THE FOG OF WAR (Data Blindspot) */}
+                     {/* STAGE 1: EMPLOYERS - Hiring Blind */}
                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${activeStage === 1 ? 'opacity-100' : 'opacity-0 scale-90 blur-sm'}`}>
+
+                        {/* Stack of Resumes (Confusing) */}
+                        <div className="relative">
+                           {[...Array(5)].map((_, i) => (
+                              <div
+                                 key={i}
+                                 className="absolute w-48 h-64 bg-white border-2 border-gray-300 rounded-lg shadow-lg"
+                                 style={{
+                                    transform: `translateX(${i * 15}px) translateY(${i * 10}px) rotate(${(i - 2) * 5}deg)`,
+                                    zIndex: 5 - i
+                                 }}
+                              >
+                                 <div className="p-4">
+                                    <div className="w-full h-2 bg-gray-200 rounded mb-2"></div>
+                                    <div className="w-3/4 h-2 bg-gray-200 rounded mb-4"></div>
+                                    <div className="w-full h-1 bg-gray-100 rounded mb-1"></div>
+                                    <div className="w-full h-1 bg-gray-100 rounded mb-1"></div>
+                                    <div className="w-2/3 h-1 bg-gray-100 rounded"></div>
+                                 </div>
+                              </div>
+                           ))}
+
+                           {/* Red X marks (Wrong choices) */}
+                           <div className="absolute -right-8 top-1/2 -translate-y-1/2 text-6xl text-red-500 font-bold animate-pulse">✗</div>
+                        </div>
+
+                        <div className="absolute bottom-12 flex items-center gap-3 bg-red-50 border border-red-100 px-4 py-2 rounded-lg shadow-sm animate-pulse">
+                           <Ban className="w-4 h-4 text-red-500" />
+                           <span className="text-xs font-bold text-red-500 uppercase tracking-wide">High Mis-hire Risk</span>
+                        </div>
+                     </div>
+
+                     {/* STAGE 2: INSTITUTES - Outdated Education */}
+                     <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${activeStage === 2 ? 'opacity-100' : 'opacity-0 scale-110 blur-sm'}`}>
+
+                        {/* Old Book vs Modern World */}
+                        <div className="relative flex items-center gap-12">
+                           {/* Old Book */}
+                           <div className="relative w-32 h-40 bg-gradient-to-br from-amber-800 to-amber-900 rounded border-2 border-amber-700 shadow-xl">
+                              <div className="absolute inset-2 border border-amber-600/30"></div>
+                              <div className="absolute top-6 left-4 right-4 space-y-1">
+                                 <div className="h-1 bg-amber-600/40 rounded"></div>
+                                 <div className="h-1 bg-amber-600/40 rounded"></div>
+                                 <div className="h-1 bg-amber-600/40 rounded w-3/4"></div>
+                              </div>
+                              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-amber-600 font-mono">1995</div>
+                           </div>
+
+                           {/* Gap/Disconnect Symbol */}
+                           <div className="text-4xl text-red-500 animate-pulse">≠</div>
+
+                           {/* Modern Tech (Fast Moving) */}
+                           <div className="relative">
+                              <div className="w-32 h-32 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center animate-pulse">
+                                 <Cpu size={48} className="text-white" />
+                              </div>
+                              <div className="absolute -top-2 -right-2 text-xl animate-spin">⚡</div>
+                              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-white font-mono bg-black/30 px-2 py-1 rounded">2025</div>
+                           </div>
+                        </div>
+
+                        <div className="absolute bottom-12 flex items-center gap-3 bg-amber-50 border border-amber-200 px-4 py-2 rounded-lg shadow-sm">
+                           <AlertCircle className="w-4 h-4 text-amber-600" />
+                           <span className="text-xs font-bold text-amber-600 uppercase tracking-wide">Curriculum Lag</span>
+                        </div>
+                     </div>
+
+                     {/* STAGE 3: SMART CITIES - Blind Infrastructure */}
+                     <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${activeStage === 3 ? 'opacity-100' : 'opacity-0 scale-110 blur-sm'}`}>
 
                         {/* The Map Grid */}
                         <div className="grid grid-cols-6 gap-6 opacity-30">
@@ -155,61 +224,7 @@ export const Challenge: React.FC = () => {
 
                         <div className="absolute bottom-12 flex items-center gap-3 bg-gray-900 border border-gray-800 px-4 py-2 rounded-lg shadow-sm">
                            <ScanLine className="w-4 h-4 text-white" />
-                           <span className="text-xs font-bold text-white uppercase tracking-wide">Lidar Scan Active</span>
-                        </div>
-                     </div>
-
-                     {/* STAGE 2: THE CIVIC OS (Digital Twin) */}
-                     <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${activeStage === 2 ? 'opacity-100' : 'opacity-0 scale-110 blur-sm'}`}>
-
-                        {/* Isometric Container */}
-                        <div className="relative w-64 h-64 transform rotate-x-60 rotate-z-45 perspective-1000 group">
-
-                           {/* Ground Grid */}
-                           <div className="absolute inset-0 border border-orange/20 bg-orange/5 grid grid-cols-4 grid-rows-4">
-                              {[...Array(16)].map((_, i) => (
-                                 <div key={i} className="border border-orange/10"></div>
-                              ))}
-                           </div>
-
-                           {/* Data Pillars (Buildings) */}
-                           <div className="absolute inset-0 grid grid-cols-4 grid-rows-4 gap-2 p-2">
-                              {[...Array(16)].map((_, i) => {
-                                 // Random height calc for visual interest
-                                 const height = 20 + Math.random() * 40;
-                                 return (
-                                    <div key={i} className="relative w-full h-full flex items-end justify-center">
-                                       <div
-                                          className="w-full bg-gradient-to-t from-orange/80 to-orange/40 opacity-80 transition-all duration-1000 ease-in-out shadow-[0_0_15px_rgba(255,106,47,0.3)]"
-                                          style={{
-                                             height: `${height}%`,
-                                             animation: `pillarPulse ${2 + Math.random()}s ease-in-out infinite alternate`
-                                          }}
-                                       >
-                                          {/* Top Cap */}
-                                          <div className="absolute top-0 w-full h-full bg-orange/20 border-t border-orange/50"></div>
-                                       </div>
-                                    </div>
-                                 )
-                              })}
-                           </div>
-
-                           {/* Floating Data Canopy (Connections) */}
-                           <div className="absolute -top-10 inset-0 grid grid-cols-2 pointer-events-none animate-float">
-                              <div className="border-t border-l border-orange/40 w-full h-full"></div>
-                              <div className="border-t border-r border-orange/40 w-full h-full"></div>
-                           </div>
-                        </div>
-
-                        {/* HUD Status Overlay */}
-                        <div className="absolute top-8 left-8">
-                           <div className="text-[10px] font-mono text-orange/80">LATENCY: 12ms</div>
-                           <div className="text-[10px] font-mono text-orange/80">SYNC_STATUS: ACTIVE</div>
-                        </div>
-
-                        <div className="absolute bottom-12 flex items-center gap-3 bg-white border border-orange px-4 py-2 rounded-lg shadow-[0_10px_30px_rgba(255,106,47,0.15)] z-20">
-                           <Cpu className="w-4 h-4 text-orange" />
-                           <span className="text-xs font-bold text-orange uppercase tracking-wide">Civic Twin: Live</span>
+                           <span className="text-xs font-bold text-white uppercase tracking-wide">Workforce Invisible</span>
                         </div>
                      </div>
 
@@ -220,36 +235,83 @@ export const Challenge: React.FC = () => {
             {/* RIGHT: Content Scroller */}
             <div className="w-full md:w-1/2">
 
-               {/* SLIDE 1: UNIVERSITIES */}
+               {/* SLIDE 1: INDIVIDUALS - PROBLEM */}
                <div className="challenge-slide min-h-screen flex flex-col justify-center px-8 md:px-20 relative overflow-hidden">
                   <span className="absolute -right-10 top-20 text-[12rem] font-black text-gray-50 pointer-events-none select-none">01</span>
 
                   <div className="arch-label inline-flex items-center gap-2 mb-8 border-l-2 border-black pl-4">
-                     <GraduationCap size={16} />
-                     <span className="text-sm font-bold tracking-[0.2em] uppercase">The Education Gap</span>
+                     <User size={16} />
+                     <span className="text-sm font-bold tracking-[0.2em] uppercase">For Individuals</span>
                   </div>
 
                   <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
-                     DEGREES ≠ <br />
-                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-red-500">READINESS.</span>
+                     INVISIBLE <br />
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-red-500">POTENTIAL.</span>
                   </h2>
 
                   <div className="arch-body border-t border-gray-100 pt-8 max-w-md">
                      <p className="text-xl text-gray-600 font-medium leading-relaxed">
-                        Traditional degrees are rigid containers. Human talent is fluid.
+                        Your real skills are buried beneath degrees and resumes. Opportunities pass you by because there's no way to prove what you're truly capable of.
                         <br /><br />
-                        We're trying to fit dynamic, multi-skilled individuals into static, outdated job descriptions. It's a system failure.
+                        You're more than your CV — but the world can't see it.
                      </p>
                   </div>
                </div>
 
-               {/* SLIDE 2: SMART CITIES (PROBLEM) */}
+               {/* SLIDE 2: EMPLOYERS - PROBLEM */}
                <div className="challenge-slide min-h-screen flex flex-col justify-center px-8 md:px-20 bg-gray-50/50 relative overflow-hidden">
                   <span className="absolute -right-10 top-20 text-[12rem] font-black text-white pointer-events-none select-none">02</span>
 
                   <div className="arch-label inline-flex items-center gap-2 mb-8 border-l-2 border-black pl-4">
+                     <Building size={16} />
+                     <span className="text-sm font-bold tracking-[0.2em] uppercase">For Employers</span>
+                  </div>
+
+                  <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
+                     HIRING <br />
+                     IN THE <br />
+                     <span className="text-gray-400">DARK.</span>
+                  </h2>
+
+                  <div className="arch-body border-t border-gray-200 pt-8 max-w-md">
+                     <p className="text-xl text-gray-600 font-medium leading-relaxed">
+                        Resumes lie. Interviews are theater. You're gambling on every hire, wasting time on mismatched candidates.
+                        <br /><br />
+                        You need teams that actually fit — but you're stuck guessing.
+                     </p>
+                  </div>
+               </div>
+
+               {/* SLIDE 3: INSTITUTES - PROBLEM */}
+               <div className="challenge-slide min-h-screen flex flex-col justify-center px-8 md:px-20 relative overflow-hidden">
+                  <span className="absolute -right-10 top-20 text-[12rem] font-black text-orange/5 pointer-events-none select-none">03</span>
+
+                  <div className="arch-label inline-flex items-center gap-2 mb-8 border-l-2 border-black pl-4">
+                     <GraduationCap size={16} />
+                     <span className="text-sm font-bold tracking-[0.2em] uppercase">For Institutes</span>
+                  </div>
+
+                  <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
+                     TEACHING <br />
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-red-500">YESTERDAY.</span>
+                  </h2>
+
+                  <div className="arch-body border-t border-gray-100 pt-8 max-w-md">
+                     <p className="text-xl text-gray-600 font-medium leading-relaxed">
+                        Curriculums lag behind industry demands. Students graduate unprepared. Placement rates drop. Your reputation suffers.
+                        <br /><br />
+                        You're educating for jobs that no longer exist.
+                     </p>
+                  </div>
+               </div>
+
+               {/* SLIDE 4: SMART CITIES - PROBLEM */}
+               <div className="challenge-slide min-h-screen flex flex-col justify-center px-8 md:px-20 bg-gray-50/50 relative overflow-hidden">
+                  <span className="absolute -right-10 top-20 text-[12rem] font-black text-white pointer-events-none select-none">04</span>
+
+                  <div className="arch-label inline-flex items-center gap-2 mb-8 border-l-2 border-black pl-4">
                      <Map size={16} />
-                     <span className="text-sm font-bold tracking-[0.2em] uppercase">The Urban Blind Spot</span>
+                     <span className="text-sm font-bold tracking-[0.2em] uppercase">For Smart Cities</span>
                   </div>
 
                   <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
@@ -259,38 +321,14 @@ export const Challenge: React.FC = () => {
                   </h2>
 
                   <div className="arch-body border-t border-gray-200 pt-8 max-w-md">
-                     <p className="text-xl text-gray-600 font-medium leading-relaxed">
-                        You can track traffic, water, and energy in real-time. But workforce data? It's invisible.
-                        <br /><br />
-                        Without a live census of skills, cities cannot predict economic shifts or prevent brain drain.
-                     </p>
-                  </div>
-               </div>
-
-               {/* SLIDE 3: THE SOLUTION */}
-               <div className="challenge-slide min-h-screen flex flex-col justify-center px-8 md:px-20 relative overflow-hidden">
-                  <span className="absolute -right-10 top-20 text-[12rem] font-black text-orange/5 pointer-events-none select-none">03</span>
-
-                  <div className="arch-label inline-flex items-center gap-2 mb-8 border-l-2 border-orange pl-4 text-orange">
-                     <Activity size={16} />
-                     <span className="text-sm font-bold tracking-[0.2em] uppercase">The Infrastructure</span>
-                  </div>
-
-                  <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">
-                     THE <br />
-                     CIVIC <br />
-                     <span className="text-orange">OS.</span>
-                  </h2>
-
-                  <div className="arch-body border-t border-gray-100 pt-8 max-w-md">
                      <p className="text-xl text-gray-600 font-medium leading-relaxed mb-10">
-                        A live, always-on skill census for Smart Cities and Universities.
+                        You track traffic, water, and energy in real-time. But workforce data? It's invisible.
                         <br /><br />
-                        Optimize curriculum in real-time. Attract industry with verified talent density.
+                        Without a live census of skills, you can't predict economic shifts or prevent brain drain.
                      </p>
 
                      <button className="group flex items-center gap-4 text-black font-bold border-b-2 border-black pb-2 hover:text-orange hover:border-orange transition-all">
-                        Explore City Solutions <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                        See How We Solve This <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                      </button>
                   </div>
                </div>
