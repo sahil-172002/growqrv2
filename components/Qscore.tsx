@@ -44,15 +44,60 @@ export const Qscore: React.FC = () => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
+      // === HELPER: Get element's actual center position relative to SVG ===
+      const getNodeCenter = (node: Element) => {
+        const rect = node.getBoundingClientRect();
+        const svg = document.querySelector('.qscore-svg');
+        if (!svg) return { x: 0, y: 0 };
+        const svgRect = svg.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2 - svgRect.left - svgRect.width / 2,
+          y: rect.top + rect.height / 2 - svgRect.top - svgRect.height / 2
+        };
+      };
+
+      // === HELPER: Update paths based on real-time positions ===
+      const updateAllPaths = () => {
+        [...leftNodes, ...rightNodes].forEach((node: any, index: number) => {
+          const pos = getNodeCenter(node);
+
+          // Bezier curve control points for smooth arc
+          const cp1x = pos.x * 0.4;
+          const cp1y = 0;
+          const cp2x = pos.x * 0.6;
+          const cp2y = pos.y;
+          const pathData = `M 0 0 C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${pos.x} ${pos.y}`;
+
+          // Update both connection and beam paths
+          if (connections[index]) {
+            gsap.set(connections[index], { attr: { d: pathData } });
+          }
+          if (beams[index]) {
+            gsap.set(beams[index], { attr: { d: pathData } });
+          }
+        });
+      };
+
       // === PREMIUM SCROLL TIMELINE ===
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top center",
-          end: "bottom center",  // Changed from 'bottom top' to trigger exit earlier
-          scrub: prefersReducedMotion ? 0 : 2,  // Slower for elegance
+          end: "bottom center",
+          scrub: prefersReducedMotion ? 0 : 2,
           fastScrollEnd: true,
           preventOverlaps: true,
+
+          // Update paths on every scroll frame for perfect alignment
+          onUpdate: () => {
+            if (!prefersReducedMotion) {
+              updateAllPaths();
+            }
+          },
+
+          // Initial path update when entering
+          onEnter: () => updateAllPaths(),
+          onEnterBack: () => updateAllPaths()
         }
       });
 
@@ -141,35 +186,13 @@ export const Qscore: React.FC = () => {
       });
 
       // === PHASE 3: CONNECTION DRAWING (40-70% scroll) ===
-      // Helper to set path data
-      const updatePaths = (index: number) => {
-        const isLeft = index < 5;
-        const indexInSide = isLeft ? index : index - 5;
-        const targetY = (indexInSide - 2) * ySpacing;
-        const targetX = isLeft ? -xOffset : xOffset;
-
-        const cp1x = targetX * 0.4;
-        const cp1y = 0;
-        const cp2x = targetX * 0.6;
-        const cp2y = targetY;
-        return `M 0 0 C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
-      };
-
-      // Connections draw themselves organically
+      // Connections fade in (paths are updated dynamically via onUpdate)
       connections.forEach((path: any, i: number) => {
-        const d = updatePaths(i);
         tl.to(path, {
-          attr: { d },
-          opacity: 0.3,  // Slightly more visible
+          opacity: 0.3,
           duration: 3,
           ease: "power1.inOut",
-          stagger: 0.1
         }, `start+=3+=${i * 0.1}`);
-      });
-
-      beams.forEach((path: any, i: number) => {
-        const d = updatePaths(i);
-        gsap.set(path, { attr: { d } });
       });
 
       // === CONTINUOUS BEAM LOOP (Runs independent of scroll) ===
@@ -271,7 +294,7 @@ export const Qscore: React.FC = () => {
         <div className="scale-[0.5] md:scale-[0.8] lg:scale-100 relative w-full h-full flex items-center justify-center transform-style-3d will-animate">
 
           {/* SVG Connections Layer */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible">
+          <svg className="qscore-svg absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible">
             {/* 
                            We use a group with CSS transform to move the origin (0,0) to the center of the SVG.
                            This matches the HTML layout where elements are positioned relative to the center.
