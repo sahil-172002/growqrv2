@@ -162,6 +162,16 @@ export const Hero: React.FC = () => {
       gsap.set(qrShards, { x: 0, y: 0, z: -10, rotateX: 0, rotateY: 0, scale: 0.8, opacity: 1, force3D: true });
       gsap.set(tunnelRef.current, { scale: 1, z: 0, rotateZ: 0, opacity: 1, force3D: true });
 
+      // Pre-calculate random positions for shards to ensure consistent animation on scroll back
+      const shardAnimations = qrShards.map((_, i) => ({
+        x: (i % 2 === 0 ? -300 : 300) * (Math.random() + 0.5),
+        y: (i < 2 ? -300 : 300) * (Math.random() + 0.5),
+        z: Math.random() * 500,
+        rotateX: Math.random() * 720,
+        rotateY: Math.random() * 720,
+        scale: 0.5 + Math.random() * 0.5
+      }));
+
       // MASTER TIMELINE with performance optimizations
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -175,7 +185,13 @@ export const Hero: React.FC = () => {
           fastScrollEnd: true, // Performance optimization
           preventOverlaps: true, // Prevent animation conflicts
 
-
+          // Reset elements when scrolling back from below
+          onEnterBack: () => {
+            gsap.set(introCardRef.current, { x: 0, y: 0, z: 0, rotateZ: 0, scale: 1, opacity: 1 });
+            gsap.set(qrShards, { x: 0, y: 0, z: -10, rotateX: 0, rotateY: 0, scale: 0.8, opacity: 1 });
+            gsap.set(tunnelRef.current, { scale: 1, z: 0, rotateZ: 0, opacity: 1 });
+            gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)" });
+          }
         }
       });
 
@@ -229,20 +245,21 @@ export const Hero: React.FC = () => {
         force3D: true
       }, "start+=0.6"); // Starts after jitter
 
-      // 3. Shards Explosion (Synced with card disintegration)
-      tl.to(qrShards, {
-        x: (i) => (i % 2 === 0 ? -300 : 300) * (Math.random() + 0.5),
-        y: (i) => (i < 2 ? -300 : 300) * (Math.random() + 0.5),
-        z: (i) => Math.random() * 500,
-        rotateX: () => Math.random() * 720,
-        rotateY: () => Math.random() * 720,
-        opacity: 0,
-        scale: (i) => 0.5 + Math.random() * 0.5,
-        duration: 2,
-        ease: "power3.out",
-        stagger: 0.02,
-        force3D: true
-      }, "start+=0.6");
+      // 3. Shards Explosion (Using pre-calculated values for consistent reverse animation)
+      qrShards.forEach((shard, i) => {
+        tl.to(shard, {
+          x: shardAnimations[i].x,
+          y: shardAnimations[i].y,
+          z: shardAnimations[i].z,
+          rotateX: shardAnimations[i].rotateX,
+          rotateY: shardAnimations[i].rotateY,
+          opacity: 0,
+          scale: shardAnimations[i].scale,
+          duration: 2,
+          ease: "power3.out",
+          force3D: true
+        }, `start+=0.6+=${i * 0.02}`);
+      });
 
       // --- PHASE 2: TRANSITION TO ECOSYSTEM ---
       tl.to(tunnelRef.current, {
