@@ -157,12 +157,17 @@ export const Hero: React.FC = () => {
       gsap.set(ecoHubWrapper, { opacity: 0, z: -2500, scale: 0, rotateY: 720, force3D: true });
       gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto", force3D: true });
 
+      // Explicitly set initial states for Hero elements to prevent scroll-back glitches
+      gsap.set(introCardRef.current, { x: 0, y: 0, z: 0, rotateZ: 0, scale: 1, opacity: 1, force3D: true });
+      gsap.set(qrShards, { x: 0, y: 0, z: -10, rotateX: 0, rotateY: 0, scale: 0.8, opacity: 1, force3D: true });
+      gsap.set(tunnelRef.current, { scale: 1, z: 0, rotateZ: 0, opacity: 1, force3D: true });
+
       // MASTER TIMELINE with performance optimizations
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=3900",  // Balanced: slide 1 not too fast, exit still visible
+          end: "+=6800",  // Increased to slow down the animation significantly
           pin: true,
           scrub: prefersReducedMotion ? 0 : 1, // Instant for reduced motion
           anticipatePin: 1,
@@ -170,15 +175,7 @@ export const Hero: React.FC = () => {
           fastScrollEnd: true, // Performance optimization
           preventOverlaps: true, // Prevent animation conflicts
 
-          // Fix for scroll-back glitches
-          onLeave: () => {
-            // Ensure exit animation completes cleanly
-            gsap.set(ecosystemRef.current, { clearProps: "all" });
-          },
-          onEnterBack: () => {
-            // Reset and refresh when scrolling back
-            ScrollTrigger.refresh();
-          }
+
         }
       });
 
@@ -207,30 +204,45 @@ export const Hero: React.FC = () => {
       // DISABLE POINTER EVENTS ON TEXT CONTAINER TO ALLOW CLICK-THROUGH TO NEXT SLIDE
       tl.set(text1Ref.current, { pointerEvents: "none" }, "start+=0.5");
 
-      // --- QR CARD DISINTEGRATION ---
+      // --- QR CARD & SHARDS ANIMATION SEQUENCE ---
+
+      // 1. Jitter/Warning Phase (Card shakes) - Using absolute values to avoid drift
       tl.to(introCardRef.current, {
-        scale: 0,
-        z: 500,
-        rotateZ: 180,
-        opacity: 0,
-        pointerEvents: "none",
-        duration: 1.5,
-        ease: "power2.in",
+        x: 5,
+        y: 5,
+        scale: 0.95,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 5,
+        ease: "sine.inOut",
         force3D: true
       }, "start");
 
-      tl.to(qrShards, {
-        x: (i) => (i % 2 === 0 ? -200 : 200) * (Math.random() + 0.5),
-        y: (i) => (i < 2 ? -200 : 200) * (Math.random() + 0.5),
-        z: (i) => Math.random() * 500,
-        rotateX: () => Math.random() * 360,
-        rotateY: () => Math.random() * 360,
-        opacity: 0,
+      // 2. Disintegration Phase (Card explodes)
+      tl.to(introCardRef.current, {
         scale: 0,
-        duration: 1.2,
-        ease: "power2.out",
+        opacity: 0,
+        z: 500,
+        rotateZ: 180,
+        duration: 1.5,
+        ease: "power2.in",
         force3D: true
-      }, "start");
+      }, "start+=0.6"); // Starts after jitter
+
+      // 3. Shards Explosion (Synced with card disintegration)
+      tl.to(qrShards, {
+        x: (i) => (i % 2 === 0 ? -300 : 300) * (Math.random() + 0.5),
+        y: (i) => (i < 2 ? -300 : 300) * (Math.random() + 0.5),
+        z: (i) => Math.random() * 500,
+        rotateX: () => Math.random() * 720,
+        rotateY: () => Math.random() * 720,
+        opacity: 0,
+        scale: (i) => 0.5 + Math.random() * 0.5,
+        duration: 2,
+        ease: "power3.out",
+        stagger: 0.02,
+        force3D: true
+      }, "start+=0.6");
 
       // --- PHASE 2: TRANSITION TO ECOSYSTEM ---
       tl.to(tunnelRef.current, {
@@ -241,37 +253,6 @@ export const Hero: React.FC = () => {
         ease: "power2.inOut",
         force3D: true
       }, "start+=0.5");
-
-      tl.to(introCardRef.current, {
-        x: "+=5", y: "+=5",
-        scale: 0.9,
-        duration: 0.2,
-        yoyo: true,
-        repeat: 3,
-        ease: "none",
-        force3D: true
-      }, "start+=0.5");
-
-      tl.to(introCardRef.current, {
-        scale: 0,
-        opacity: 0,
-        z: 200,
-        duration: 0.5,
-        ease: "power2.in",
-        force3D: true
-      }, "start+=1.0");
-
-      tl.to(qrShards, {
-        x: (i) => (Math.random() - 0.5) * 100,
-        y: (i) => (Math.random() - 0.5) * 100,
-        z: (i) => 800 + Math.random() * 500,
-        rotateZ: () => Math.random() * 360,
-        opacity: 0,
-        scale: (i) => 0.5 + Math.random() * 0.5,
-        duration: 1.5,
-        ease: "power2.in",
-        force3D: true
-      }, "start+=1.0");
 
       // --- GAP: Tunnel Travel (REDUCED GAP) ---
 
