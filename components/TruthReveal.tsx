@@ -61,7 +61,7 @@ export const TruthReveal: React.FC = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: isMobile ? "+=2500" : "+=4500", // Extended for new slide content
+          end: isMobile ? "+=2125" : "+=3825", // Reduced 15% for snappier feel
           pin: true,
           scrub: prefersReducedMotion ? 0 : 1,
           anticipatePin: 1,

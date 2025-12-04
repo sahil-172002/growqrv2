@@ -191,7 +191,7 @@ export const Hero: React.FC = () => {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: isMobile ? "+=2500" : "+=6800",  // MUCH shorter on mobile (60% reduction)
+          end: isMobile ? "+=2125" : "+=5780",  // Reduced 15% for snappier feel
           pin: true,
           scrub: prefersReducedMotion ? 0 : (isMobile ? 0.8 : 1), // Faster response on mobile
           anticipatePin: 1,

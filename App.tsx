@@ -1,5 +1,5 @@
 
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TruthReveal } from './components/TruthReveal';
@@ -17,10 +17,13 @@ import { Calltoaction } from './components/Calltoaction';
 import { MockupShowcase } from './components/MockupShowcase';
 import { Chatbot } from './components/Chatbot';
 import { FAQ } from './components/FAQ';
+import { LoadingScreen, ScrollProgress, ScrollToTop } from './components/ui/PageUtils';
 
 
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   useLayoutEffect(() => {
     // Force scroll to top on reload
     if (typeof window !== 'undefined') {
@@ -37,76 +40,88 @@ export default function App() {
   }, []);
 
   return (
-    <main className="bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden">
-      <Navbar />
+    <>
+      {/* Loading Screen */}
+      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
-      <Hero />
-      <TruthReveal />
-      <Qscore />
-      <Growth />
-      {/* <MockupShowcase /> */}
+      {/* Scroll Progress Bar */}
+      {!isLoading && <ScrollProgress />}
 
-      {/* <Challenge /> */}
-      <SolutionsGrid />
-      {/* <UnifiedShowcase /> */}
+      {/* Scroll To Top Button */}
+      {!isLoading && <ScrollToTop />}
 
-      <TechEngine />
+      <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden
+        ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>
+        <Navbar />
 
-      <FAQ />
+        <Hero />
+        <TruthReveal />
+        <Qscore />
+        <Growth />
+        {/* <MockupShowcase /> */}
 
-      {/* <Ecosystem /> */}
-      {/* <CircularFeatures /> */}
+        {/* <Challenge /> */}
+        <SolutionsGrid />
+        {/* <UnifiedShowcase /> */}
 
-      <Calltoaction />
+        <TechEngine />
 
+        <FAQ />
 
-      {/* HIDDEN SECTIONS */}
-      {false && (
-        <>
-          <Challenge />
+        {/* <Ecosystem /> */}
+        {/* <CircularFeatures /> */}
 
-          {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
-          <SolutionsGrid />
-
-
-
-          <UnifiedShowcase />
-          {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
+        <Calltoaction />
 
 
-          <TechEngine />
+        {/* HIDDEN SECTIONS */}
+        {false && (
+          <>
+            <Challenge />
 
-          {/* CTA Section */}
-          <section className="py-32 bg-gradient-to-r from-orange to-[#FF8C5F] relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-            <div className="container mx-auto px-6 text-center relative z-10">
-              <Reveal width="100%">
-                <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 font-montreal">Your Readiness. <br />Your Opportunity.</h2>
-                <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">The future doesn't wait. Start building your Q-Profile today.</p>
-                <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                  <button className="px-10 py-5 bg-white text-orange rounded-full text-xl font-bold hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all">I Am an Individual</button>
-                  <button className="px-10 py-5 bg-black/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-full text-xl font-bold hover:bg-black/20 hover:-translate-y-1 transition-all">I Represent an Organization</button>
-                </div>
-              </Reveal>
-            </div>
-          </section>
+            {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
+            <SolutionsGrid />
 
-          {/* Global Vision */}
-          <section className="py-32 bg-gray-900 text-center">
-            <div className="container mx-auto px-6">
-              <Reveal width="100%">
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 font-montreal">One Identity. One Network. One Future.</h2>
-                <p className="text-white/50 text-lg">From India to the world. From hidden to hired.</p>
-              </Reveal>
-            </div>
-          </section>
-        </>
-      )}
 
-      <Footer />
 
-      {/* Floating Chatbot */}
-      <Chatbot />
-    </main>
+            <UnifiedShowcase />
+            {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
+
+
+            <TechEngine />
+
+            {/* CTA Section */}
+            <section className="py-32 bg-gradient-to-r from-orange to-[#FF8C5F] relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+              <div className="container mx-auto px-6 text-center relative z-10">
+                <Reveal width="100%">
+                  <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 font-montreal">Your Readiness. <br />Your Opportunity.</h2>
+                  <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">The future doesn't wait. Start building your Q-Profile today.</p>
+                  <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                    <button className="px-10 py-5 bg-white text-orange rounded-full text-xl font-bold hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all">I Am an Individual</button>
+                    <button className="px-10 py-5 bg-black/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-full text-xl font-bold hover:bg-black/20 hover:-translate-y-1 transition-all">I Represent an Organization</button>
+                  </div>
+                </Reveal>
+              </div>
+            </section>
+
+            {/* Global Vision */}
+            <section className="py-32 bg-gray-900 text-center">
+              <div className="container mx-auto px-6">
+                <Reveal width="100%">
+                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 font-montreal">One Identity. One Network. One Future.</h2>
+                  <p className="text-white/50 text-lg">From India to the world. From hidden to hired.</p>
+                </Reveal>
+              </div>
+            </section>
+          </>
+        )}
+
+        <Footer />
+
+        {/* Floating Chatbot */}
+        <Chatbot />
+      </main>
+    </>
   );
 }

@@ -231,7 +231,7 @@ export const Growth: React.FC = () => {
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top top",
-                    end: "+=300%",
+                    end: "+=255%", // Reduced 15% for snappier feel
                     scrub: 1,
                     pin: true,
                     anticipatePin: 1,
