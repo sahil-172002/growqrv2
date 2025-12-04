@@ -74,7 +74,10 @@ export const Calltoaction: React.FC = () => {
             />
 
             {/* Radiant Sun Glow at Bottom - More Visible */}
-            <div className="absolute bottom-0 left-0 right-0 h-48 overflow-hidden">
+            <div className="absolute bottom-0 left-0 right-0 h-72 overflow-visible pointer-events-none">
+                {/* Fade mask to blend top edge */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-transparent h-24 z-10" />
+
                 {/* Outer Aura - Soft Wide Glow */}
                 <div
                     className="absolute left-1/2 -translate-x-1/2 -bottom-[350px] 
