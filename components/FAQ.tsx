@@ -16,14 +16,14 @@ const faqData: FAQItem[] = [
         category: "Getting Started",
         categoryIcon: Zap,
         question: "What is GrowQR and how does it work?",
-        answer: "GrowQR is your unified digital identity platform that combines your skills, credentials, and achievements into one verified profile. When someone scans your unique QR code, they instantly see your complete professional profile — verified skills, certifications, experience, and your real-time Q-Score. Think of it as your digital professional passport."
+        answer: "GrowQR is your unified digital identity platform that combines your skills, credentials, and achievements into one verified profile. When someone scans your unique QR code, they instantly see your complete professional profile: verified skills, certifications, experience, and your real-time Q-Score. Think of it as your digital professional passport."
     },
     {
         id: 2,
         category: "Getting Started",
         categoryIcon: Zap,
         question: "What is Q-Score and why does it matter?",
-        answer: "Q-Score is your Growth Identity Score — a real-time metric that quantifies your professional readiness. It's calculated using AI across 25+ dimensions including technical skills, soft skills, verified credentials, and achievements. Unlike static resumes, your Q-Score updates dynamically, giving employers and opportunities a live snapshot of your potential."
+        answer: "Q-Score is your Growth Identity Score, a real-time metric that quantifies your professional readiness. It's calculated using AI across 25+ dimensions including technical skills, soft skills, verified credentials, and achievements. Unlike static resumes, your Q-Score updates dynamically, giving employers and opportunities a live snapshot of your potential."
     },
     {
         id: 3,
@@ -39,21 +39,21 @@ const faqData: FAQItem[] = [
         category: "Security",
         categoryIcon: Shield,
         question: "How is my personal data protected?",
-        answer: "We use bank-grade 256-bit encryption for all data, both in transit and at rest. Your profile is stored on secure, GDPR-compliant servers. We never sell your data to third parties. You have complete control over what's visible — enable or disable any section of your profile with one click."
+        answer: "We use bank-grade 256-bit encryption for all data, both in transit and at rest. Your profile is stored on secure, GDPR-compliant servers. We never sell your data to third parties. You have complete control over what's visible. Enable or disable any section of your profile with one click."
     },
     {
         id: 5,
         category: "Security",
         categoryIcon: Shield,
         question: "How does credential verification work?",
-        answer: "We partner directly with universities, certification bodies, and employers to verify credentials at the source. Verified credentials are timestamped and recorded on blockchain, making them tamper-proof. You'll see a verification badge on each credential — verified, pending, or self-reported."
+        answer: "We partner directly with universities, certification bodies, and employers to verify credentials at the source. Verified credentials are timestamped and recorded on blockchain, making them tamper-proof. You'll see a verification badge on each credential: verified, pending, or self-reported."
     },
     {
         id: 6,
         category: "Security",
         categoryIcon: Shield,
         question: "Who can see my profile when they scan my QR?",
-        answer: "You're always in control. Set your profile to public (anyone can view), private (only approved connections), or custom (choose exactly which sections are visible). You can also create multiple QR codes with different visibility settings for different purposes — one for job applications, another for networking."
+        answer: "You're always in control. Set your profile to public (anyone can view), private (only approved connections), or custom (choose exactly which sections are visible). You can also create multiple QR codes with different visibility settings for different purposes, like one for job applications and another for networking."
     },
 
     // For Organizations - 3 Questions
@@ -85,7 +85,7 @@ const faqData: FAQItem[] = [
         category: "Pricing",
         categoryIcon: CreditCard,
         question: "Is GrowQR free for individuals?",
-        answer: "Yes! GrowQR is completely free for individuals. Create your profile, generate your QR code, build your Q-Score, and share it unlimited times — all at no cost. We believe everyone deserves a verified digital identity. Premium features like custom branding and advanced analytics are available with Pro."
+        answer: "Yes! GrowQR is completely free for individuals. Create your profile, generate your QR code, build your Q-Score, and share it unlimited times, all at no cost. We believe everyone deserves a verified digital identity. Premium features like custom branding and advanced analytics are available with Pro."
     },
     {
         id: 11,
@@ -115,14 +115,14 @@ const faqData: FAQItem[] = [
         category: "Global",
         categoryIcon: Globe,
         question: "Is GrowQR available in multiple languages?",
-        answer: "Currently, GrowQR is available in English, with Hindi, Spanish, and French coming soon. Your profile content can be in any language — we support Unicode. The Q-Score is universal and works across all languages and regions."
+        answer: "Currently, GrowQR is available in English, with Hindi, Spanish, and French coming soon. Your profile content can be in any language as we support Unicode. The Q-Score is universal and works across all languages and regions."
     },
     {
         id: 15,
         category: "Global",
         categoryIcon: Globe,
         question: "Can I use GrowQR if I'm relocating internationally?",
-        answer: "GrowQR is perfect for global mobility. Your verified credentials travel with you — no need to re-verify degrees or certifications in a new country. Employers worldwide can scan your QR and instantly see your verified professional history, making international job searches much easier."
+        answer: "GrowQR is perfect for global mobility. Your verified credentials travel with you, so there's no need to re-verify degrees or certifications in a new country. Employers worldwide can scan your QR and instantly see your verified professional history, making international job searches much easier."
     }
 ];
 
@@ -176,11 +176,16 @@ export const FAQ: React.FC = () => {
                         return (
                             <button
                                 key={category}
-                                onClick={() => setActiveCategory(activeCategory === category ? "all" : category)}
+                                onClick={() => {
+                                    // Only switch if clicking a different category (can't deselect)
+                                    if (activeCategory !== category) {
+                                        setActiveCategory(category);
+                                    }
+                                }}
                                 className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2
                   ${activeCategory === category
-                                        ? 'bg-gray-900 text-white shadow-lg'
-                                        : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                                        ? 'bg-gray-900 text-white shadow-lg cursor-default'
+                                        : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer'
                                     }`}
                             >
                                 <CategoryIcon className="w-4 h-4" />
@@ -210,15 +215,15 @@ export const FAQ: React.FC = () => {
                                 className="w-full px-6 py-5 flex items-center justify-between text-left group"
                             >
                                 <div className="flex items-center gap-4 flex-1 pr-4">
-                                    {/* Category Badge */}
-                                    <div className={`hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors
+                                    {/* Category Icon Badge */}
+                                    <div className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-full transition-colors flex-shrink-0
                     ${openId === faq.id
                                             ? 'bg-orange/10 text-orange'
                                             : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
                                         }`}
+                                        title={faq.category}
                                     >
-                                        <faq.categoryIcon className="w-3 h-3" />
-                                        {faq.category}
+                                        <faq.categoryIcon className="w-4 h-4" />
                                     </div>
 
                                     {/* Question Text */}

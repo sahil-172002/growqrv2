@@ -1,5 +1,5 @@
 
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TruthReveal } from './components/TruthReveal';
@@ -18,11 +18,14 @@ import { MockupShowcase } from './components/MockupShowcase';
 import { Chatbot } from './components/Chatbot';
 import { FAQ } from './components/FAQ';
 import { LoadingScreen, ScrollProgress, ScrollToTop } from './components/ui/PageUtils';
+import { usePerformanceSettings, getPerformanceClasses } from './utils/performance';
 
 
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const perfSettings = usePerformanceSettings();
+  const perfClasses = getPerformanceClasses(perfSettings);
 
   useLayoutEffect(() => {
     // Force scroll to top on reload
@@ -39,8 +42,35 @@ export default function App() {
     }
   }, []);
 
+  // Performance optimization styles
+  const perfStyles = `
+    /* Performance tier: ${perfSettings.tier} */
+    .no-blur * { 
+      filter: none !important; 
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    .no-shadows * { 
+      box-shadow: none !important; 
+      text-shadow: none !important;
+    }
+    .reduce-motion * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .perf-low .animate-pulse,
+    .perf-low .animate-spin-slow,
+    .perf-low .animate-gentle-float {
+      animation: none !important;
+    }
+  `;
+
   return (
     <>
+      {/* Performance optimization styles */}
+      <style>{perfStyles}</style>
+
       {/* Loading Screen */}
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
@@ -50,7 +80,7 @@ export default function App() {
       {/* Scroll To Top Button */}
       {!isLoading && <ScrollToTop />}
 
-      <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden
+      <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden ${perfClasses}
         ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>
         <Navbar />
 

@@ -155,6 +155,15 @@ export const Hero: React.FC = () => {
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // PERFORMANCE TIER DETECTION
+    const deviceMemory = (navigator as any).deviceMemory || 8;
+    const cpuCores = navigator.hardwareConcurrency || 8;
+    const isLowEndDevice = deviceMemory <= 4 || cpuCores <= 4 || prefersReducedMotion;
+    const isVeryLowEnd = deviceMemory <= 2 || cpuCores <= 2;
+
+    // Performance multiplier (lower = faster animations)
+    const perfMultiplier = isVeryLowEnd ? 0.4 : (isLowEndDevice ? 0.6 : 1);
+
     const ctx = gsap.context(() => {
       // Cache DOM queries for performance
       const textElements = text1Ref.current?.querySelectorAll('h2, p, .absolute.bottom-2');
@@ -165,7 +174,7 @@ export const Hero: React.FC = () => {
 
       // INITIAL STATE with GPU acceleration
       gsap.set(".eco-token-wrapper", { opacity: 0, z: -2000, scale: 0.5, force3D: true });
-      gsap.set(ecoHubWrapper, { opacity: 0, z: -2500, scale: 0, rotateY: 720, force3D: true });
+      gsap.set(ecoHubWrapper, { opacity: 0, z: -2500, scale: 0, rotateY: isLowEndDevice ? 360 : 720, force3D: true });
       gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto", force3D: true });
 
       // Explicitly set initial states for Hero elements to prevent scroll-back glitches
@@ -173,27 +182,30 @@ export const Hero: React.FC = () => {
       gsap.set(qrShards, { x: 0, y: 0, z: -10, rotateX: 0, rotateY: 0, scale: 0.8, opacity: 1, force3D: true });
       gsap.set(tunnelRef.current, { scale: 1, z: 0, rotateZ: 0, opacity: 1, force3D: true });
 
-      // Pre-calculate random positions for shards to ensure consistent animation on scroll back
+      // Pre-calculate random positions for shards (reduce for low-end)
       const shardAnimations = qrShards.map((_, i) => ({
-        x: (i % 2 === 0 ? -300 : 300) * (Math.random() + 0.5),
-        y: (i < 2 ? -300 : 300) * (Math.random() + 0.5),
-        z: Math.random() * 500,
-        rotateX: Math.random() * 720,
-        rotateY: Math.random() * 720,
+        x: (i % 2 === 0 ? -300 : 300) * (Math.random() + 0.5) * (isLowEndDevice ? 0.5 : 1),
+        y: (i < 2 ? -300 : 300) * (Math.random() + 0.5) * (isLowEndDevice ? 0.5 : 1),
+        z: Math.random() * (isLowEndDevice ? 250 : 500),
+        rotateX: Math.random() * (isLowEndDevice ? 360 : 720),
+        rotateY: Math.random() * (isLowEndDevice ? 360 : 720),
         scale: 0.5 + Math.random() * 0.5
       }));
 
       // Mobile detection
       const isMobile = window.innerWidth < 768;
 
-      // MASTER TIMELINE with MOBILE UX OPTIMIZATION
+      // Optimized scroll distances based on performance
+      const scrollEnd = isVeryLowEnd ? "+=1500" : (isLowEndDevice ? "+=2500" : (isMobile ? "+=1800" : "+=3800"));
+
+      // MASTER TIMELINE with PERFORMANCE OPTIMIZATION
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: isMobile ? "+=2125" : "+=5780",  // Reduced 15% for snappier feel
+          end: scrollEnd,
           pin: true,
-          scrub: prefersReducedMotion ? 0 : (isMobile ? 0.8 : 1), // Faster response on mobile
+          scrub: prefersReducedMotion ? 0 : (isLowEndDevice ? 0.5 : (isMobile ? 0.8 : 1)),
           anticipatePin: 1,
           invalidateOnRefresh: true,
           fastScrollEnd: true,
@@ -305,14 +317,14 @@ export const Hero: React.FC = () => {
       // 1. Central Hub: Scales up from 0
       tl.fromTo(ecoHubWrapper,
         { scale: 0, opacity: 0, rotateY: 720 },
-        { scale: 1, opacity: 1, rotateY: 0, duration: 2, ease: "back.out(1.7)", force3D: true },
+        { scale: 1, opacity: 1, rotateY: 0, duration: 1.2, ease: "back.out(1.5)", force3D: true },
         "start+=1.5"  // Changed from 1.8 to 1.5 to reduce gap
       );
 
       // Rings Expansion
       tl.fromTo(".eco-ring",
         { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 2, ease: "power2.out", stagger: 0.2 },
+        { scale: 1, opacity: 1, duration: 1.2, ease: "power2.out", stagger: 0.1 },
         "start+=1.5"
       );
 
@@ -327,7 +339,7 @@ export const Hero: React.FC = () => {
           { x: 0, y: 0, scale: 0, opacity: 0, rotateY: isMobile ? 90 : 180 }, // Less rotation on mobile
           {
             x: tx, y: ty, scale: 1, opacity: 1, rotateY: 0,
-            duration: isMobile ? 2 : 3, // Faster on mobile
+            duration: isMobile ? 1.2 : 1.5, // Faster animations
             ease: "power2.out",
             force3D: true
           },
@@ -341,7 +353,7 @@ export const Hero: React.FC = () => {
         {
           width: radius,
           opacity: 1,
-          duration: isMobile ? 2 : 3, // Faster on mobile
+          duration: isMobile ? 1.2 : 1.5, // Faster animations
           ease: "power2.out",
           stagger: 0,
           force3D: true
@@ -353,73 +365,60 @@ export const Hero: React.FC = () => {
       gsap.to(".ring-container", { rotation: 360, duration: 120, repeat: -1, ease: "none", force3D: true });
       gsap.to(".feature-rotator", { rotation: -360, duration: 120, repeat: -1, ease: "none", force3D: true });
 
-      // === PREMIUM EXIT ANIMATION ===
-      // Give the ecosystem some time to be visible
-      tl.to({}, { duration: 2 }, "+=0.5");
+      // === UNIFIED EXIT ANIMATION (ONE SCROLL) ===
+      // Brief hold for users to see the ecosystem
+      tl.to({}, { duration: 0.8 }, "+=0.2");
 
-      // Phase 1: Beams fade out
+      // All exit happens together at "exit" label
+      // Beams + lines fade together
       tl.to(beams, {
         opacity: 0,
-        duration: 1,
+        duration: 0.4,
         ease: "power2.in"
       }, "exit");
 
-      // Phase 2: Connection lines dissolve
       tl.to(".connection-line", {
         opacity: 0,
-        duration: 1.2,
+        duration: 0.4,
         ease: "power1.in"
-      }, "exit+=0.3");
+      }, "exit");
 
-      // Phase 3: Feature nodes scatter and implode
+      // Features implode directly (no scatter phase)
       featureNodes.forEach((node: any, i: number) => {
-        const angle = (i * (360 / features.length)) * (Math.PI / 180);
-
-        // First: Brief scatter outward
-        tl.to(node, {
-          x: `+=${Math.cos(angle) * 50}`,
-          y: `+=${Math.sin(angle) * 50}`,
-          scale: 1.1,
-          duration: 0.6,
-          ease: "power1.out",
-          force3D: true
-        }, `exit+=0.5+=${i * 0.05}`);
-
-        // Then: Implode to center with rotation
         tl.to(node, {
           x: 0,
           y: 0,
           scale: 0,
           opacity: 0,
-          rotateY: -180,
-          z: -400,
-          filter: "blur(10px)",
-          duration: 1.5,
+          rotateY: -60,
+          z: -150,
+          filter: "blur(4px)",
+          duration: 0.6,
           ease: "power2.in",
           force3D: true
-        }, `exit+=1.2+=${i * 0.06}`);
+        }, `exit+=${i * 0.02}`);
       });
 
-      // Phase 4: Central hub collapses with dramatic rotation
+      // Hub collapses at same time
       tl.to(".eco-hub-wrapper", {
         scale: 0,
         opacity: 0,
-        rotateY: -540,
-        z: -600,
-        filter: "blur(15px)",
-        duration: 2,
-        ease: "expo.in",
+        rotateY: -180,
+        z: -200,
+        filter: "blur(8px)",
+        duration: 0.6,
+        ease: "power2.in",
         force3D: true
-      }, "exit+=2");
+      }, "exit+=0.1");
 
-      // Phase 5: Background and container fade
+      // Container fade
       tl.to(ecosystemRef.current, {
         opacity: 0,
-        filter: "blur(20px)",
-        duration: 1.5,
+        filter: "blur(8px)",
+        duration: 0.5,
         ease: "power1.in",
         force3D: true
-      }, "exit+=2.5");
+      }, "exit+=0.4");
 
     }, containerRef);
 
@@ -598,25 +597,18 @@ export const Hero: React.FC = () => {
 
             </div>
 
-            {/* Diagram Label / Explanation - Floating with Connector (Bottom) */}
-            <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none z-30 flex flex-col items-center">
-              <div className="flex flex-col-reverse items-center gap-3">
-                {/* Unified Text (No Badge) */}
-                <div className="flex items-center gap-3 transform hover:scale-105 transition-transform duration-300 px-4 py-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-orange animate-pulse"></div>
-                    <span className="text-sm md:text-base font-bold tracking-[0.2em] text-gray-900 uppercase font-montreal">Growth Matrix</span>
-                  </div>
-
-                  <div className="w-px h-4 bg-gray-300"></div>
-
-                  <p className="text-sm md:text-base text-gray-500 font-medium whitespace-nowrap">
-                    Connecting every dimension of your potential
-                  </p>
+            {/* Diagram Label - Clean Bottom Aligned */}
+            <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none z-30">
+              <div className="flex flex-col items-center gap-2">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm">
+                  <div className="w-2 h-2 rounded-full bg-orange animate-pulse"></div>
+                  <span className="text-sm font-bold tracking-wider text-gray-900 uppercase font-montreal">Your Toolkit</span>
                 </div>
-
-                {/* Connecting Line to Diagram (Pointing Up) */}
-                <div className="w-px h-8 md:h-12 bg-gradient-to-t from-gray-300 to-transparent border-r border-dashed border-gray-300 opacity-50"></div>
+                {/* Subtitle */}
+                <p className="text-sm text-gray-500 font-medium">
+                  9 features to grow, prove, and get discovered
+                </p>
               </div>
             </div>
           </div>
