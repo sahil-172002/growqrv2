@@ -131,29 +131,43 @@ export const TruthReveal: React.FC = () => {
       });
 
       // --- SLIDE 4 (GrowQR Solution - EXPANDED) ---
-      // Title animation
+      // Set initial state for cards (hidden)
+      gsap.set(slide4Features, { opacity: 0, y: 40, scale: 0.9 });
+
+      // Track if cards animation has played
+      let cardsAnimated = false;
+
+      // Title animation - with callback to trigger cards
       pinTl.fromTo(slide4,
         { opacity: 0, scale: 0.9 },
-        { opacity: 1, scale: 1, duration: 1.5, ease: "power3.out", force3D: true }
-      );
-
-      // Feature cards stagger in
-      pinTl.fromTo(slide4Features,
-        { opacity: 0, y: 40, scale: 0.9 },
         {
           opacity: 1,
-          y: 0,
           scale: 1,
-          duration: 1,
-          stagger: 0.15,
-          ease: "back.out(1.4)",
-          force3D: true
-        },
-        "-=0.8"
+          duration: 1.5,
+          ease: "power3.out",
+          force3D: true,
+          onUpdate: function () {
+            // When slide4 is mostly visible, trigger cards animation ONCE
+            if (!cardsAnimated && slide4.style.opacity && parseFloat(slide4.style.opacity) > 0.7) {
+              cardsAnimated = true;
+              // Auto-play cards animation (NOT scroll-based)
+              gsap.to(slide4Features, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.4,
+                stagger: 0.06,
+                ease: "back.out(1.7)",
+                force3D: true,
+                overwrite: true
+              });
+            }
+          }
+        }
       );
 
       // Hold for reading
-      pinTl.to({}, { duration: 1.5 });
+      pinTl.to({}, { duration: 2 });
 
       // --- SLIDE 4 EXIT ---
       pinTl.to(slide4Features, {
