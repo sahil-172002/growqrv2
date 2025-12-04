@@ -354,7 +354,7 @@ export const Growth: React.FC = () => {
                         Growing <span className="text-orange">Together.</span>
                     </h2>
                     <p className="text-lg text-gray-500 max-w-xl mx-auto font-medium">
-                        As you grow, the network strengthens. As it strengthens, you soar.
+                        Your growth fuels the network. The network fuels you.
                     </p>
                 </div>
 
