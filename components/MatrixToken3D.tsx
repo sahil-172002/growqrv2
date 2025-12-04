@@ -109,6 +109,9 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
     const layerSpacing = 1;
     const radius = "50%";
 
+    // Responsive text size based on tile size
+    const textSize = size < 100 ? "text-[8px]" : "text-[10px]";
+
     return (
         <div
             className={`relative perspective-800 select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
@@ -166,7 +169,7 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
                             <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0 backdrop-blur-sm">
                                 <Icon size={18} className="relative z-10 text-white" />
                             </div>
-                            <span className="text-[10px] font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md">
+                            <span className={`${textSize} font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md`}>
                                 {label}
                             </span>
                         </div>
@@ -191,7 +194,7 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
                             <div className="absolute inset-0 bg-orange/10"></div>
                             <Icon size={18} className="relative z-10 text-orange" />
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-gray-600 text-center leading-tight subpixel-antialiased w-full px-1 font-poppins">
+                        <span className={`${textSize} font-bold uppercase tracking-wide text-gray-600 text-center leading-tight subpixel-antialiased w-full px-1 font-poppins`}>
                             {label}
                         </span>
                     </div>

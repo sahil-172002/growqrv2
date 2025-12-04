@@ -135,12 +135,15 @@ export const CompactIDCard3D: React.FC = () => {
     // DISABLED CONTINUOUS SPIN for Hub (User Request)
     const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0.04, false, false, false);
 
-    // Dimensions
-    const width = "150px";
-    const height = "225px";
-    const depth = 12;
-    const radius = "24px";
+    // Responsive Dimensions
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const width = isMobile ? "100px" : "150px";
+    const height = isMobile ? "150px" : "225px";
+    const depth = isMobile ? 8 : 12;
+    const radius = isMobile ? "16px" : "24px";
     const layerSpacing = 1;
+    const qrSize = isMobile ? 60 : 100;
+    const scoreSize = isMobile ? "text-2xl" : "text-3xl";
 
     const shadowScale = useTransform(smoothRotateX, (v) => 1 - Math.abs(Math.sin(v * Math.PI / 180)) * 0.2);
 
@@ -175,7 +178,7 @@ export const CompactIDCard3D: React.FC = () => {
                 <motion.div
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[20%] bg-black/30 blur-xl rounded-[100%]"
                     style={{
-                        transform: `translateZ(-60px) translateY(120px)`,
+                        transform: `translateZ(-60px) translateY(${isMobile ? 80 : 120}px)`,
                         scale: shadowScale,
                     }}
                 />
@@ -206,33 +209,32 @@ export const CompactIDCard3D: React.FC = () => {
                     }}
                 >
                     <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent opacity-60 pointer-events-none z-30 mix-blend-overlay"></div>
 
                     {/* Removed scale-x-[-1] as it was causing double-mirroring (inversion) */}
                     <div className="w-full h-full flex flex-col items-center justify-center p-4 text-gray-800">
                         <div className="relative mb-2">
                             <div className="absolute inset-0 bg-orange/5 blur-xl rounded-full"></div>
                             {/* QR Code in Dark Gray/Black */}
-                            <QrCode size={100} className="relative text-gray-800 drop-shadow-sm" />
+                            <QrCode size={qrSize} className="relative text-gray-800 drop-shadow-sm" />
                         </div>
 
                         {/* Mini Data Stream (Dark Theme Version) */}
-                        <div className="flex flex-col items-center justify-center w-full mt-4">
+                        <div className="flex flex-col items-center justify-center w-full mt-2">
                             {/* Label */}
                             <div className="flex items-center gap-1 mb-1 opacity-60">
-                                <span className="text-[8px] font-mono text-gray-600 tracking-[0.2em] uppercase font-bold">Q-Score</span>
+                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-600 tracking-[0.2em] uppercase font-bold`}>Q-Score</span>
                             </div>
 
                             {/* Score Display */}
                             <div className="flex items-baseline gap-1 relative mb-2">
-                                <span className="font-mono text-3xl font-black text-gray-900 tracking-tighter drop-shadow-sm">
+                                <span className={`font-mono ${scoreSize} font-black text-gray-900 tracking-tighter drop-shadow-sm`}>
                                     {score}
                                 </span>
-                                <span className="text-[8px] font-mono text-gray-500 font-bold">/ 100</span>
+                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-500 font-bold`}>/ 100</span>
                             </div>
 
                             {/* Frequency Visualizer (Dark Bars) */}
-                            <div className="flex items-end justify-center gap-[2px] h-3 w-16 opacity-60">
+                            <div className={`flex items-end justify-center gap-[2px] ${isMobile ? 'h-2 w-12' : 'h-3 w-16'} opacity-60`}>
                                 {bars.map((h, i) => (
                                     <div key={i}
                                         className="w-[2px] bg-gray-800 rounded-full transition-all duration-75 ease-linear"
@@ -260,11 +262,37 @@ export const CompactIDCard3D: React.FC = () => {
                         <div className="relative mb-2">
                             <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
                             {/* Increased QR Code Size */}
-                            <QrCode size={100} className="relative text-white/90 drop-shadow-md" />
+                            <QrCode size={qrSize} className="relative text-white/90 drop-shadow-md" />
                         </div>
 
                         {/* New Mini Data Stream */}
-                        <MiniDataStream />
+                        <div className="flex flex-col items-center justify-center w-full mt-2">
+                            {/* Label */}
+                            <div className="flex items-center gap-1 mb-1 opacity-80">
+                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white tracking-[0.2em] uppercase font-bold`}>Q-Score</span>
+                            </div>
+
+                            {/* Score Display */}
+                            <div className="flex items-baseline gap-1 relative mb-2">
+                                <span className={`font-mono ${scoreSize} font-black text-white tracking-tighter drop-shadow-md`}>
+                                    {score}
+                                </span>
+                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white/60 font-bold`}>/ 100</span>
+                            </div>
+
+                            {/* Frequency Visualizer */}
+                            <div className={`flex items-end justify-center gap-[2px] ${isMobile ? 'h-2 w-12' : 'h-3 w-16'} opacity-80`}>
+                                {bars.map((h, i) => (
+                                    <div key={i}
+                                        className="w-[2px] bg-white rounded-full transition-all duration-75 ease-linear"
+                                        style={{
+                                            height: `${h}%`,
+                                            opacity: Math.max(0.4, h / 100)
+                                        }}
+                                    ></div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

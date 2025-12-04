@@ -32,7 +32,7 @@ export const Qscore: React.FC = () => {
 
   // Layout Configuration
   const xOffset = 420; // Increased distance for wider tiles
-  const ySpacing = 100; // Vertical spacing between items
+  const ySpacing = 90; // Vertical spacing between items
 
   useLayoutEffect(() => {
     const gsap = (window as any).gsap;
@@ -283,14 +283,14 @@ export const Qscore: React.FC = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="py-24 md:py-40 bg-white overflow-hidden relative min-h-[140vh]">
+    <section ref={containerRef} className="py-24 bg-white overflow-hidden relative min-h-screen">
       <div className="max-w-7xl mx-auto px-6 text-center mb-4 relative z-20">
-        <h2 className="text-3xl md:text-5xl font-semibold mb-4 md:mb-6 text-black font-montreal">
-          25+ Core Dimensions. <span className="text-orange">One Score.</span>
+        <h2 className="text-3xl md:text-5xl font-semibold mb-2 md:mb-2 text-black font-montreal">
+          Powered by <span className="text-orange">25+ Dimensions.</span>
         </h2>
       </div>
 
-      <div className="relative w-full h-[600px] md:h-[800px] -mt-12 flex items-center justify-center perspective-1000">
+      <div className="relative w-full h-[600px] md:h-[800px] -mt-24 flex items-center justify-center perspective-1000">
         <div className="scale-[0.5] md:scale-[0.8] lg:scale-100 relative w-full h-full flex items-center justify-center transform-style-3d will-animate">
 
           {/* SVG Connections Layer */}

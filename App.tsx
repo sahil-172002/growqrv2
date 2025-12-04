@@ -10,10 +10,13 @@ import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
 import { Reveal } from './components/ui/Reveal';
 import { Qscore } from './components/Qscore';
+import { Growth } from './components/Growth';
 // import { CircularFeatures } from './components/CircularFeatures';
 // import { Ecosystem } from './components/Ecosystem';
 import { Calltoaction } from './components/Calltoaction';
 import { MockupShowcase } from './components/MockupShowcase';
+import { Chatbot } from './components/Chatbot';
+import { FAQ } from './components/FAQ';
 
 
 
@@ -40,14 +43,16 @@ export default function App() {
       <Hero />
       <TruthReveal />
       <Qscore />
+      <Growth />
       {/* <MockupShowcase /> */}
 
       {/* <Challenge /> */}
       <SolutionsGrid />
-      <UnifiedShowcase />
+      {/* <UnifiedShowcase /> */}
 
       <TechEngine />
 
+      <FAQ />
 
       {/* <Ecosystem /> */}
       {/* <CircularFeatures /> */}
@@ -67,7 +72,7 @@ export default function App() {
 
           <UnifiedShowcase />
           {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
-          <UnifiedShowcase />
+
 
           <TechEngine />
 
@@ -99,6 +104,9 @@ export default function App() {
       )}
 
       <Footer />
+
+      {/* Floating Chatbot */}
+      <Chatbot />
     </main>
   );
 }

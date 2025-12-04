@@ -1,5 +1,6 @@
 
 import React, { useRef, useLayoutEffect } from 'react';
+import { QrCode, Shield, Zap, Globe, CheckCircle2, Fingerprint, BarChart3 } from 'lucide-react';
 
 export const TruthReveal: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,12 +15,17 @@ export const TruthReveal: React.FC = () => {
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Mobile detection for optimized UX
+    const isMobile = window.innerWidth < 768;
+
     const ctx = gsap.context(() => {
       // CACHE ALL DOM QUERIES for performance
       const lines = Array.from(textContainerRef.current!.children);
       const slide1 = lines[0] as HTMLElement;
       const slide3 = lines[1] as HTMLElement;
       const slide4 = lines[2] as HTMLElement;
+      const slide4Features = gsap.utils.toArray(".growqr-feature");
+      const slide5 = lines[3] as HTMLElement;
 
       const bgs = gsap.utils.toArray(".slide3-bg");
       const fgs = gsap.utils.toArray(".slide3-fg");
@@ -50,12 +56,12 @@ export const TruthReveal: React.FC = () => {
         }
       );
 
-      // 2. Pinning Timeline (Content) - Optimized
+      // 2. Pinning Timeline (Content) - MOBILE OPTIMIZED
       const pinTl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=2500",
+          end: isMobile ? "+=2500" : "+=4500", // Extended for new slide content
           pin: true,
           scrub: prefersReducedMotion ? 0 : 1,
           anticipatePin: 1,
@@ -124,10 +130,52 @@ export const TruthReveal: React.FC = () => {
         force3D: true
       });
 
-      // --- SLIDE 4 (GrowQR Solution) ---
+      // --- SLIDE 4 (GrowQR Solution - EXPANDED) ---
+      // Title animation
       pinTl.fromTo(slide4,
-        { opacity: 0, scale: 0.8 },
-        { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.2)", force3D: true }
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 1.5, ease: "power3.out", force3D: true }
+      );
+
+      // Feature cards stagger in
+      pinTl.fromTo(slide4Features,
+        { opacity: 0, y: 40, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          stagger: 0.15,
+          ease: "back.out(1.4)",
+          force3D: true
+        },
+        "-=0.8"
+      );
+
+      // Hold for reading
+      pinTl.to({}, { duration: 1.5 });
+
+      // --- SLIDE 4 EXIT ---
+      pinTl.to(slide4Features, {
+        opacity: 0,
+        y: -20,
+        duration: 0.6,
+        stagger: 0.05,
+        force3D: true
+      });
+
+      pinTl.to(slide4, {
+        opacity: 0,
+        scale: 1.1,
+        filter: 'blur(10px)',
+        duration: 0.8,
+        force3D: true
+      }, "-=0.3");
+
+      // --- SLIDE 5 (Q-Score Intro) ---
+      pinTl.fromTo(slide5,
+        { opacity: 0, scale: 0.9, y: 30 },
+        { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "power3.out", force3D: true }
       );
 
     }, containerRef);
@@ -151,43 +199,128 @@ export const TruthReveal: React.FC = () => {
             </p>
           </div>
 
-          {/* SLIDE 3 */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center w-full opacity-0 pointer-events-none gap-6 md:gap-16 will-animate">
+          {/* SLIDE 3 (HIDDEN/BURIED/LOST) */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center w-full opacity-0 pointer-events-none gap-8 md:gap-16 will-animate">
 
             {/* Row 1 */}
-            <div className="relative w-full h-24 md:h-48 flex items-center justify-center">
-              <span className="slide3-bg absolute text-[4rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">HIDDEN</span>
-              <p className="slide3-fg relative z-10 text-xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-4 md:px-6 py-2 font-montreal whitespace-nowrap">
+            <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
+              <span className="slide3-bg absolute text-[5.5rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">HIDDEN</span>
+              <p className="slide3-fg relative z-10 text-2xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-6 md:px-6 py-3 md:py-2 font-montreal whitespace-nowrap">
                 Behind Outdated Resumes.
               </p>
             </div>
 
             {/* Row 2 */}
-            <div className="relative w-full h-24 md:h-48 flex items-center justify-center">
-              <span className="slide3-bg absolute text-[4rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">BURIED</span>
-              <p className="slide3-fg relative z-10 text-xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-4 md:px-6 py-2 font-montreal whitespace-nowrap">
+            <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
+              <span className="slide3-bg absolute text-[5.5rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">BURIED</span>
+              <p className="slide3-fg relative z-10 text-2xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-6 md:px-6 py-3 md:py-2 font-montreal whitespace-nowrap">
                 In Broken Systems.
               </p>
             </div>
 
             {/* Row 3 */}
-            <div className="relative w-full h-24 md:h-48 flex items-center justify-center">
-              <span className="slide3-bg absolute text-[4rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">LOST</span>
-              <p className="slide3-fg relative z-10 text-xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-4 md:px-6 py-2 font-montreal whitespace-nowrap">
+            <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
+              <span className="slide3-bg absolute text-[5.5rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">LOST</span>
+              <p className="slide3-fg relative z-10 text-2xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-6 md:px-6 py-3 md:py-2 font-montreal whitespace-nowrap">
                 In The Noise.
               </p>
             </div>
 
           </div>
 
-          {/* SLIDE 4 */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 px-4 will-animate">
-            <div className="relative inline-block">
+          {/* SLIDE 4 - EXPANDED GROWQR EXPLANATION */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 px-4 will-animate">
+
+            {/* Main Header */}
+            <div className="relative inline-block mb-8 md:mb-12">
               <div className="absolute -inset-10 bg-orange/10 blur-3xl rounded-full"></div>
-              <p className="relative text-3xl md:text-7xl font-black text-black tracking-tight leading-tight font-montreal">
-                We built <span className="text-orange inline-block transform hover:scale-105 transition-transform duration-300 cursor-pointer">GrowQR</span> <br />to change that.
+              <p className="relative text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal">
+                We built <span className="text-orange inline-block transform hover:scale-105 transition-transform duration-300 cursor-pointer">GrowQR</span>
+              </p>
+              <p className="relative text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal mt-1">
+                to change that.
               </p>
             </div>
+
+            {/* Subtext */}
+            <p className="text-lg md:text-2xl text-gray-500 font-montreal mb-8 md:mb-12 max-w-3xl leading-relaxed">
+              GrowQR combines your <span className="text-gray-900 font-medium">skills</span>, <span className="text-gray-900 font-medium">credentials</span>, and <span className="text-gray-900 font-medium">achievements</span> into one verified profile. Accessible via a single QR code.
+            </p>
+
+            {/* Feature Pills */}
+            <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-4xl">
+
+              {/* Feature 1 */}
+              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
+                  <QrCode className="w-5 h-5 text-orange" />
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 text-sm">One QR Code</p>
+                  <p className="text-xs text-gray-500">Your entire identity</p>
+                </div>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
+                  <Shield className="w-5 h-5 text-orange" />
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 text-sm">Verified Credentials</p>
+                  <p className="text-xs text-gray-500">Tamper-proof trust</p>
+                </div>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
+                  <BarChart3 className="w-5 h-5 text-orange" />
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 text-sm">Real-Time Q-Score</p>
+                  <p className="text-xs text-gray-500">Your readiness metric</p>
+                </div>
+              </div>
+
+              {/* Feature 4 */}
+              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
+                  <Globe className="w-5 h-5 text-orange" />
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 text-sm">Universal Access</p>
+                  <p className="text-xs text-gray-500">Works everywhere</p>
+                </div>
+              </div>
+
+              {/* Feature 5 */}
+              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
+                  <Zap className="w-5 h-5 text-orange" />
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 text-sm">AI-Powered</p>
+                  <p className="text-xs text-gray-500">Smart matching</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* SLIDE 5 (Q-Score Bridge) */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 px-4 will-animate text-center">
+            <p className="text-3xl md:text-7xl font-light text-black font-montreal mb-6 md:mb-8">
+              Meet <span className="text-orange font-semibold">Q-Score.</span>
+            </p>
+            <p className="text-xl md:text-3xl text-gray-600 font-montreal max-w-5xl mx-auto leading-relaxed">
+              Your <span className="font-medium">Growth Identity Score</span>. <br className="hidden md:block" />
+              Built from Visible Talent, Verified Proof, and Personal Traits.
+            </p>
+            <p className="text-base md:text-xl text-gray-400 font-montreal mt-6 md:mt-8">
+              Continuously measured across 25+ unique dimensions.
+            </p>
           </div>
 
         </div>

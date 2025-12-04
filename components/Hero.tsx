@@ -62,7 +62,7 @@ const HeroBackground = React.forwardRef<HTMLDivElement>((props, ref) => (
   <div ref={ref} className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none bg-gray-50/30 transform-gpu origin-center">
 
     {/* Ambient Floating Gradients - Boosted Visibility */}
-    <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-orange/15 rounded-full blur-[100px] mix-blend-multiply animate-[float_18s_ease-in-out_infinite]" />
+    <div className="hero-orange-glow absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-orange/15 rounded-full blur-[100px] mix-blend-multiply animate-[float_18s_ease-in-out_infinite]" />
     <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-blue-200/30 rounded-full blur-[80px] mix-blend-multiply animate-[float_22s_ease-in-out_infinite_reverse]" />
     <div className="absolute top-[20%] left-[20%] w-[40vw] h-[40vw] bg-purple-100/40 rounded-full blur-[90px] mix-blend-multiply animate-pulse-slow" />
 
@@ -183,18 +183,21 @@ export const Hero: React.FC = () => {
         scale: 0.5 + Math.random() * 0.5
       }));
 
-      // MASTER TIMELINE with performance optimizations
+      // Mobile detection
+      const isMobile = window.innerWidth < 768;
+
+      // MASTER TIMELINE with MOBILE UX OPTIMIZATION
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=6800",  // Increased to slow down the animation significantly
+          end: isMobile ? "+=2500" : "+=6800",  // MUCH shorter on mobile (60% reduction)
           pin: true,
-          scrub: prefersReducedMotion ? 0 : 1, // Instant for reduced motion
+          scrub: prefersReducedMotion ? 0 : (isMobile ? 0.8 : 1), // Faster response on mobile
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          fastScrollEnd: true, // Performance optimization
-          preventOverlaps: true, // Prevent animation conflicts
+          fastScrollEnd: true,
+          preventOverlaps: true,
 
           // Reset elements when scrolling back from below
           onEnterBack: () => {
@@ -233,25 +236,25 @@ export const Hero: React.FC = () => {
 
       // --- QR CARD & SHARDS ANIMATION SEQUENCE ---
 
-      // 1. Jitter/Warning Phase (Card shakes) - Using absolute values to avoid drift
+      // 1. Jitter/Warning Phase (Card shakes) - OPTIMIZED FOR MOBILE
       tl.to(introCardRef.current, {
         x: 5,
         y: 5,
         scale: 0.95,
         duration: 0.1,
         yoyo: true,
-        repeat: 5,
+        repeat: isMobile ? 3 : 5, // Fewer repeats on mobile
         ease: "sine.inOut",
         force3D: true
       }, "start");
 
-      // 2. Disintegration Phase (Card explodes)
+      // 2. Disintegration Phase (Card explodes) - FASTER ON MOBILE
       tl.to(introCardRef.current, {
         scale: 0,
         opacity: 0,
-        z: 500,
-        rotateZ: 180,
-        duration: 1.5,
+        z: isMobile ? 300 : 500, // Less Z-depth on mobile
+        rotateZ: isMobile ? 90 : 180, // Less rotation on mobile
+        duration: isMobile ? 1 : 1.5, // Faster on mobile
         ease: "power2.in",
         force3D: true
       }, "start+=0.6"); // Starts after jitter
@@ -262,24 +265,31 @@ export const Hero: React.FC = () => {
           x: shardAnimations[i].x,
           y: shardAnimations[i].y,
           z: shardAnimations[i].z,
-          rotateX: shardAnimations[i].rotateX,
-          rotateY: shardAnimations[i].rotateY,
+          rotateX: isMobile ? shardAnimations[i].rotateX / 2 : shardAnimations[i].rotateX, // Half rotation on mobile
+          rotateY: isMobile ? shardAnimations[i].rotateY / 2 : shardAnimations[i].rotateY,
           opacity: 0,
           scale: shardAnimations[i].scale,
-          duration: 2,
+          duration: isMobile ? 1.2 : 2, // Faster on mobile
           ease: "power3.out",
           force3D: true
         }, `start+=0.6+=${i * 0.02}`);
       });
 
-      // --- PHASE 2: TRANSITION TO ECOSYSTEM ---
+      // --- PHASE 2: TRANSITION TO ECOSYSTEM --- OPTIMIZED FOR MOBILE
       tl.to(tunnelRef.current, {
-        scale: 4,
-        z: 800,
+        scale: isMobile ? 3 : 4, // Less scale on mobile
+        z: isMobile ? 500 : 800, // Less Z-depth on mobile
         opacity: 0,
-        duration: 2,
+        duration: isMobile ? 1.5 : 2, // Faster on mobile
         ease: "power2.inOut",
         force3D: true
+      }, "start+=0.5");
+
+      // Fade out orange glow for Ecosystem slide
+      tl.to(".hero-orange-glow", {
+        opacity: 0,
+        duration: 2,
+        ease: "power2.inOut"
       }, "start+=0.5");
 
       // --- GAP: Tunnel Travel (REDUCED GAP) ---
@@ -299,18 +309,25 @@ export const Hero: React.FC = () => {
         "start+=1.5"  // Changed from 1.8 to 1.5 to reduce gap
       );
 
-      // 2. Features: Expand from center (using cached queries)
+      // Rings Expansion
+      tl.fromTo(".eco-ring",
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 2, ease: "power2.out", stagger: 0.2 },
+        "start+=1.5"
+      );
+
+      // 2. Features: Expand from center (using cached queries) - MOBILE 10% INCREASE
+      const radius = window.innerWidth < 768 ? 143 : (window.innerWidth < 1024 ? 200 : 255);
       featureNodes.forEach((node: any, i: number) => {
         const angle = (i * (360 / features.length)) * (Math.PI / 180);
-        const radius = 255;
         const tx = Math.cos(angle) * radius;
         const ty = Math.sin(angle) * radius;
 
         tl.fromTo(node,
-          { x: 0, y: 0, scale: 0, opacity: 0, rotateY: 180 },
+          { x: 0, y: 0, scale: 0, opacity: 0, rotateY: isMobile ? 90 : 180 }, // Less rotation on mobile
           {
             x: tx, y: ty, scale: 1, opacity: 1, rotateY: 0,
-            duration: 3,
+            duration: isMobile ? 2 : 3, // Faster on mobile
             ease: "power2.out",
             force3D: true
           },
@@ -318,13 +335,13 @@ export const Hero: React.FC = () => {
         );
       });
 
-      // BEAM EXPANSION (using cached queries)
+      // BEAM EXPANSION (using cached queries) - RESPONSIVE WIDTH
       tl.fromTo(beams,
         { width: 0, opacity: 0 },
         {
-          width: 255,
+          width: radius,
           opacity: 1,
-          duration: 3,
+          duration: isMobile ? 2 : 3, // Faster on mobile
           ease: "power2.out",
           stagger: 0,
           force3D: true
@@ -464,7 +481,7 @@ export const Hero: React.FC = () => {
 
           {/* TUNNEL (Slide 1) */}
           <div ref={tunnelRef} className="absolute inset-0 transform-style-3d flex items-center justify-center will-animate">
-            <div className="relative w-[600px] h-[600px] transform-style-3d">
+            <div className="relative w-[90vw] max-w-[600px] h-[90vw] max-h-[600px] transform-style-3d">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={`tunnel-ring-${i}`}
@@ -472,7 +489,7 @@ export const Hero: React.FC = () => {
                   style={{
                     width: `${60 + i * 20}%`,
                     height: `${60 + i * 20}%`,
-                    transform: `translateZ(${-i * 300}px)`,
+                    transform: `translateZ(${-i * (window.innerWidth < 768 ? 150 : 300)}px)`,
                     opacity: 0.6 - (i * 0.1)
                   }}
                 ></div>
@@ -505,16 +522,19 @@ export const Hero: React.FC = () => {
 
             <style>{beamStyle}</style>
 
-            <div className="relative w-[800px] h-[800px] flex items-center justify-center transform-style-3d pointer-events-auto">
+            <div className="relative w-[90vw] max-w-[350px] md:max-w-[600px] lg:max-w-[800px] h-[90vw] max-h-[350px] md:max-h-[600px] lg:max-h-[800px] flex items-center justify-center transform-style-3d pointer-events-auto -translate-y-12">
 
               {/* Background Orbits */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
-                <div className="absolute w-[500px] h-[500px] border border-gray-300 rounded-full"></div>
-                <div className="absolute w-[700px] h-[700px] border border-dashed border-gray-300 rounded-full"></div>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-100">
+                {/* Inner Ring - Solid - Reverse Spin */}
+                <div className="eco-ring absolute w-[45%] h-[45%] md:w-[55%] md:h-[55%] lg:w-[400px] lg:h-[400px] border border-gray-300 rounded-full animate-spin-slow animation-reverse" style={{ animationDuration: '25s' }}></div>
+
+                {/* Outer Ring - Dashed - Spin */}
+                <div className="eco-ring absolute w-[70%] h-[70%] md:w-[80%] md:h-[80%] lg:w-[600px] lg:h-[600px] border border-dashed border-gray-300 rounded-full animate-spin-slow" style={{ animationDuration: '40s' }}></div>
               </div>
 
               {/* Central Hub */}
-              <div className="eco-hub-wrapper relative z-20 transform-style-3d">
+              <div className="eco-hub-wrapper relative z-20 transform-style-3d scale-50 md:scale-90 lg:scale-100">
                 <div className="">
                   <CompactIDCard3D />
                 </div>
@@ -524,33 +544,42 @@ export const Hero: React.FC = () => {
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d ring-container">
 
                 {/* BEAMS LAYER */}
+                {/* BEAMS LAYER - Commented out as per request
                 {features.map((_, i) => {
-                  const angleDeg = i * (360 / features.length);
+                  const angle = (i * (360 / features.length)) * (Math.PI / 180);
+                  const radius = typeof window !== 'undefined' && window.innerWidth < 768 ? 143 : (window.innerWidth < 1024 ? 200 : 255);
+                  const x = Math.cos(angle) * radius;
+                  const y = Math.sin(angle) * radius;
+
                   return (
                     <div
                       key={`beam-${i}`}
-                      className="feature-beam absolute top-1/2 left-1/2 h-[2px] origin-left beam-gradient"
+                      className="feature-beam absolute pointer-events-none"
                       style={{
-                        width: 0, // Starts at 0, animates to 255
-                        transform: `translateY(-1px) rotate(${angleDeg}deg) translateZ(-10px)`,
-                        opacity: 0,
-                        boxShadow: '0 0 10px rgba(255, 106, 47, 0.4)'
+                        left: '50%',
+                        top: '50%',
+                        width: 0,
+                        height: 2,
+                        transformOrigin: '0 50%',
+                        transform: `rotate(${i * (360 / features.length)}deg)`,
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(200, 200, 200, 0.1) 20%, rgba(200, 200, 200, 0.4) 50%, rgba(200, 200, 200, 0.1) 80%, transparent 100%)',
                       }}
                     ></div>
                   );
                 })}
+                */}
 
                 {features.map((item, i) => (
                   <div
                     key={`feature-${i}`}
                     className="feature-node absolute pointer-events-auto flex items-center justify-center"
                     style={{
-                      width: 126,
-                      height: 126,
+                      width: typeof window !== 'undefined' && window.innerWidth < 768 ? 88 : 126,
+                      height: typeof window !== 'undefined' && window.innerWidth < 768 ? 88 : 126,
                       left: '50%',
                       top: '50%',
-                      marginLeft: -63,
-                      marginTop: -63
+                      marginLeft: typeof window !== 'undefined' && window.innerWidth < 768 ? -44 : -63,
+                      marginTop: typeof window !== 'undefined' && window.innerWidth < 768 ? -44 : -63
                     }} // Perfectly centered origin
                   >
                     <div className="feature-rotator">
@@ -558,7 +587,7 @@ export const Hero: React.FC = () => {
                         <MatrixToken3D
                           label={item.label}
                           icon={item.icon}
-                          size={126}
+                          size={typeof window !== 'undefined' && window.innerWidth < 768 ? 88 : 126}
                           enableIdleSpin={false}
                         />
                       </div>
@@ -567,6 +596,28 @@ export const Hero: React.FC = () => {
                 ))}
               </div>
 
+            </div>
+
+            {/* Diagram Label / Explanation - Floating with Connector (Bottom) */}
+            <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none z-30 flex flex-col items-center">
+              <div className="flex flex-col-reverse items-center gap-3">
+                {/* Unified Text (No Badge) */}
+                <div className="flex items-center gap-3 transform hover:scale-105 transition-transform duration-300 px-4 py-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-orange animate-pulse"></div>
+                    <span className="text-sm md:text-base font-bold tracking-[0.2em] text-gray-900 uppercase font-montreal">Growth Matrix</span>
+                  </div>
+
+                  <div className="w-px h-4 bg-gray-300"></div>
+
+                  <p className="text-sm md:text-base text-gray-500 font-medium whitespace-nowrap">
+                    Connecting every dimension of your potential
+                  </p>
+                </div>
+
+                {/* Connecting Line to Diagram (Pointing Up) */}
+                <div className="w-px h-8 md:h-12 bg-gradient-to-t from-gray-300 to-transparent border-r border-dashed border-gray-300 opacity-50"></div>
+              </div>
             </div>
           </div>
 
@@ -581,7 +632,7 @@ export const Hero: React.FC = () => {
           {/* Dynamic 3D QR Hero Element */}
           <div ref={introCardRef} className="relative z-20 mb-10 md:mb-12 group cursor-pointer animate-gentle-float perspective-1000">
 
-            {[...Array(8)].map((_, i) => (
+            {[...Array(typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 8)].map((_, i) => (
               <div key={`shard-${i}`}
                 className="qr-shard absolute inset-0 bg-orange/80 backdrop-blur-sm rounded-xl z-0"
                 style={{
@@ -619,7 +670,7 @@ export const Hero: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="absolute top-0 left-0 w-full h-2 bg-white/80 shadow-[0_0_20px_rgba(255,255,255,0.9)] animate-[scan_3s_ease-in-out_infinite] z-20"></div>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.4)] animate-[scan_3s_ease-in-out_infinite] z-20"></div>
 
                   <div className="flex-1 w-full flex items-center justify-center pt-8">
                     <QrCode className="w-28 h-28 md:w-40 md:h-40 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />

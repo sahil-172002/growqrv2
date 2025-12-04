@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { User, Building, GraduationCap, Globe, ArrowRight } from 'lucide-react';
+import { User, Building, GraduationCap, Globe, ArrowRight, Briefcase } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from 'framer-motion';
 import {
   Activity,
@@ -23,7 +23,7 @@ const solutions = [
     id: 'individual',
     icon: User,
     label: "For Individuals",
-    title: "UNLEASH YOUR POTENTIAL",
+    title: "GROW YOURSELF",
     subtitle: "Your Q-Score & Personalized Dashboard",
     description: "Get a clear, science-backed snapshot of your skills, readiness, and growth potential — all in one score.",
     features: [
@@ -38,9 +38,9 @@ const solutions = [
     id: 'employer',
     icon: Building,
     label: "For Employers",
-    title: "BUILD INTELLIGENT TEAMS",
+    title: "BUILD TEAMS",
     subtitle: "Your Q-Score & Intelligent Dashboard",
-    description: "Get an AI-analyzed snapshot of your organization’s skills, culture, and perception.",
+    description: "Get an AI-analyzed snapshot of your organization's skills, culture, and perception.",
     features: [
       { title: "Instant Evaluation", desc: "Holistic view of internal skill sets and culture." },
       { title: "Smart Hiring", desc: "Autonomous hiring of relevant, verified profiles." },
@@ -53,7 +53,7 @@ const solutions = [
     id: 'institute',
     icon: GraduationCap,
     label: "For Institutes",
-    title: "ELEVATE EDUCATION",
+    title: "EMPOWER STUDENTS",
     subtitle: "Your Q-Score & Student Dashboard",
     description: "Unlock an intelligently analyzed, comprehensive view of student performance and progress.",
     features: [
@@ -68,7 +68,7 @@ const solutions = [
     id: 'city',
     icon: Globe,
     label: "For Smart Cities",
-    title: "OPTIMIZE CIVILIZATION",
+    title: "EMPOWER CITIZENS",
     subtitle: "Your Q-Score & Smart City Dashboard",
     description: "Access a streamlined, integrated view of your population and skill categorizations.",
     features: [
@@ -439,158 +439,26 @@ export const SolutionsGrid: React.FC = () => {
   };
 
   const render3DObject = (stage: number, scale = 1) => {
+    const CommonPlate = ({ Icon }: { Icon: any }) => (
+      <div className="relative w-48 h-48 md:w-64 md:h-64 animate-[spinEntry_1s_ease-out_forwards]" style={{ transform: `scale(${scale})` }}>
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,106,47,0.5),rgba(0,0,0,0.9))] shadow-[0_0_60px_rgba(255,106,47,0.4)]"></div>
+        <div className="absolute inset-[-20px] rounded-full border border-orange/30 border-t-transparent animate-[spin_3s_linear_infinite]"></div>
+        <div className="absolute inset-[-40px] rounded-full border border-orange/10 border-b-transparent animate-[spin_5s_linear_infinite_reverse]"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Icon size={scale * 80} className="text-white drop-shadow-lg" />
+        </div>
+      </div>
+    );
+
     switch (stage) {
-      case 0: // Individual - ORIGINAL (user approved)
-        return (
-          <div className="relative w-48 h-48 md:w-64 md:h-64 animate-[spinEntry_1s_ease-out_forwards]" style={{ transform: `scale(${scale})` }}>
-            <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,106,47,0.5),rgba(0,0,0,0.9))] shadow-[0_0_60px_rgba(255,106,47,0.4)]"></div>
-            <div className="absolute inset-[-20px] rounded-full border border-orange/30 border-t-transparent animate-[spin_3s_linear_infinite]"></div>
-            <div className="absolute inset-[-40px] rounded-full border border-orange/10 border-b-transparent animate-[spin_5s_linear_infinite_reverse]"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <User size={scale * 80} className="text-white drop-shadow-lg" />
-            </div>
-          </div>
-        );
-
-
-      case 1: // EMPLOYERS - Team Metrics Dashboard
-        return (
-          <MetricCard3D
-            width="w-[300px]"
-            height="h-[200px]"
-            depth={14}
-            material="dark"
-            label="Team Pulse"
-            subLabel="EMPLOYER"
-            icon={Users}
-            color="#10B981"
-          >
-            <div className="flex flex-col gap-3">
-              {/* Team Size */}
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-400">Team Size</span>
-                <span className="text-white font-bold">47</span>
-              </div>
-              {/* Skill Match */}
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-gray-400">Skill Match</span>
-                  <span className="text-green-400">87%</span>
-                </div>
-                <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500 w-[87%]"></div>
-                </div>
-              </div>
-              {/* Culture Fit */}
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-gray-400">Culture Fit</span>
-                  <span className="text-blue-400">94%</span>
-                </div>
-                <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500 w-[94%]"></div>
-                </div>
-              </div>
-            </div>
-          </MetricCard3D>
-        );
-
-      case 2: // INSTITUTES - Skills Progression
-        return (
-          <MetricCard3D
-            width="w-[280px]"
-            height="h-[240px]"
-            depth={16}
-            material="matte"
-            label="Skills Growth"
-            subLabel="INSTITUTE"
-            icon={BookOpen}
-            color="#FF6A2F"
-          >
-            <div className="flex flex-col h-full justify-between">
-              {/* Progress Bars */}
-              <div className="space-y-2">
-                {['Technical', 'Analytical', 'Leadership'].map((skill, i) => (
-                  <div key={skill}>
-                    <div className="flex justify-between text-[9px] mb-1">
-                      <span className="text-gray-500">{skill}</span>
-                      <span className="text-gray-900 font-bold">{85 + i * 5}%</span>
-                    </div>
-                    <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-orange to-red-500"
-                        style={{ width: `${85 + i * 5}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Footer Stats */}
-              <div className="flex justify-between items-center pt-2">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-black">567</div>
-                  <div className="text-[8px] text-gray-400">STUDENTS</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-green-600">94%</div>
-                  <div className="text-[8px] text-gray-400">PLACED</div>
-                </div>
-              </div>
-            </div>
-          </MetricCard3D>
-        );
-
-      case 3: // SMART CITIES - Live City Dashboard
-        return (
-          <MetricCard3D
-            width="w-[320px]"
-            height="h-[260px]"
-            depth={12}
-            material="dark"
-            label="City Metrics"
-            subLabel="SMART CITY"
-            icon={BarChart3}
-            color="#6366F1"
-          >
-            <div className="flex flex-col gap-2">
-              {/* Top Metrics */}
-              <div className="grid grid-cols-2 gap-2">
-                <div className="bg-indigo-900/30 rounded p-2 border border-indigo-500/30">
-                  <div className="text-[8px] text-gray-400 mb-1">POPULATION</div>
-                  <div className="text-indigo-400 text-sm font-bold font-mono">1.2M</div>
-                </div>
-                <div className="bg-green-900/30 rounded p-2 border border-green-500/30">
-                  <div className="text-[8px] text-gray-400 mb-1">SKILL INDEX</div>
-                  <div className="text-green-400 text-sm font-bold font-mono">8.4</div>
-                </div>
-              </div>
-
-              {/* Heat Map Grid */}
-              <div className="grid grid-cols-8 gap-0.5 p-2 bg-gray-800/30 rounded">
-                {[...Array(32)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-2 rounded-sm ${i % 4 === 0
-                      ? 'bg-indigo-500'
-                      : i % 3 === 0
-                        ? 'bg-orange/70'
-                        : 'bg-gray-700/50'
-                      }`}
-                  ></div>
-                ))}
-              </div>
-
-              {/* Live Status */}
-              <div className="flex items-center justify-between text-[9px]">
-                <span className="text-gray-400">LIVE SYNC</span>
-                <div className="flex items-center gap-1">
-                  <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse"></div>
-                  <span className="text-green-400 font-mono">ACTIVE</span>
-                </div>
-              </div>
-            </div>
-          </MetricCard3D>
-        );
+      case 0: // Individual
+        return <CommonPlate Icon={User} />;
+      case 1: // Employers
+        return <CommonPlate Icon={Briefcase} />;
+      case 2: // Institutes
+        return <CommonPlate Icon={BookOpen} />;
+      case 3: // Smart Cities
+        return <CommonPlate Icon={BarChart3} />;
       default: return null;
     }
   };
@@ -629,17 +497,16 @@ export const SolutionsGrid: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="sg-anim inline-flex items-center gap-3 mb-4 md:mb-6 border-l-4 border-black pl-4">
-                  <div className={`p-2 rounded-lg border shadow-sm ${activeStage === index ? 'bg-black border-black text-white' : 'bg-white border-gray-200 text-black'
-                    } transition-all duration-500`}>
-                    <Icon size={18} />
+                <div className="sg-anim inline-flex items-center gap-1.5 mb-4 md:mb-6 pl-2.5 pr-3 py-1.5 rounded-full bg-gray-900 border border-gray-800 shadow-lg w-fit">
+                  <div className={`p-1.5 rounded-full ${activeStage === index ? 'bg-orange text-white' : 'bg-gray-700 text-gray-300'} transition-all duration-500`}>
+                    <Icon size={14} strokeWidth={2.5} />
                   </div>
-                  <span className="text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-gray-500">
+                  <span className="text-sm font-bold tracking-wide uppercase text-white whitespace-nowrap">
                     {item.label}
                   </span>
                 </div>
 
-                <h2 className="sg-anim text-4xl md:text-6xl font-black tracking-tighter text-black mb-3 leading-[0.95] font-montreal">
+                <h2 className="sg-anim text-3xl md:text-5xl font-black tracking-tighter text-black mb-3 leading-[0.95] font-montreal whitespace-nowrap">
                   {item.title}
                 </h2>
 
@@ -647,30 +514,33 @@ export const SolutionsGrid: React.FC = () => {
                   {item.subtitle}
                 </h3>
 
-                <p className="sg-anim text-base md:text-lg text-gray-500 font-medium leading-relaxed mb-8 max-w-lg">
+                {/* <p className="sg-anim text-base md:text-lg text-gray-500 font-medium leading-relaxed mb-8 max-w-lg">
                   {item.description}
-                </p>
+                </p> */}
 
-                <div className="sg-anim grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-8 md:mb-10">
+                <div className="sg-anim space-y-4 mb-8 md:mb-10">
                   {item.features.map((feature, i) => (
-                    <div key={i} className="flex gap-3 group items-start">
-                      <div className="w-5 h-5 mt-0.5 rounded-full flex items-center justify-center text-white text-[9px] font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-black bg-orange shadow-md shadow-orange/20">
+                    <div
+                      key={i}
+                      className="flex gap-4 items-start p-4 rounded-xl bg-white/40 backdrop-blur-sm border border-gray-100 transition-all duration-300 hover:bg-white/60 hover:shadow-md hover:-translate-y-0.5 group"
+                    >
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 bg-orange shadow-md shadow-orange/30">
                         {i + 1}
                       </div>
-                      <div>
-                        <h4 className="font-bold text-black text-sm md:text-base leading-tight mb-0.5">{feature.title}</h4>
-                        <p className="text-xs text-gray-500 leading-relaxed">{feature.desc}</p>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-black text-base md:text-lg leading-tight mb-1.5">{feature.title}</h4>
+                        <p className="text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <button className="sg-anim group relative px-8 py-4 bg-orange text-white rounded-full text-base font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,106,47,0.6)] hover:scale-105 w-fit">
+                {/* <button className="sg-anim group relative px-8 py-4 bg-orange text-white rounded-full text-base font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,106,47,0.6)] hover:scale-105 w-fit">
                   <span className="relative z-10 flex items-center gap-2">
                     Explore Solution
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </span>
-                </button>
+                </button> */}
               </div>
             );
           })}

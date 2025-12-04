@@ -1,95 +1,185 @@
 import React, { useRef, useLayoutEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Zap } from 'lucide-react';
 
 export const Calltoaction: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
-    const warpPortalRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
 
     useLayoutEffect(() => {
         const gsap = (window as any).gsap;
         const ScrollTrigger = (window as any).ScrollTrigger;
 
-        if (!gsap || !ScrollTrigger || !containerRef.current) return;
+        if (!gsap || !ScrollTrigger || !sectionRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Initial State
-            gsap.set(contentRef.current, { opacity: 0, scale: 0.8, filter: "blur(20px)" });
-            gsap.set(warpPortalRef.current, { opacity: 0, scale: 0, z: -500 });
+            // Set initial states
+            gsap.set('.cta-eyebrow', { y: 20, opacity: 0 });
+            gsap.set('.cta-title', { y: 40, opacity: 0 });
+            gsap.set('.cta-subtitle', { y: 30, opacity: 0 });
+            gsap.set('.cta-buttons', { y: 30, opacity: 0 });
 
+            // Create timeline
             const tl = gsap.timeline({
                 scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top center", // Trigger when top of container hits center of viewport
-                    end: "bottom bottom",
-                    scrub: 1,
+                    trigger: sectionRef.current,
+                    start: "top 70%",
+                    end: "top 30%",
+                    toggleActions: "play none none reverse",
                 }
             });
 
-            // Warp Portal Effect (Transition IN)
-            tl.to(warpPortalRef.current, {
-                scale: 5,
+            tl.to('.cta-eyebrow', {
+                y: 0,
                 opacity: 1,
-                z: 400,
-                rotateZ: 180,
-                duration: 1.5,
-                ease: "power2.in"
-            }, "start");
+                duration: 0.6,
+                ease: "power3.out"
+            })
+                .to('.cta-title', {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out"
+                }, "-=0.4")
+                .to('.cta-subtitle', {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.7,
+                    ease: "power3.out"
+                }, "-=0.5")
+                .to('.cta-buttons', {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: "power3.out"
+                }, "-=0.4");
 
-            // Fade out portal as content appears
-            tl.to(warpPortalRef.current, {
-                opacity: 0,
-                duration: 0.5
-            }, ">-0.5");
-
-            // Content Reveal
-            tl.to(contentRef.current, {
-                opacity: 1,
-                scale: 1,
-                filter: "blur(0px)",
-                duration: 1,
-                ease: "power2.out"
-            }, "-=1.0");
-
-        }, containerRef);
+        }, sectionRef);
 
         return () => ctx.revert();
     }, []);
 
     return (
-        <section ref={containerRef} className="relative py-32 md:py-48 bg-white overflow-hidden perspective-1000 min-h-[80vh] flex items-center justify-center">
+        <section
+            ref={sectionRef}
+            className="relative mx-auto w-full pt-24 pb-32 px-6 text-center md:px-8 
+            min-h-[70vh] overflow-hidden 
+            bg-[linear-gradient(to_bottom,#ffffff_0%,#ffffff_50%,#fff8f5_75%,#ffefe8_100%)]
+            "
+        >
+            {/* Grid Background with Mask */}
+            <div
+                className="absolute -z-10 inset-0 opacity-60 h-full w-full 
+                bg-[linear-gradient(to_right,#ffd4c2_1px,transparent_1px),linear-gradient(to_bottom,#ffd4c2_1px,transparent_1px)]
+                bg-[size:4rem_4rem] 
+                [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_50%,transparent_100%)]"
+            />
 
-            {/* WARP PORTAL (Transition Effect) */}
-            <div ref={warpPortalRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0 pointer-events-none">
-                <div className="absolute w-[400px] md:w-[800px] h-[400px] md:h-[800px] border-[2px] border-orange/10 rounded-full shadow-[0_0_100px_rgba(255,106,47,0.3)] animate-[spin_4s_linear_infinite]"></div>
-                <div className="absolute w-[300px] md:w-[600px] h-[300px] md:h-[600px] border-[4px] border-dashed border-orange/30 rounded-full animate-[spin_8s_linear_infinite_reverse]"></div>
-                <div className="absolute w-[200px] md:w-[400px] h-[200px] md:h-[400px] border-[8px] border-t-orange border-r-orange/50 border-b-transparent border-l-transparent rounded-full shadow-[0_0_50px_rgba(255,106,47,0.6)] animate-[spin_2s_linear_infinite]"></div>
+            {/* Radiant Sun Glow at Bottom - More Visible */}
+            <div className="absolute bottom-0 left-0 right-0 h-48 overflow-hidden">
+                {/* Outer Aura - Soft Wide Glow */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 -bottom-[350px] 
+                    w-[1000px] md:w-[1400px] lg:w-[2000px] h-[450px]
+                    rounded-[50%] 
+                    bg-gradient-to-t from-orange/25 via-orange/10 to-transparent
+                    blur-[80px]"
+                />
+
+                {/* Middle Glow Ring */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 -bottom-[330px] 
+                    w-[900px] md:w-[1300px] lg:w-[1800px] h-[420px]
+                    rounded-[50%] 
+                    bg-gradient-to-t from-orange/35 via-orange/15 to-transparent
+                    blur-[50px]"
+                />
+
+                {/* Inner Bright Core */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 -bottom-[310px] 
+                    w-[800px] md:w-[1200px] lg:w-[1600px] h-[400px]
+                    rounded-[50%] 
+                    bg-[radial-gradient(closest-side,#fff_75%,#FF6A2F)]
+                    shadow-[0_-40px_120px_rgba(255,106,47,0.4),0_-15px_60px_rgba(255,106,47,0.25)]"
+                />
+
+                {/* Top Edge Highlight */}
+                <div
+                    className="absolute left-1/2 -translate-x-1/2 -bottom-[308px] 
+                    w-[800px] md:w-[1200px] lg:w-[1600px] h-[400px]
+                    rounded-[50%] 
+                    border-t-[3px] border-orange/60"
+                />
             </div>
 
-            {/* CONTENT */}
-            <div ref={contentRef} className="relative z-10 container mx-auto px-6 text-center">
-                <div className="relative z-10">
-                    {/* Ambient Back Glow */}
-                    <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-t from-orange/5 via-transparent to-transparent blur-3xl"></div>
+            {/* Floating Glow Orbs */}
+            <div className="absolute top-20 left-1/4 w-64 h-64 bg-orange/10 rounded-full blur-[100px] animate-pulse"></div>
+            <div className="absolute bottom-40 right-1/4 w-48 h-48 bg-orange/5 rounded-full blur-[80px]"></div>
 
-                    <h2 className="text-6xl font-semibold md:text-8xl lg:text-9xl font-black text-black mb-6 tracking-tighter leading-none">
-                        YOU ARE <span className="text-orange">READY.</span>
-                    </h2>
+            {/* Content Container */}
+            <div className="relative z-10 max-w-4xl mx-auto">
 
-                    <p className="text-xl md:text-2xl text-gray-500 max-w-3xl mx-auto mb-10 font-medium leading-normal">
-                        Your identity is verified. Step into the ecosystem that turns talent into opportunity.
-                    </p>
+                {/* Eyebrow Badge */}
+                <div className="cta-eyebrow inline-flex items-center gap-2 mb-8">
+                    <span
+                        className="text-sm text-gray-600 font-medium mx-auto px-5 py-2 
+                        bg-gradient-to-tr from-orange/10 via-orange/5 to-transparent  
+                        border border-orange/20
+                        rounded-full tracking-wide flex items-center justify-center
+                        hover:border-orange/40 transition-colors duration-300 cursor-pointer group"
+                    >
+                        <Zap className="w-4 h-4 text-orange mr-2" />
+                        Your Future Starts Here
+                        <ArrowRight className="inline w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1 text-orange" />
+                    </span>
+                </div>
 
-                    <button className="pointer-events-auto relative overflow-hidden px-10 py-5 bg-black text-white rounded-full text-lg font-bold transition-all shadow-2xl hover:shadow-[0_20px_50px_rgba(255,106,47,0.4)] group">
-                        {/* Liquid Fill Effect on Hover */}
-                        <div className="absolute inset-0 bg-orange translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                {/* Main Title */}
+                <h2
+                    className="cta-title text-5xl sm:text-6xl md:text-7xl lg:text-8xl 
+                    font-semibold leading-none tracking-tighter mb-6
+                    bg-gradient-to-br from-black from-30% to-black/40
+                    bg-clip-text text-transparent"
+                >
+                    Ready to Get
+                    <br />
+                    <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">
+                        Discovered?
+                    </span>
+                </h2>
 
-                        <div className="relative z-10 flex items-center gap-3">
-                            Get Your Q-Score
-                            <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                        </div>
+                {/* Subtitle */}
+                <p
+                    className="cta-subtitle text-lg md:text-xl tracking-tight text-gray-500 
+                    max-w-xl mx-auto mb-10 leading-relaxed"
+                >
+                    Join thousands who've unlocked their verified Q-Score.
+                    <br />
+                    <span className="text-gray-700 font-medium">One scan. Infinite possibilities.</span>
+                </p>
+
+                {/* CTA Buttons */}
+                <div className="cta-buttons flex flex-col sm:flex-row items-center justify-center gap-4">
+
+                    {/* Primary CTA */}
+                    <button className="group relative overflow-hidden px-8 py-4 bg-orange text-white rounded-full text-base font-bold transition-all duration-300 shadow-[0_8px_30px_rgba(255,106,47,0.35)] hover:shadow-[0_12px_40px_rgba(255,106,47,0.5)] hover:-translate-y-0.5">
+                        {/* Shine Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+
+                        <span className="relative flex items-center gap-2">
+                            Get My Q-Score
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                    </button>
+
+                    {/* Secondary CTA */}
+                    <button className="group px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-800 rounded-full text-base font-bold transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:bg-white hover:-translate-y-0.5 hover:shadow-lg">
+                        <span className="flex items-center gap-2">
+                            For Organizations
+                            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange group-hover:translate-x-1 transition-all" />
+                        </span>
                     </button>
                 </div>
+
             </div>
         </section>
     );
