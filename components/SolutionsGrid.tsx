@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { User, Building, GraduationCap, Globe, ArrowRight, Briefcase } from 'lucide-react';
+import { User, Building, GraduationCap, Globe, ArrowRight, Briefcase, Building2 } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from 'framer-motion';
 import {
   Activity,
@@ -66,7 +66,7 @@ const solutions = [
   },
   {
     id: 'city',
-    icon: Globe,
+    icon: Building2,
     label: "For Smart Cities",
     title: "EMPOWER CITIZENS",
     subtitle: "Your Q-Score & Smart City Dashboard",
@@ -458,7 +458,7 @@ export const SolutionsGrid: React.FC = () => {
       case 2: // Institutes
         return <CommonPlate Icon={BookOpen} />;
       case 3: // Smart Cities
-        return <CommonPlate Icon={BarChart3} />;
+        return <CommonPlate Icon={Building2} />;
       default: return null;
     }
   };

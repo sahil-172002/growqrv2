@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Headphones, X, Send, Bot, User, Minus, HelpCircle, Zap, Shield, Users, MessageSquare, ChevronRight } from 'lucide-react';
+import { Headphones, X, Send, Bot, User, Minus, HelpCircle, Zap, Shield, Users, MessageSquare, ChevronRight, Trash2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { generateGeminiResponse, resetChatHistory } from '../lib/gemini';
 
 interface Message {
     id: number;
@@ -47,14 +49,41 @@ const CHAT_CATEGORIES = [
 
 type ViewState = 'closed' | 'faq' | 'chat';
 
+// Function to save query to Supabase
+const saveQueryToSupabase = async (query: string, response: string) => {
+    try {
+        await supabase.from('support_queries').insert({
+            query: query,
+            response: response,
+            created_at: new Date().toISOString(),
+        });
+    } catch (error) {
+        console.log('Note: Support queries table may not exist yet. Query logged locally.');
+    }
+};
+
 export const Chatbot: React.FC = () => {
     const [viewState, setViewState] = useState<ViewState>('closed');
     const [isHovered, setIsHovered] = useState(false);
     const [selectedFaq, setSelectedFaq] = useState<number | null>(null);
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>(() => {
+        // Load messages from localStorage on mount
+        const saved = localStorage.getItem('growqr_chat_messages');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                return parsed.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) }));
+            } catch { return []; }
+        }
+        return [];
+    });
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [showCategories, setShowCategories] = useState(true);
+    const [showCategories, setShowCategories] = useState(() => {
+        // Hide categories if there are existing messages
+        const saved = localStorage.getItem('growqr_chat_messages');
+        return !saved || JSON.parse(saved).length === 0;
+    });
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -65,6 +94,10 @@ export const Chatbot: React.FC = () => {
 
     useEffect(() => {
         scrollToBottom();
+        // Save messages to localStorage whenever they change
+        if (messages.length > 0) {
+            localStorage.setItem('growqr_chat_messages', JSON.stringify(messages));
+        }
     }, [messages]);
 
     useEffect(() => {
@@ -98,18 +131,23 @@ export const Chatbot: React.FC = () => {
     const handleOpenChat = () => {
         setIsHovered(false);
         setViewState('chat');
-        setMessages([
-            {
-                id: 1,
-                text: "Hi, welcome to GrowQR! 👋\nI'm here to help you with your Q-Score journey. How can I assist you today?",
-                sender: 'bot',
-                timestamp: new Date(),
-            }
-        ]);
-        setShowCategories(true);
+
+        // Only show welcome message if no existing conversation
+        if (messages.length === 0) {
+            setMessages([
+                {
+                    id: 1,
+                    text: "Hi, welcome to GrowQR! 👋\nI'm your AI assistant powered by Gemini. Ask me anything about Q-Score, our platform, or how to get started!",
+                    sender: 'bot',
+                    timestamp: new Date(),
+                }
+            ]);
+            setShowCategories(true);
+        }
+        // Don't reset Gemini history if we have existing messages
     };
 
-    const handleCategoryClick = (category: string) => {
+    const handleCategoryClick = async (category: string) => {
         setShowCategories(false);
         const userMessage: Message = {
             id: Date.now(),
@@ -120,19 +158,9 @@ export const Chatbot: React.FC = () => {
         setMessages(prev => [...prev, userMessage]);
         setIsTyping(true);
 
-        setTimeout(() => {
-            let response = "I'd be happy to help you with that! ";
-            if (category.includes("Q-Score")) {
-                response += "Q-Score is your verified readiness metric. It combines AI analysis with credential verification to showcase your true potential. Would you like to know more about how it's calculated?";
-            } else if (category.includes("Organizations")) {
-                response += "GrowQR helps organizations find verified talent faster. We offer API access, bulk verification, and custom analytics. Shall I connect you with our team?";
-            } else if (category.includes("Getting Started")) {
-                response += "Getting started is simple! Click 'Get My Q-Score' on our homepage to begin. The process takes about 5 minutes.";
-            } else if (category.includes("Privacy")) {
-                response += "Your data is protected with 256-bit encryption. We're GDPR compliant and you have full control over your profile visibility.";
-            } else {
-                response += "Feel free to type your question below and I'll do my best to help!";
-            }
+        try {
+            // Use Gemini AI for response
+            const response = await generateGeminiResponse(category);
 
             const botMessage: Message = {
                 id: Date.now() + 1,
@@ -142,10 +170,22 @@ export const Chatbot: React.FC = () => {
             };
             setIsTyping(false);
             setMessages(prev => [...prev, botMessage]);
-        }, 1200);
+
+            // Save to Supabase
+            saveQueryToSupabase(category, response);
+        } catch (error) {
+            setIsTyping(false);
+            const errorMessage: Message = {
+                id: Date.now() + 1,
+                text: "I encountered an issue. Please try again or email us at hello@growqr.ai for help!",
+                sender: 'bot',
+                timestamp: new Date(),
+            };
+            setMessages(prev => [...prev, errorMessage]);
+        }
     };
 
-    const handleSendMessage = (text: string) => {
+    const handleSendMessage = async (text: string) => {
         if (!text.trim()) return;
 
         setShowCategories(false);
@@ -160,16 +200,31 @@ export const Chatbot: React.FC = () => {
         setInputValue('');
         setIsTyping(true);
 
-        setTimeout(() => {
+        try {
+            // Use Gemini AI for intelligent response
+            const aiResponse = await generateGeminiResponse(text);
+
             const botMessage: Message = {
                 id: Date.now() + 1,
-                text: "Thanks for your question! For detailed inquiries, please email us at hello@growqr.ai or schedule a demo. Is there anything else I can help with?",
+                text: aiResponse,
                 sender: 'bot',
                 timestamp: new Date(),
             };
             setIsTyping(false);
             setMessages(prev => [...prev, botMessage]);
-        }, 1200);
+
+            // Save to Supabase
+            saveQueryToSupabase(text, aiResponse);
+        } catch (error) {
+            setIsTyping(false);
+            const errorMessage: Message = {
+                id: Date.now() + 1,
+                text: "Sorry, I'm having trouble connecting. Please try again or email hello@growqr.ai for assistance!",
+                sender: 'bot',
+                timestamp: new Date(),
+            };
+            setMessages(prev => [...prev, errorMessage]);
+        }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -183,8 +238,14 @@ export const Chatbot: React.FC = () => {
         setViewState('closed');
         setIsHovered(false);
         setSelectedFaq(null);
+        // Don't clear messages - they persist for when user reopens
+    };
+
+    const handleClearChat = () => {
         setMessages([]);
         setShowCategories(true);
+        resetChatHistory();
+        localStorage.removeItem('growqr_chat_messages');
     };
 
     return (
@@ -329,12 +390,21 @@ export const Chatbot: React.FC = () => {
                             <h3 className="text-white font-semibold text-sm tracking-tight">GrowQR Assistant</h3>
                             <span className="text-gray-400 text-xs">Typically replies instantly</span>
                         </div>
-                        <button
-                            onClick={handleClose}
-                            className="text-gray-500 hover:text-white hover:bg-white/10 transition-all p-2 rounded-lg"
-                        >
-                            <Minus className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={handleClearChat}
+                                className="text-gray-500 hover:text-red-400 hover:bg-white/10 transition-all p-2 rounded-lg"
+                                title="Clear conversation"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                            <button
+                                onClick={handleClose}
+                                className="text-gray-500 hover:text-white hover:bg-white/10 transition-all p-2 rounded-lg"
+                            >
+                                <Minus className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
 

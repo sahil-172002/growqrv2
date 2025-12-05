@@ -172,253 +172,291 @@ export const Hero: React.FC = () => {
       const featureNodes = gsap.utils.toArray(".feature-node");
       const beams = gsap.utils.toArray(".feature-beam");
 
-      // INITIAL STATE with GPU acceleration
-      gsap.set(".eco-token-wrapper", { opacity: 0, z: -2000, scale: 0.5, force3D: true });
-      gsap.set(ecoHubWrapper, { opacity: 0, z: -2500, scale: 0, rotateY: isLowEndDevice ? 360 : 720, force3D: true });
-      gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto", force3D: true });
-
-      // Explicitly set initial states for Hero elements to prevent scroll-back glitches
-      gsap.set(introCardRef.current, { x: 0, y: 0, z: 0, rotateZ: 0, scale: 1, opacity: 1, force3D: true });
-      gsap.set(qrShards, { x: 0, y: 0, z: -10, rotateX: 0, rotateY: 0, scale: 0.8, opacity: 1, force3D: true });
-      gsap.set(tunnelRef.current, { scale: 1, z: 0, rotateZ: 0, opacity: 1, force3D: true });
-
-      // Pre-calculate random positions for shards (reduce for low-end)
-      const shardAnimations = qrShards.map((_, i) => ({
-        x: (i % 2 === 0 ? -300 : 300) * (Math.random() + 0.5) * (isLowEndDevice ? 0.5 : 1),
-        y: (i < 2 ? -300 : 300) * (Math.random() + 0.5) * (isLowEndDevice ? 0.5 : 1),
-        z: Math.random() * (isLowEndDevice ? 250 : 500),
-        rotateX: Math.random() * (isLowEndDevice ? 360 : 720),
-        rotateY: Math.random() * (isLowEndDevice ? 360 : 720),
-        scale: 0.5 + Math.random() * 0.5
-      }));
-
       // Mobile detection
       const isMobile = window.innerWidth < 768;
 
       // Optimized scroll distances based on performance
       const scrollEnd = isVeryLowEnd ? "+=1500" : (isLowEndDevice ? "+=2500" : (isMobile ? "+=1800" : "+=3800"));
 
-      // MASTER TIMELINE with PERFORMANCE OPTIMIZATION
+      // ============================================
+      // RESET FUNCTION - Called to restore Slide 1
+      // ============================================
+      const resetSlide1 = () => {
+        // Reset card
+        gsap.set(introCardRef.current, {
+          x: 0, y: 0, z: 0, rotateZ: 0,
+          scale: 1, opacity: 1,
+          force3D: true
+        });
+
+        // Reset tunnel
+        gsap.set(tunnelRef.current, {
+          scale: 1, z: 0, rotateZ: 0, opacity: 1,
+          force3D: true
+        });
+
+        // Reset text container
+        gsap.set(text1Ref.current, {
+          opacity: 1,
+          force3D: true
+        });
+
+        // Reset individual text elements
+        if (textElements) {
+          gsap.set(textElements, {
+            opacity: 1,
+            y: 0,
+            force3D: true
+          });
+        }
+
+        // Reset orange glow
+        gsap.set(".hero-orange-glow", { opacity: 1 });
+
+        // Reset shards to INVISIBLE behind the card
+        gsap.set(qrShards, {
+          x: 0, y: 0, z: -10,
+          rotateX: 0, rotateY: 0,
+          scale: 0.85, opacity: 0,
+          force3D: true
+        });
+      };
+
+      // ============================================
+      // INITIAL STATE SETUP
+      // ============================================
+      // Slide 2 elements start hidden
+      gsap.set(".eco-token-wrapper", { opacity: 0, z: -2000, scale: 0.5, force3D: true });
+      gsap.set(ecoHubWrapper, { opacity: 0, z: -2500, scale: 0, rotateY: isLowEndDevice ? 360 : 720, force3D: true });
+
+      // Slide 1 elements start visible
+      resetSlide1();
+
+      // ============================================
+      // MASTER TIMELINE
+      // ============================================
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
           end: scrollEnd,
           pin: true,
-          scrub: prefersReducedMotion ? 0 : (isLowEndDevice ? 0.5 : (isMobile ? 0.8 : 1)),
+          scrub: isLowEndDevice ? 0.3 : (isMobile ? 0.5 : 0.8),
           anticipatePin: 1,
           invalidateOnRefresh: true,
           fastScrollEnd: true,
           preventOverlaps: true,
 
-          // Reset elements when scrolling back from below
-          onEnterBack: () => {
-            gsap.set(introCardRef.current, { x: 0, y: 0, z: 0, rotateZ: 0, scale: 1, opacity: 1 });
-            gsap.set(qrShards, { x: 0, y: 0, z: -10, rotateX: 0, rotateY: 0, scale: 0.8, opacity: 1 });
-            gsap.set(tunnelRef.current, { scale: 1, z: 0, rotateZ: 0, opacity: 1 });
-            gsap.set(text1Ref.current, { opacity: 1, scale: 1, filter: "blur(0px)" });
+          // CRITICAL: Reset everything when scrolling back to top
+          onLeaveBack: () => {
+            resetSlide1();
+          },
+
+          // Also reset on enter to be safe
+          onEnter: () => {
+            resetSlide1();
           }
         }
       });
 
-      // --- PHASE 1: ENTERING THE PORTAL ---
-      tl.to(tunnelRef.current, {
-        scale: 3,
-        z: 500,
-        rotateZ: 45,
-        opacity: 0,
-        duration: 2,
-        ease: "power1.inOut",
-        force3D: true
-      }, "start");
+      // ============================================
+      // SLIDE 1 EXIT ANIMATIONS (Simple & Reversible)
+      // ============================================
 
+      // Tunnel zooms out and fades
+      tl.to(tunnelRef.current, {
+        scale: 2.5,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.inOut",
+        force3D: true
+      }, "phase1");
+
+      // Text fades up and out (NO BLUR - keeps it simple)
       if (textElements) {
         tl.to(textElements, {
           opacity: 0,
-          y: -50,
-          filter: "blur(10px)",
-          duration: 0.8,
-          stagger: 0.1,
+          y: -30,
+          duration: 0.6,
+          stagger: 0.05,
           force3D: true
-        }, "start");
+        }, "phase1");
       }
 
-      // DISABLE POINTER EVENTS ON TEXT CONTAINER TO ALLOW CLICK-THROUGH TO NEXT SLIDE
-      tl.set(text1Ref.current, { pointerEvents: "none" }, "start+=0.5");
-
-      // --- QR CARD & SHARDS ANIMATION SEQUENCE ---
-
-      // 1. Jitter/Warning Phase (Card shakes) - OPTIMIZED FOR MOBILE
+      // Card scales up slightly then zooms away
       tl.to(introCardRef.current, {
-        x: 5,
-        y: 5,
-        scale: 0.95,
-        duration: 0.1,
-        yoyo: true,
-        repeat: isMobile ? 3 : 5, // Fewer repeats on mobile
-        ease: "sine.inOut",
+        scale: 1.05,
+        duration: 0.2,
+        ease: "power1.out",
         force3D: true
-      }, "start");
+      }, "phase1");
 
-      // 2. Disintegration Phase (Card explodes) - FASTER ON MOBILE
       tl.to(introCardRef.current, {
         scale: 0,
         opacity: 0,
-        z: isMobile ? 300 : 500, // Less Z-depth on mobile
-        rotateZ: isMobile ? 90 : 180, // Less rotation on mobile
-        duration: isMobile ? 1 : 1.5, // Faster on mobile
+        y: -100,
+        duration: 1,
         ease: "power2.in",
         force3D: true
-      }, "start+=0.6"); // Starts after jitter
+      }, "phase1+=0.2");
 
-      // 3. Shards Explosion (Using pre-calculated values for consistent reverse animation)
+      // Shards explosion - 3D burst effect coming towards viewer
+      const shardEndPositions = [
+        { x: -220, y: -160, z: 250, rotateX: 45, rotateY: -30 },
+        { x: 220, y: -140, z: 300, rotateX: -45, rotateY: 30 },
+        { x: -180, y: 170, z: 220, rotateX: 30, rotateY: 45 },
+        { x: 240, y: 150, z: 280, rotateX: -30, rotateY: -45 },
+        { x: -140, y: -200, z: 200, rotateX: 60, rotateY: 20 },
+        { x: 160, y: -180, z: 320, rotateX: -60, rotateY: -20 },
+        { x: -160, y: 220, z: 260, rotateX: 40, rotateY: 60 },
+        { x: 200, y: 200, z: 240, rotateX: -40, rotateY: -60 },
+      ];
+
       qrShards.forEach((shard, i) => {
-        tl.to(shard, {
-          x: shardAnimations[i].x,
-          y: shardAnimations[i].y,
-          z: shardAnimations[i].z,
-          rotateX: isMobile ? shardAnimations[i].rotateX / 2 : shardAnimations[i].rotateX, // Half rotation on mobile
-          rotateY: isMobile ? shardAnimations[i].rotateY / 2 : shardAnimations[i].rotateY,
-          opacity: 0,
-          scale: shardAnimations[i].scale,
-          duration: isMobile ? 1.2 : 2, // Faster on mobile
-          ease: "power3.out",
-          force3D: true
-        }, `start+=0.6+=${i * 0.02}`);
+        const end = shardEndPositions[i % shardEndPositions.length];
+        const mult = isMobile ? 0.5 : 1;
+
+        tl.fromTo(shard,
+          // FROM: visible behind card
+          {
+            x: 0, y: 0, z: -10,
+            rotateX: 0, rotateY: 0,
+            scale: 0.85, opacity: 1
+          },
+          // TO: exploded towards viewer with 3D rotation
+          {
+            x: end.x * mult,
+            y: end.y * mult,
+            z: end.z * mult,  // Coming towards viewer!
+            rotateX: end.rotateX * mult,
+            rotateY: end.rotateY * mult,
+            scale: 0.5,
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out",
+            force3D: true
+          },
+          "phase1+=0.1"
+        );
       });
 
-      // --- PHASE 2: TRANSITION TO ECOSYSTEM --- OPTIMIZED FOR MOBILE
-      tl.to(tunnelRef.current, {
-        scale: isMobile ? 3 : 4, // Less scale on mobile
-        z: isMobile ? 500 : 800, // Less Z-depth on mobile
-        opacity: 0,
-        duration: isMobile ? 1.5 : 2, // Faster on mobile
-        ease: "power2.inOut",
-        force3D: true
-      }, "start+=0.5");
-
-      // Fade out orange glow for Ecosystem slide
+      // Orange glow fades
       tl.to(".hero-orange-glow", {
         opacity: 0,
-        duration: 2,
-        ease: "power2.inOut"
-      }, "start+=0.5");
+        duration: 1,
+        ease: "power1.inOut"
+      }, "phase1");
 
-      // --- GAP: Tunnel Travel (REDUCED GAP) ---
+      // ============================================
+      // SLIDE 2 ENTER ANIMATIONS
+      // ============================================
 
       tl.fromTo(ecosystemRef.current,
-        { scale: 0.8, opacity: 0, z: -200 },
-        { scale: 1, opacity: 1, z: 0, duration: 1.5, ease: "power2.out", force3D: true },
-        "start+=1.2"  // Changed from 1.5 to 1.2 to reduce gap
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1.2, ease: "power2.out", force3D: true },
+        "phase2"
       );
 
-      // --- NEW CIRCULAR EXPANSION ANIMATION ---
-
-      // 1. Central Hub: Scales up from 0
+      // Central Hub: Scales up from 0
       tl.fromTo(ecoHubWrapper,
-        { scale: 0, opacity: 0, rotateY: 720 },
-        { scale: 1, opacity: 1, rotateY: 0, duration: 1.2, ease: "back.out(1.5)", force3D: true },
-        "start+=1.5"  // Changed from 1.8 to 1.5 to reduce gap
+        { scale: 0, opacity: 0, rotateY: 360 },
+        { scale: 1, opacity: 1, rotateY: 0, duration: 1, ease: "back.out(1.2)", force3D: true },
+        "phase2+=0.2"
       );
 
       // Rings Expansion
       tl.fromTo(".eco-ring",
         { scale: 0, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.2, ease: "power2.out", stagger: 0.1 },
-        "start+=1.5"
+        { scale: 1, opacity: 1, duration: 1, ease: "power2.out", stagger: 0.08 },
+        "phase2+=0.3"
       );
 
-      // 2. Features: Expand from center (using cached queries) - MOBILE 10% INCREASE
-      const radius = window.innerWidth < 768 ? 143 : (window.innerWidth < 1024 ? 200 : 255);
+      // Features: Expand from center
+      const radius = window.innerWidth < 768 ? 129 : (window.innerWidth < 1024 ? 180 : 230);
       featureNodes.forEach((node: any, i: number) => {
         const angle = (i * (360 / features.length)) * (Math.PI / 180);
         const tx = Math.cos(angle) * radius;
         const ty = Math.sin(angle) * radius;
 
         tl.fromTo(node,
-          { x: 0, y: 0, scale: 0, opacity: 0, rotateY: isMobile ? 90 : 180 }, // Less rotation on mobile
+          { x: 0, y: 0, scale: 0, opacity: 0 },
           {
-            x: tx, y: ty, scale: 1, opacity: 1, rotateY: 0,
-            duration: isMobile ? 1.2 : 1.5, // Faster animations
+            x: tx, y: ty, scale: 1, opacity: 1,
+            duration: isMobile ? 0.8 : 1,
             ease: "power2.out",
             force3D: true
           },
-          "start+=1.7"  // Changed from 2.0 to 1.7 to reduce gap
+          "phase2+=0.4"
         );
       });
 
-      // BEAM EXPANSION (using cached queries) - RESPONSIVE WIDTH
+      // BEAM EXPANSION
       tl.fromTo(beams,
         { width: 0, opacity: 0 },
         {
           width: radius,
           opacity: 1,
-          duration: isMobile ? 1.2 : 1.5, // Faster animations
+          duration: isMobile ? 0.8 : 1,
           ease: "power2.out",
           stagger: 0,
           force3D: true
         },
-        "start+=1.7"  // Changed from 2.0 to 1.7 to reduce gap
+        "phase2+=0.4"
       );
 
       // Continuous Orbit with GPU acceleration
       gsap.to(".ring-container", { rotation: 360, duration: 120, repeat: -1, ease: "none", force3D: true });
       gsap.to(".feature-rotator", { rotation: -360, duration: 120, repeat: -1, ease: "none", force3D: true });
 
-      // === UNIFIED EXIT ANIMATION (ONE SCROLL) ===
-      // Brief hold for users to see the ecosystem
-      tl.to({}, { duration: 0.8 }, "+=0.2");
+      // ============================================
+      // SLIDE 2 EXIT ANIMATIONS (Simple, no blur)
+      // ============================================
 
-      // All exit happens together at "exit" label
-      // Beams + lines fade together
+      // Brief hold
+      tl.to({}, { duration: 0.5 }, "+=0.1");
+
+      // Everything fades out together
       tl.to(beams, {
         opacity: 0,
         duration: 0.4,
         ease: "power2.in"
-      }, "exit");
+      }, "phase3");
 
       tl.to(".connection-line", {
         opacity: 0,
-        duration: 0.4,
+        duration: 0.3,
         ease: "power1.in"
-      }, "exit");
+      }, "phase3");
 
-      // Features implode directly (no scatter phase)
+      // Features collapse to center
       featureNodes.forEach((node: any, i: number) => {
         tl.to(node, {
           x: 0,
           y: 0,
           scale: 0,
           opacity: 0,
-          rotateY: -60,
-          z: -150,
-          filter: "blur(4px)",
-          duration: 0.6,
+          duration: 0.5,
           ease: "power2.in",
           force3D: true
-        }, `exit+=${i * 0.02}`);
+        }, `phase3+=${i * 0.02}`);
       });
 
-      // Hub collapses at same time
+      // Hub collapses
       tl.to(".eco-hub-wrapper", {
         scale: 0,
         opacity: 0,
-        rotateY: -180,
-        z: -200,
-        filter: "blur(8px)",
-        duration: 0.6,
+        duration: 0.5,
         ease: "power2.in",
         force3D: true
-      }, "exit+=0.1");
+      }, "phase3+=0.1");
 
       // Container fade
       tl.to(ecosystemRef.current, {
         opacity: 0,
-        filter: "blur(8px)",
-        duration: 0.5,
+        duration: 0.4,
         ease: "power1.in",
         force3D: true
-      }, "exit+=0.4");
+      }, "phase3+=0.3");
 
     }, containerRef);
 
@@ -479,7 +517,7 @@ export const Hero: React.FC = () => {
         <div ref={sceneRef} className="relative w-full h-full flex items-center justify-center transform-style-3d will-animate">
 
           {/* TUNNEL (Slide 1) */}
-          <div ref={tunnelRef} className="absolute inset-0 transform-style-3d flex items-center justify-center will-animate">
+          <div ref={tunnelRef} className="absolute inset-0 transform-style-3d flex items-center justify-center will-animate -translate-y-12 md:-translate-y-16">
             <div className="relative w-[90vw] max-w-[600px] h-[90vw] max-h-[600px] transform-style-3d">
               {[...Array(6)].map((_, i) => (
                 <div
@@ -502,7 +540,7 @@ export const Hero: React.FC = () => {
                 <div key={i}
                   className="absolute w-8 h-8 md:w-12 md:h-12 bg-white shadow-xl rounded-xl flex items-center justify-center border border-gray-100"
                   style={{
-                    top: '50%',
+                    top: '45%',
                     left: '50%',
                     transform: `rotate(${i * 45}deg) translate(140px) rotate(-${i * 45}deg) translateZ(${i * 10}px) translateX(-50%) translateY(-50%)`,
                   }}
@@ -515,25 +553,25 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* ECOSYSTEM CIRCULAR LAYOUT (Slide 2) */}
-          <div ref={ecosystemRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0 pointer-events-none will-animate">
+          <div ref={ecosystemRef} className="absolute inset-0 flex items-center justify-center transform-style-3d opacity-0 pointer-events-none will-animate z-5">
 
 
 
             <style>{beamStyle}</style>
 
-            <div className="relative w-[90vw] max-w-[350px] md:max-w-[600px] lg:max-w-[800px] h-[90vw] max-h-[350px] md:max-h-[600px] lg:max-h-[800px] flex items-center justify-center transform-style-3d pointer-events-auto -translate-y-12">
+            <div className="relative w-[90vw] max-w-[315px] md:max-w-[540px] lg:max-w-[720px] h-[90vw] max-h-[315px] md:max-h-[540px] lg:max-h-[720px] flex items-center justify-center transform-style-3d pointer-events-auto -translate-y-4 sm:-translate-y-8 md:-translate-y-12">
 
               {/* Background Orbits */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-100">
                 {/* Inner Ring - Solid - Reverse Spin */}
-                <div className="eco-ring absolute w-[45%] h-[45%] md:w-[55%] md:h-[55%] lg:w-[400px] lg:h-[400px] border border-gray-300 rounded-full animate-spin-slow animation-reverse" style={{ animationDuration: '25s' }}></div>
+                <div className="eco-ring absolute w-[40%] h-[40%] md:w-[50%] md:h-[50%] lg:w-[360px] lg:h-[360px] border border-gray-300 rounded-full animate-spin-slow animation-reverse" style={{ animationDuration: '25s' }}></div>
 
                 {/* Outer Ring - Dashed - Spin */}
-                <div className="eco-ring absolute w-[70%] h-[70%] md:w-[80%] md:h-[80%] lg:w-[600px] lg:h-[600px] border border-dashed border-gray-300 rounded-full animate-spin-slow" style={{ animationDuration: '40s' }}></div>
+                <div className="eco-ring absolute w-[63%] h-[63%] md:w-[72%] md:h-[72%] lg:w-[540px] lg:h-[540px] border border-dashed border-gray-300 rounded-full animate-spin-slow" style={{ animationDuration: '40s' }}></div>
               </div>
 
               {/* Central Hub */}
-              <div className="eco-hub-wrapper relative z-20 transform-style-3d scale-50 md:scale-90 lg:scale-100">
+              <div className="eco-hub-wrapper relative z-20 transform-style-3d scale-[0.45] md:scale-[0.81] lg:scale-90">
                 <div className="">
                   <CompactIDCard3D />
                 </div>
@@ -573,12 +611,12 @@ export const Hero: React.FC = () => {
                     key={`feature-${i}`}
                     className="feature-node absolute pointer-events-auto flex items-center justify-center"
                     style={{
-                      width: typeof window !== 'undefined' && window.innerWidth < 768 ? 88 : 126,
-                      height: typeof window !== 'undefined' && window.innerWidth < 768 ? 88 : 126,
+                      width: typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 113,
+                      height: typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 113,
                       left: '50%',
                       top: '50%',
-                      marginLeft: typeof window !== 'undefined' && window.innerWidth < 768 ? -44 : -63,
-                      marginTop: typeof window !== 'undefined' && window.innerWidth < 768 ? -44 : -63
+                      marginLeft: typeof window !== 'undefined' && window.innerWidth < 768 ? -40 : -56.5,
+                      marginTop: typeof window !== 'undefined' && window.innerWidth < 768 ? -40 : -56.5
                     }} // Perfectly centered origin
                   >
                     <div className="feature-rotator">
@@ -586,7 +624,7 @@ export const Hero: React.FC = () => {
                         <MatrixToken3D
                           label={item.label}
                           icon={item.icon}
-                          size={typeof window !== 'undefined' && window.innerWidth < 768 ? 88 : 126}
+                          size={typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 113}
                           enableIdleSpin={false}
                         />
                       </div>
@@ -597,16 +635,16 @@ export const Hero: React.FC = () => {
 
             </div>
 
-            {/* Diagram Label - Clean Bottom Aligned */}
-            <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none z-30">
-              <div className="flex flex-col items-center gap-2">
+            {/* Diagram Label - Positioned higher on mobile */}
+            <div className="absolute bottom-16 sm:bottom-10 md:bottom-10 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none z-30 px-4">
+              <div className="flex flex-col items-center gap-1 sm:gap-2">
                 {/* Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm">
-                  <div className="w-2 h-2 rounded-full bg-orange animate-pulse"></div>
-                  <span className="text-sm font-bold tracking-wider text-gray-900 uppercase font-montreal">Your Growth Matrix</span>
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm">
+                  <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-orange animate-pulse"></div>
+                  <span className="text-xs sm:text-sm font-bold tracking-wider text-gray-900 uppercase font-montreal">Your Growth Matrix</span>
                 </div>
                 {/* Subtitle */}
-                <p className="text-base md:text-lg text-gray-500 font-medium">
+                <p className="text-sm sm:text-base md:text-lg text-gray-500 font-medium">
                   9 Powerful Values Unlocked with One QR
                 </p>
               </div>
@@ -620,21 +658,21 @@ export const Hero: React.FC = () => {
       <div className="relative z-10 container mx-auto px-6 h-full pointer-events-none">
 
         {/* SLIDE 1: INTRO */}
-        <div ref={text1Ref} className="absolute inset-0 flex flex-col items-center justify-center text-center pt-24 pointer-events-auto">
+        <div ref={text1Ref} className="absolute inset-0 flex flex-col items-center justify-center text-center pt-8 md:pt-12 pointer-events-auto z-20 -translate-y-8 md:-translate-y-12">
           {/* Dynamic 3D QR Hero Element */}
-          <div ref={introCardRef} className="relative z-20 mb-10 md:mb-12 group cursor-pointer animate-gentle-float perspective-1000">
+          <div ref={introCardRef} className="relative z-30 mb-10 md:mb-12 group cursor-pointer animate-gentle-float perspective-1000">
 
+            {/* Shards - 3D explosion pieces with QR icons */}
             {[...Array(typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 8)].map((_, i) => (
               <div key={`shard-${i}`}
-                className="qr-shard absolute inset-0 bg-orange/80 backdrop-blur-sm rounded-xl z-0"
-                style={{
-                  transform: `scale(0.8) translateZ(-10px)`,
-                  opacity: 1
-                }}
-              ></div>
+                className="qr-shard absolute inset-0 bg-orange/80 backdrop-blur-sm rounded-xl z-0 flex items-center justify-center opacity-0"
+                style={{ transform: 'scale(0.85) translateZ(-10px)' }}
+              >
+                <QrCode className="w-24 h-24 md:w-32 md:h-32 text-white/70" strokeWidth={1.5} />
+              </div>
             ))}
 
-            <div className="relative w-56 h-72 md:w-80 md:h-96 transform-style-3d">
+            <div className="relative w-[200px] h-[260px] md:w-72 md:h-[345px] transform-style-3d">
               {/* Ambient Glow */}
               <div className="absolute inset-0 bg-orange/30 blur-[60px] rounded-full animate-pulse-slow"></div>
 
@@ -678,24 +716,25 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-[1200px] mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl text-gray-900 font-light leading-tight font-montreal tracking-tight text-balance">
+          <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
+            <h2 className="text-[1.75rem] sm:text-3xl md:text-5xl lg:text-6xl text-gray-900 font-light leading-[1.15] font-montreal tracking-tight">
               One QR. <span className="text-orange font-semibold">Infinite</span> <span className="text-black font-semibold">Possibilities.</span>
             </h2>
-            <p className="mt-4 text-lg md:text-xl text-gray-500 font-medium tracking-wide">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-xl text-gray-500 font-medium tracking-wide">
               The future of Readiness.
             </p>
           </div>
 
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 text-sm">
-            <span>Dive In</span>
-            <div className="w-px h-12 bg-gradient-to-b from-orange to-transparent"></div>
+          {/* Scroll hint - more visible on mobile */}
+          <div className="absolute bottom-4 sm:bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 sm:gap-2">
+            <span className="text-xs sm:text-sm font-medium text-gray-400 animate-pulse">Dive In</span>
+            <div className="w-0.5 h-8 sm:h-12 bg-gradient-to-b from-orange to-transparent rounded-full"></div>
           </div>
         </div>
-
-        <div ref={(el) => { if (el) (window as any).finalExitRef = el }} className="fixed inset-0 bg-white pointer-events-none opacity-0 z-50 mix-blend-overlay"></div>
-
       </div>
+
+      <div ref={(el) => { if (el) (window as any).finalExitRef = el }} className="fixed inset-0 bg-white pointer-events-none opacity-0 z-50 mix-blend-overlay"></div>
+
     </div>
   );
 };

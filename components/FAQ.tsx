@@ -121,53 +121,52 @@ export const FAQ: React.FC = () => {
     };
 
     return (
-        <section className="py-24 md:py-32 bg-gray-50 relative overflow-hidden">
+        <section id="faq" className="py-16 sm:py-24 md:py-32 bg-gray-50 relative overflow-hidden">
             {/* Subtle Background Pattern */}
             <div
                 className="absolute inset-0 opacity-40"
                 style={{
                     backgroundImage: `radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0)`,
-                    backgroundSize: '32px 32px'
+                    backgroundSize: '24px 24px'
                 }}
             />
 
-            <div className="container mx-auto px-6 max-w-5xl relative z-10">
+            <div className="container mx-auto px-4 sm:px-6 max-w-5xl relative z-10">
 
                 {/* Header */}
-                <div className="text-center mb-12 md:mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm mb-6">
-                        <HelpCircle className="w-4 h-4 text-orange" />
-                        <span className="text-sm font-medium text-gray-600">FAQ</span>
+                <div className="text-center mb-8 sm:mb-12 md:mb-16">
+                    <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-gray-200 rounded-full shadow-sm mb-4 sm:mb-6">
+                        <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange" />
+                        <span className="text-xs sm:text-sm font-medium text-gray-600">FAQ</span>
                     </div>
 
-                    <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 font-montreal mb-4">
+                    <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-gray-900 font-montreal mb-3 sm:mb-4">
                         Questions? <span className="text-orange">Answers.</span>
                     </h2>
-                    <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+                    <p className="text-sm sm:text-lg text-gray-500 max-w-2xl mx-auto px-2">
                         Everything you need to know about GrowQR and your Q-Score journey.
                     </p>
                 </div>
 
-                {/* Category Filter Pills */}
-                <div className="flex flex-wrap justify-center gap-2 mb-10">
+                {/* Category Filter Pills - Horizontal scroll on mobile */}
+                <div className="flex gap-2 mb-8 sm:mb-10 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-hide">
                     {categories.map(category => {
                         const CategoryIcon = faqData.find(f => f.category === category)?.categoryIcon || HelpCircle;
                         return (
                             <button
                                 key={category}
                                 onClick={() => {
-                                    // Only switch if clicking a different category (can't deselect)
                                     if (activeCategory !== category) {
                                         setActiveCategory(category);
                                     }
                                 }}
-                                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2
+                                className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap flex-shrink-0 touch-manipulation
                   ${activeCategory === category
                                         ? 'bg-gray-900 text-white shadow-lg cursor-default'
                                         : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer'
                                     }`}
                             >
-                                <CategoryIcon className="w-4 h-4" />
+                                <CategoryIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                 {category}
                             </button>
                         );
@@ -175,11 +174,11 @@ export const FAQ: React.FC = () => {
                 </div>
 
                 {/* FAQ Accordion */}
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                     {filteredFaqs.map((faq, index) => (
                         <div
                             key={faq.id}
-                            className={`bg-white rounded-2xl border transition-all duration-300 overflow-hidden
+                            className={`bg-white rounded-xl sm:rounded-2xl border transition-all duration-300 overflow-hidden
                 ${openId === faq.id
                                     ? 'border-orange/30 shadow-lg shadow-orange/5'
                                     : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
@@ -191,10 +190,10 @@ export const FAQ: React.FC = () => {
                             {/* Question Button */}
                             <button
                                 onClick={() => toggleFaq(faq.id)}
-                                className="w-full px-6 py-5 flex items-center justify-between text-left group"
+                                className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between text-left group touch-manipulation"
                             >
-                                <div className="flex items-center gap-4 flex-1 pr-4">
-                                    {/* Category Icon Badge */}
+                                <div className="flex items-center gap-3 sm:gap-4 flex-1 pr-3 sm:pr-4">
+                                    {/* Category Icon Badge - Hidden on mobile */}
                                     <div className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-full transition-colors flex-shrink-0
                     ${openId === faq.id
                                             ? 'bg-orange/10 text-orange'
@@ -206,7 +205,7 @@ export const FAQ: React.FC = () => {
                                     </div>
 
                                     {/* Question Text */}
-                                    <span className={`text-base md:text-lg font-medium transition-colors
+                                    <span className={`text-sm sm:text-base md:text-lg font-medium transition-colors leading-snug
                     ${openId === faq.id ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'}`}
                                     >
                                         {faq.question}
@@ -214,16 +213,16 @@ export const FAQ: React.FC = () => {
                                 </div>
 
                                 {/* Toggle Icon */}
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300
+                                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300
                   ${openId === faq.id
                                         ? 'bg-orange text-white rotate-0'
                                         : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'
                                     }`}
                                 >
                                     {openId === faq.id ? (
-                                        <Minus className="w-4 h-4" />
+                                        <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                     ) : (
-                                        <Plus className="w-4 h-4 transition-transform group-hover:scale-110" />
+                                        <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:scale-110" />
                                     )}
                                 </div>
                             </button>
@@ -231,12 +230,12 @@ export const FAQ: React.FC = () => {
                             {/* Answer Panel */}
                             <div
                                 className={`overflow-hidden transition-all duration-500 ease-out
-                  ${openId === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  ${openId === faq.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
                             >
-                                <div className="px-6 pb-6 pt-0">
-                                    <div className="pl-0 sm:pl-[88px]">
-                                        <div className="h-px bg-gradient-to-r from-orange/20 via-orange/10 to-transparent mb-4" />
-                                        <p className="text-gray-600 leading-relaxed text-base">
+                                <div className="px-4 sm:px-6 pb-4 sm:pb-6 pt-0">
+                                    <div className="pl-0 sm:pl-[48px] md:pl-[88px]">
+                                        <div className="h-px bg-gradient-to-r from-orange/20 via-orange/10 to-transparent mb-3 sm:mb-4" />
+                                        <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
                                             {faq.answer}
                                         </p>
                                     </div>

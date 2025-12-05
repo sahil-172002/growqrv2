@@ -1,34 +1,89 @@
 
 import React, { useLayoutEffect, useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TruthReveal } from './components/TruthReveal';
 import { Challenge } from './components/Challenge';
 import { SolutionsGrid } from './components/SolutionsGrid';
-import { UnifiedShowcase } from './components/UnifiedShowcase'; // NEW IMPORT
+import { UnifiedShowcase } from './components/UnifiedShowcase';
 import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
 import { Reveal } from './components/ui/Reveal';
 import { Qscore } from './components/Qscore';
 import { Growth } from './components/Growth';
-// import { CircularFeatures } from './components/CircularFeatures';
-// import { Ecosystem } from './components/Ecosystem';
 import { Calltoaction } from './components/Calltoaction';
 import { MockupShowcase } from './components/MockupShowcase';
 import { Chatbot } from './components/Chatbot';
 import { FAQ } from './components/FAQ';
 import { LoadingScreen, ScrollProgress, ScrollToTop } from './components/ui/PageUtils';
-import { usePerformanceSettings, getPerformanceClasses } from './utils/performance';
+import { WaitlistModal } from './components/WaitlistModal';
 
+// Page imports
+import { AboutPage } from './pages/About';
+import { MissionPage } from './pages/Mission';
+import { ContactPage } from './pages/Contact';
 
+// Scroll to top on route change
+function ScrollToTopOnMount() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
+// Landing Page Component
+function LandingPage({
+  handleOpenWaitlist,
+  perfClasses,
+  isLoading
+}: {
+  handleOpenWaitlist: (role: 'individual' | 'organization') => void;
+  perfClasses: string;
+  isLoading: boolean;
+}) {
+  return (
+    <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden ${perfClasses}
+      ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>
+      <Navbar onOpenWaitlist={() => handleOpenWaitlist('individual')} />
+
+      <Hero />
+      <TruthReveal />
+      <Qscore />
+      <Growth />
+
+      <SolutionsGrid />
+
+      <TechEngine />
+
+      <FAQ />
+
+      <Calltoaction onOpenWaitlist={handleOpenWaitlist} />
+
+      <Footer />
+
+      <Chatbot />
+    </main>
+  );
+}
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const perfSettings = usePerformanceSettings();
-  const perfClasses = getPerformanceClasses(perfSettings);
+  const [isWaitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistRole, setWaitlistRole] = useState<'individual' | 'organization'>('individual');
+
+  const handleOpenWaitlist = (role: 'individual' | 'organization') => {
+    setWaitlistRole(role);
+    setWaitlistOpen(true);
+  };
+
+  const perfSettings = { tier: 'high' as const };
+  const perfClasses = '';
 
   useLayoutEffect(() => {
-    // Force scroll to top on reload
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
       if ('scrollRestoration' in history) {
@@ -36,13 +91,11 @@ export default function App() {
       }
     }
 
-    // Register GSAP plugins globally if needed, though usually accessed via window
     if (typeof window !== 'undefined' && (window as any).gsap && (window as any).ScrollTrigger) {
       (window as any).gsap.registerPlugin((window as any).ScrollTrigger);
     }
   }, []);
 
-  // Performance optimization styles
   const perfStyles = `
     /* Performance tier: ${perfSettings.tier} */
     .no-blur * { 
@@ -67,11 +120,11 @@ export default function App() {
   `;
 
   return (
-    <>
+    <BrowserRouter>
       {/* Performance optimization styles */}
       <style>{perfStyles}</style>
 
-      {/* Loading Screen */}
+      {/* Loading Screen - only on landing page */}
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
       {/* Scroll Progress Bar */}
@@ -80,78 +133,47 @@ export default function App() {
       {/* Scroll To Top Button */}
       {!isLoading && <ScrollToTop />}
 
-      <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden ${perfClasses}
-        ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>
-        <Navbar />
+      {/* Scroll to top on route change */}
+      <ScrollToTopOnMount />
 
-        <Hero />
-        <TruthReveal />
-        <Qscore />
-        <Growth />
-        {/* <MockupShowcase /> */}
+      <Routes>
+        {/* Landing Page */}
+        <Route
+          path="/"
+          element={
+            <LandingPage
+              handleOpenWaitlist={handleOpenWaitlist}
+              perfClasses={perfClasses}
+              isLoading={isLoading}
+            />
+          }
+        />
 
-        {/* <Challenge /> */}
-        <SolutionsGrid />
-        {/* <UnifiedShowcase /> */}
+        {/* About Page */}
+        <Route
+          path="/about"
+          element={<AboutPage onOpenWaitlist={handleOpenWaitlist} />}
+        />
 
-        <TechEngine />
+        {/* Mission Page */}
+        <Route
+          path="/mission"
+          element={<MissionPage onOpenWaitlist={handleOpenWaitlist} />}
+        />
 
-        <FAQ />
+        {/* Contact Page */}
+        <Route
+          path="/contact"
+          element={<ContactPage onOpenWaitlist={handleOpenWaitlist} />}
+        />
+      </Routes>
 
-        {/* <Ecosystem /> */}
-        {/* <CircularFeatures /> */}
-
-        <Calltoaction />
-
-
-        {/* HIDDEN SECTIONS */}
-        {false && (
-          <>
-            <Challenge />
-
-            {/* SECTION 4: SOLUTIONS GRID (Holographic Scroll) */}
-            <SolutionsGrid />
-
-
-
-            <UnifiedShowcase />
-            {/* SECTION 6: UNIFIED SHOWCASE (Aperture Reveal) */}
-
-
-            <TechEngine />
-
-            {/* CTA Section */}
-            <section className="py-32 bg-gradient-to-r from-orange to-[#FF8C5F] relative overflow-hidden">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-              <div className="container mx-auto px-6 text-center relative z-10">
-                <Reveal width="100%">
-                  <h2 className="text-5xl md:text-7xl font-extrabold text-white mb-6 font-montreal">Your Readiness. <br />Your Opportunity.</h2>
-                  <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-medium">The future doesn't wait. Start building your Q-Profile today.</p>
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                    <button className="px-10 py-5 bg-white text-orange rounded-full text-xl font-bold hover:shadow-[0_10px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all">I Am an Individual</button>
-                    <button className="px-10 py-5 bg-black/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-full text-xl font-bold hover:bg-black/20 hover:-translate-y-1 transition-all">I Represent an Organization</button>
-                  </div>
-                </Reveal>
-              </div>
-            </section>
-
-            {/* Global Vision */}
-            <section className="py-32 bg-gray-900 text-center">
-              <div className="container mx-auto px-6">
-                <Reveal width="100%">
-                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 font-montreal">One Identity. One Network. One Future.</h2>
-                  <p className="text-white/50 text-lg">From India to the world. From hidden to hired.</p>
-                </Reveal>
-              </div>
-            </section>
-          </>
-        )}
-
-        <Footer />
-
-        {/* Floating Chatbot */}
-        <Chatbot />
-      </main>
-    </>
+      {/* Waitlist Modal - Global */}
+      <WaitlistModal
+        isOpen={isWaitlistOpen}
+        onClose={() => setWaitlistOpen(false)}
+        defaultRole={waitlistRole}
+      />
+    </BrowserRouter>
   );
 }

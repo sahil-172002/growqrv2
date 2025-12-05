@@ -1,5 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react';
-import { QrCode, Cpu, ShieldCheck, Brain, BarChart3, Users } from 'lucide-react';
+import { QrCode, Brain, Hash, Link2, Atom, Fingerprint } from 'lucide-react';
 
 // Premium 3D Glass Tile Component
 const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string, desc: string, index: number }) => (
@@ -29,7 +29,7 @@ const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string
         <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent"></div>
 
         {/* Content Container */}
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-5">
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
 
           {/* Icon Container with Glowing Ring */}
           <div className="relative mb-4">
@@ -46,12 +46,12 @@ const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string
           </div>
 
           {/* Label */}
-          <h3 className="text-xs font-bold text-gray-900 uppercase tracking-[0.15em] mb-2 group-hover:text-gray-800 transition-colors duration-300">
+          <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.12em] mb-2 group-hover:text-gray-800 transition-colors duration-300 text-center">
             {label}
           </h3>
 
           {/* Description */}
-          <p className="text-[9px] font-medium text-gray-500 text-center leading-relaxed max-w-[110px] group-hover:text-gray-600 transition-colors duration-300">
+          <p className="text-[9px] font-medium text-gray-500 text-center leading-relaxed max-w-[130px] group-hover:text-gray-600 transition-colors duration-300">
             {desc}
           </p>
 
@@ -72,11 +72,11 @@ const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string
 // Tech Engine Data
 const techFeatures = [
   { icon: QrCode, label: "Unified QR", desc: "One identity across all platforms" },
-  { icon: BarChart3, label: "Q-Score", desc: "Real-time skill quantification" },
+  { icon: Hash, label: "Q-Score", desc: "Real-time skill quantification" },
   { icon: Brain, label: "AI Agents", desc: "Personalized growth assistants" },
-  { icon: ShieldCheck, label: "Blockchain", desc: "Tamper-proof verification" },
-  { icon: Cpu, label: "Predictive", desc: "Future potential analysis" },
-  { icon: Users, label: "Verified", desc: "Peer-to-peer validation" },
+  { icon: Link2, label: "Blockchain", desc: "Tamper-proof credential verification" },
+  { icon: Atom, label: "Quantum Intel", desc: "Next-gen adaptive computing power" },
+  { icon: Fingerprint, label: "Human Intel", desc: "Authentic human identity validation" },
 ];
 
 export const TechEngine: React.FC = () => {
@@ -216,8 +216,8 @@ export const TechEngine: React.FC = () => {
         </div>
 
         {/* === TECH GRID === */}
-        <div ref={gridRef} className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 lg:gap-6">
+        <div ref={gridRef} className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 md:gap-6 lg:gap-7">
             {techFeatures.map((feature, index) => (
               <TechTile
                 key={feature.label}
