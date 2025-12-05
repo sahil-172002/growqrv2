@@ -351,7 +351,7 @@ export const Growth: React.FC = () => {
                         <span className="text-[10px] font-bold text-orange uppercase tracking-widest">The Loop</span>
                     </div>
                     <h2 className="text-4xl md:text-6xl font-black text-gray-900 font-montreal mb-4 tracking-tight">
-                        Growing <span className="text-orange">Together.</span>
+                        Grow <span className="text-orange">Together.</span>
                     </h2>
                     <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium">
                         Your Skill Growth Fuels the Network; The Network Fuels Your Career.
