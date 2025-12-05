@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, HelpCircle, Zap, Shield, Users, CreditCard, Globe } from 'lucide-react';
+import { Plus, Minus, HelpCircle, Zap, Shield, Users, Globe } from 'lucide-react';
 
 interface FAQItem {
     id: number;
@@ -79,28 +79,7 @@ const faqData: FAQItem[] = [
         answer: "Yes, we offer comprehensive REST APIs for seamless integration with your existing HRMS, ATS, LMS, or custom systems. Our API allows you to verify credentials, fetch Q-Scores, and sync talent data. Enterprise clients get dedicated support for custom integrations."
     },
 
-    // Pricing - 3 Questions
-    {
-        id: 10,
-        category: "Pricing",
-        categoryIcon: CreditCard,
-        question: "Is GrowQR free for individuals?",
-        answer: "Yes! GrowQR is completely free for individuals. Create your profile, generate your QR code, build your Q-Score, and share it unlimited times, all at no cost. We believe everyone deserves a verified digital identity. Premium features like custom branding and advanced analytics are available with Pro."
-    },
-    {
-        id: 11,
-        category: "Pricing",
-        categoryIcon: CreditCard,
-        question: "What's included in the Pro plan?",
-        answer: "Pro unlocks advanced analytics (see who viewed your profile), custom QR designs, priority credential verification, detailed skill insights, and the ability to showcase projects and portfolios. It's perfect for professionals who want to stand out and track their career growth."
-    },
-    {
-        id: 12,
-        category: "Pricing",
-        categoryIcon: CreditCard,
-        question: "How does enterprise pricing work?",
-        answer: "Enterprise pricing is customized based on your organization's size and needs. We offer volume-based pricing for bulk verifications, dedicated account management, custom integrations, and SLA guarantees. Contact our sales team for a tailored quote and demo."
-    },
+
 
     // Global - 3 Questions
     {

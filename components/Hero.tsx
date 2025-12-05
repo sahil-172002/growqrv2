@@ -603,11 +603,11 @@ export const Hero: React.FC = () => {
                 {/* Badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm">
                   <div className="w-2 h-2 rounded-full bg-orange animate-pulse"></div>
-                  <span className="text-sm font-bold tracking-wider text-gray-900 uppercase font-montreal">Your Toolkit</span>
+                  <span className="text-sm font-bold tracking-wider text-gray-900 uppercase font-montreal">Your Growth Matrix</span>
                 </div>
                 {/* Subtitle */}
-                <p className="text-sm text-gray-500 font-medium">
-                  9 features to grow, prove, and get discovered
+                <p className="text-base md:text-lg text-gray-500 font-medium">
+                  9 Powerful Values Unlocked with One QR
                 </p>
               </div>
             </div>
@@ -680,8 +680,11 @@ export const Hero: React.FC = () => {
 
           <div className="w-full max-w-[1200px] mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-5xl lg:text-6xl text-gray-900 font-light leading-tight font-montreal tracking-tight text-balance">
-              One QR. <span className="text-orange font-semibold">Infinite</span> <span className="text-black font-semibold">impact.</span>
+              One QR. <span className="text-orange font-semibold">Infinite</span> <span className="text-black font-semibold">Possibilities.</span>
             </h2>
+            <p className="mt-4 text-lg md:text-xl text-gray-500 font-medium tracking-wide">
+              The future of Readiness.
+            </p>
           </div>
 
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 text-sm">

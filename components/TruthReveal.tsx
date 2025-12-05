@@ -209,7 +209,7 @@ export const TruthReveal: React.FC = () => {
               The world runs on <span className="text-orange font-medium">talent.</span>
             </p>
             <p className="text-3xl md:text-7xl md:leading-tight font-light text-black font-montreal mt-2 md:mt-4">
-              But <span className="text-orange font-medium">70%</span> of it is invisible.
+              But <span className="text-orange font-medium">70%</span> Remains Undiscovered.
             </p>
           </div>
 
@@ -249,44 +249,44 @@ export const TruthReveal: React.FC = () => {
             <div className="relative inline-block mb-8 md:mb-12">
               <div className="absolute -inset-10 bg-orange/10 blur-3xl rounded-full"></div>
               <p className="relative text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal">
-                We built <span className="text-orange inline-block transform hover:scale-105 transition-transform duration-300 cursor-pointer">GrowQR</span>
+                To Change that,
               </p>
               <p className="relative text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal mt-1">
-                to change that.
+                We Built <span className="text-orange inline-block transform hover:scale-105 transition-transform duration-300 cursor-pointer">GrowQR</span>
               </p>
             </div>
 
             {/* Subtext */}
             <p className="text-lg md:text-2xl text-gray-500 font-montreal mb-8 md:mb-12 max-w-3xl leading-relaxed">
-              GrowQR combines your <span className="text-gray-900 font-medium">skills</span>, <span className="text-gray-900 font-medium">credentials</span>, and <span className="text-gray-900 font-medium">achievements</span> into one verified profile. Accessible via a single QR code.
+              An AI-driven proof-of-skill platform for <span className="text-gray-900 font-medium">individuals</span>, <span className="text-gray-900 font-medium">enterprises</span>, <span className="text-gray-900 font-medium">institutions</span>, and <span className="text-gray-900 font-medium">smart cities</span> — all powered by a unique QR.
             </p>
 
-            {/* Feature Pills */}
+            {/* Feature Pills - Row 1 (3 cards) */}
             <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-4xl">
 
-              {/* Feature 1 */}
+              {/* Feature 1 - Unified QR */}
               <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
                 <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
                   <QrCode className="w-5 h-5 text-orange" />
                 </div>
                 <div className="text-left">
-                  <p className="font-semibold text-gray-900 text-sm">One QR Code</p>
+                  <p className="font-semibold text-gray-900 text-sm">Unified QR</p>
                   <p className="text-xs text-gray-500">Your entire identity</p>
                 </div>
               </div>
 
-              {/* Feature 2 */}
+              {/* Feature 2 - Personal AI */}
               <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
                 <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
-                  <Shield className="w-5 h-5 text-orange" />
+                  <Zap className="w-5 h-5 text-orange" />
                 </div>
                 <div className="text-left">
-                  <p className="font-semibold text-gray-900 text-sm">Verified Credentials</p>
-                  <p className="text-xs text-gray-500">Tamper-proof trust</p>
+                  <p className="font-semibold text-gray-900 text-sm">Personal AI</p>
+                  <p className="text-xs text-gray-500">Smart guidance</p>
                 </div>
               </div>
 
-              {/* Feature 3 */}
+              {/* Feature 3 - Real-Time Q-Score */}
               <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
                 <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
                   <BarChart3 className="w-5 h-5 text-orange" />
@@ -297,25 +297,30 @@ export const TruthReveal: React.FC = () => {
                 </div>
               </div>
 
-              {/* Feature 4 */}
+            </div>
+
+            {/* Feature Pills - Row 2 (2 cards) */}
+            <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-4xl mt-3 md:mt-4">
+
+              {/* Feature 4 - Verified Credentials */}
+              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
+                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
+                  <Shield className="w-5 h-5 text-orange" />
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900 text-sm">Verified Credentials</p>
+                  <p className="text-xs text-gray-500">Tamper-proof trust</p>
+                </div>
+              </div>
+
+              {/* Feature 5 - Universal Opportunities */}
               <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
                 <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
                   <Globe className="w-5 h-5 text-orange" />
                 </div>
                 <div className="text-left">
-                  <p className="font-semibold text-gray-900 text-sm">Universal Access</p>
-                  <p className="text-xs text-gray-500">Works everywhere</p>
-                </div>
-              </div>
-
-              {/* Feature 5 */}
-              <div className="growqr-feature flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md hover:border-orange/30 transition-all duration-300 group">
-                <div className="w-10 h-10 rounded-xl bg-orange/10 flex items-center justify-center group-hover:bg-orange/20 transition-colors">
-                  <Zap className="w-5 h-5 text-orange" />
-                </div>
-                <div className="text-left">
-                  <p className="font-semibold text-gray-900 text-sm">AI-Powered</p>
-                  <p className="text-xs text-gray-500">Smart matching</p>
+                  <p className="font-semibold text-gray-900 text-sm">Universal Opportunities</p>
+                  <p className="text-xs text-gray-500">Access everywhere</p>
                 </div>
               </div>
 
@@ -329,8 +334,8 @@ export const TruthReveal: React.FC = () => {
               Meet <span className="text-orange font-semibold">Q-Score.</span>
             </p>
             <p className="text-xl md:text-3xl text-gray-600 font-montreal max-w-5xl mx-auto leading-relaxed">
-              Your <span className="font-medium">Growth Identity Score</span>. <br className="hidden md:block" />
-              Built from Visible Talent, Verified Proof, and Personal Traits.
+              <span className="font-medium"> Q-SCORE™:</span> Your Skill Identity, Revealed. <br className="hidden md:block" />
+              <span className="whitespace-nowrap">Powered by AI & Science. One Verified Number Blending 25+ Human Attributes.</span>
             </p>
             <p className="text-base md:text-xl text-gray-400 font-montreal mt-6 md:mt-8">
               Continuously measured across 25+ unique dimensions.

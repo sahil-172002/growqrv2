@@ -284,10 +284,17 @@ export const Qscore: React.FC = () => {
 
   return (
     <section ref={containerRef} className="py-24 bg-white overflow-hidden relative min-h-screen">
-      <div className="max-w-7xl mx-auto px-6 text-center mb-4 relative z-20">
-        <h2 className="text-3xl md:text-5xl font-semibold mb-2 md:mb-2 text-black font-montreal">
-          Powered by <span className="text-orange">25+ Dimensions.</span>
+      <div className="max-w-7xl mx-auto px-6 text-center mb-6 relative z-20">
+        {/* <p className="text-sm md:text-base font-medium text-gray-600 uppercase tracking-wider mb-2">The Science Behind Your Score</p> */}
+        <h1 className="text-4xl md:text-6xl font-semibold text-gray-900 mb-2 font-montreal">
+          Deconstructing Skill Identity
+        </h1>
+        <h2 className="text-3xl md:text-5xl font-semibold text-orange mb-2 font-montreal">
+          The Dimensions of Q-Core
         </h2>
+        {/* <p className="text-lg md:text-xl text-gray-600 font-montreal mt-4 max-w-2xl mx-auto">
+          Explore the 25+ signals that define your Q‑Core, unlocking a deeper understanding of your skill identity.
+        </p> */}
       </div>
 
       <div className="relative w-full h-[600px] md:h-[800px] -mt-24 flex items-center justify-center perspective-1000">

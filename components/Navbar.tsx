@@ -50,13 +50,13 @@ export const Navbar: React.FC = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="px-6 py-2.5 text-sm font-bold text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-all duration-300 font-montreal">
+          {/* <button className="px-6 py-2.5 text-sm font-bold text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-all duration-300 font-montreal">
             Login
-          </button>
+          </button> */}
 
           <button className="group relative px-8 py-3 bg-black text-white rounded-full text-sm font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,106,47,0.4)] font-montreal">
             <div className="absolute inset-0 w-full h-full bg-orange transition-transform duration-300 translate-y-full group-hover:translate-y-0"></div>
-            <span className="relative z-10 group-hover:text-white transition-colors duration-300">Get Started</span>
+            <span className="relative z-10 group-hover:text-white transition-colors duration-300">Early Access</span>
           </button>
         </div>
 
@@ -76,9 +76,9 @@ export const Navbar: React.FC = () => {
           } md:hidden flex flex-col pt-24 pb-8 px-6 h-[100dvh]`}
       >
         <div className="flex flex-col gap-4 items-center justify-center flex-1 w-full max-w-sm mx-auto">
-          <button className="w-full py-4 text-xl font-bold text-black border border-gray-100 rounded-2xl hover:bg-gray-50 active:scale-95 transition-all">
+          {/* <button className="w-full py-4 text-xl font-bold text-black border border-gray-100 rounded-2xl hover:bg-gray-50 active:scale-95 transition-all">
             Login
-          </button>
+          </button> */}
           <button className="w-full py-4 bg-black text-white rounded-2xl text-xl font-bold shadow-xl shadow-orange/10 active:scale-95 transition-all relative overflow-hidden group">
             <span className="relative z-10">Get Started</span>
             <div className="absolute inset-0 bg-orange opacity-0 group-active:opacity-100 transition-opacity"></div>

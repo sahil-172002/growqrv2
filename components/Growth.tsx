@@ -323,10 +323,10 @@ export const Growth: React.FC = () => {
                         <span className="text-[10px] font-bold text-orange uppercase tracking-widest">The Seed</span>
                     </div>
                     <h2 className="text-4xl md:text-6xl font-black text-gray-900 font-montreal mb-4 tracking-tight">
-                        It Starts With <span className="text-orange">You.</span>
+                        Your Verified<span className="text-orange"> Q-SCORE™</span>
                     </h2>
-                    <p className="text-lg text-gray-500 max-w-xl mx-auto font-medium">
-                        Your verified Q-Score is the key that unlocks the entire ecosystem.
+                    <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium">
+                        The Single Key to Unlock the Entire Ecosystem.
                     </p>
                 </div>
 
@@ -339,8 +339,8 @@ export const Growth: React.FC = () => {
                     <h2 className="text-4xl md:text-6xl font-black text-gray-900 font-montreal mb-4 tracking-tight">
                         Access <span className="text-gray-500">Everything.</span>
                     </h2>
-                    <p className="text-lg text-gray-500 max-w-xl mx-auto font-medium">
-                        Institutions, Companies, and Cities are waiting for verified talent.
+                    <p className="text-lg text-gray-500 max-w-3xl mx-auto font-medium">
+                        Connect with Institutions, Companies, and Smart Cities Seeking Verified Talent.
                     </p>
                 </div>
 
@@ -353,8 +353,8 @@ export const Growth: React.FC = () => {
                     <h2 className="text-4xl md:text-6xl font-black text-gray-900 font-montreal mb-4 tracking-tight">
                         Growing <span className="text-orange">Together.</span>
                     </h2>
-                    <p className="text-lg text-gray-500 max-w-xl mx-auto font-medium">
-                        Your growth fuels the network. The network fuels you.
+                    <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium">
+                        Your Skill Growth Fuels the Network; The Network Fuels Your Career.
                     </p>
                 </div>
 

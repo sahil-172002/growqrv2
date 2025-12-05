@@ -169,7 +169,7 @@ export const Calltoaction: React.FC = () => {
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
 
                         <span className="relative flex items-center gap-2">
-                            Get My Q-Score
+                            Early Access
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </span>
                     </button>
@@ -177,7 +177,7 @@ export const Calltoaction: React.FC = () => {
                     {/* Secondary CTA */}
                     <button className="group px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-800 rounded-full text-base font-bold transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:bg-white hover:-translate-y-0.5 hover:shadow-lg">
                         <span className="flex items-center gap-2">
-                            For Organizations
+                            Join Waitlist
                             <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange group-hover:translate-x-1 transition-all" />
                         </span>
                     </button>

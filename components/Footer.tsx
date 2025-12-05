@@ -93,31 +93,24 @@ export const Footer: React.FC = () => {
               <div className="group">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange"></span>
-                  <span className="text-sm font-medium text-gray-700">New Delhi, India</span>
-                </div>
-                <p className="text-xs text-gray-500 pl-3.5 leading-relaxed">
-                  55, Third Floor, Saidulajab, Gadaipur, New Delhi, 110030
-                </p>
-              </div>
-
-              <div className="group">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-orange"></span>
-                  <span className="text-sm font-medium text-gray-700">Austin, USA</span>
+                  <span className="text-sm font-medium text-gray-700">Princeton, USA</span>
                   <span className="text-[10px] px-1.5 py-0.5 bg-orange/10 text-orange rounded font-medium">HQ</span>
                 </div>
                 <p className="text-xs text-gray-500 pl-3.5 leading-relaxed">
-                  123 Tech Drive, Suite 400, Austin, TX 78701
+                  103 Carnegie Center Drive,<br />
+                  Princeton, NJ 08540
                 </p>
               </div>
 
               <div className="group">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange"></span>
-                  <span className="text-sm font-medium text-gray-700">New York, USA</span>
+                  <span className="text-sm font-medium text-gray-700">Noida, India</span>
                 </div>
                 <p className="text-xs text-gray-500 pl-3.5 leading-relaxed">
-                  456 Commerce Blvd, 1st Floor, New York, NY
+                  2nd Floor, A-55,<br />
+                  Noida, Gautam Budh Nagar,<br />
+                  Uttar Pradesh 201301
                 </p>
               </div>
             </div>
