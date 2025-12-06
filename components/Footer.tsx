@@ -152,21 +152,20 @@ export const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Product</h4>
             <ul className="space-y-3">
-              <li><a href="#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Individuals</a></li>
-              <li><a href="#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Enterprises</a></li>
-              <li><a href="#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Universities</a></li>
-              <li><a href="#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Smart Cities</a></li>
-              <li><a href="#cta" className="text-sm text-gray-600 hover:text-orange transition-colors">Get Started</a></li>
+              <li><a href="/#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Individuals</a></li>
+              <li><a href="/#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Enterprises</a></li>
+              <li><a href="/#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Universities</a></li>
+              <li><a href="/#growth" className="text-sm text-gray-600 hover:text-orange transition-colors">Smart Cities</a></li>
+              <li><a href="/#cta" className="text-sm text-gray-600 hover:text-orange transition-colors">Get Started</a></li>
             </ul>
           </div>
 
           <div className="col-span-1 md:col-span-2">
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Company</h4>
             <ul className="space-y-3">
+              <li><a href="/#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-SCORE™</a></li>
               <li><Link to="/about" className="text-sm text-gray-600 hover:text-orange transition-colors">About</Link></li>
               <li><Link to="/vision" className="text-sm text-gray-600 hover:text-orange transition-colors">Vision</Link></li>
-              <li><a href="#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-SCORE™</a></li>
-              <li><a href="#faq" className="text-sm text-gray-600 hover:text-orange transition-colors">FAQ</a></li>
               <li><Link to="/contact" className="text-sm text-gray-600 hover:text-orange transition-colors">Contact</Link></li>
             </ul>
           </div>

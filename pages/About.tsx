@@ -2,6 +2,7 @@ import React from 'react';
 import { Users, Target, Lightbulb, Globe, Award, TrendingUp, ArrowRight, Zap } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { Calltoaction } from '../components/Calltoaction';
 
 interface AboutPageProps {
     onOpenWaitlist: (role: 'individual' | 'organization') => void;
@@ -124,6 +125,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenWaitlist }) => {
                 </div>
             </section>
 
+            <Calltoaction onOpenWaitlist={onOpenWaitlist} />
 
             <Footer />
         </div>
