@@ -211,7 +211,7 @@ export const TruthReveal: React.FC = () => {
                 The World Runs On <span className="text-orange font-medium">Talent.</span>
               </p>
               <p className="text-2xl sm:text-3xl md:text-7xl md:leading-tight font-light text-black font-montreal mt-2 md:mt-4">
-                But <span className="text-orange font-medium">70%</span> Remains Undiscovered.
+                But <span className="text-orange font-medium">Millions</span> Remain Undiscovered.
               </p>
             </div>
 
@@ -222,7 +222,7 @@ export const TruthReveal: React.FC = () => {
               <div className="relative w-full h-24 sm:h-32 md:h-48 flex items-center justify-center">
                 <span className="slide3-bg absolute text-[4rem] sm:text-[5.5rem] md:text-[11rem] font-black text-black tracking-tighter opacity-0 select-none leading-none font-montreal">HIDDEN</span>
                 <p className="slide3-fg relative z-10 text-lg sm:text-2xl md:text-6xl font-bold text-black bg-white/60 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 font-montreal whitespace-nowrap">
-                  Behind Outdated Resumes.
+                  Behind Unclear Pathways.
                 </p>
               </div>
 
@@ -251,7 +251,7 @@ export const TruthReveal: React.FC = () => {
               <div className="relative inline-block mb-3 sm:mb-6 md:mb-10">
                 <div className="absolute -inset-6 md:-inset-10 bg-orange/10 blur-2xl md:blur-3xl rounded-full"></div>
                 <p className="relative text-xl sm:text-2xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal">
-                  To Change That,
+                  To Change,
                 </p>
                 <p className="relative text-xl sm:text-2xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal mt-0.5 sm:mt-1">
                   We Built <span className="text-orange">GrowQR</span>
@@ -259,8 +259,8 @@ export const TruthReveal: React.FC = () => {
               </div>
 
               {/* Subtext - Hidden on smallest screens, shorter on mobile */}
-              <p className="hidden sm:block text-sm md:text-xl text-gray-500 font-montreal mb-4 md:mb-8 max-w-2xl leading-relaxed text-center px-2">
-                AI-driven proof-of-skill for <span className="text-gray-900 font-medium">individuals</span>, <span className="text-gray-900 font-medium">enterprises</span>, and <span className="text-gray-900 font-medium">institutions</span>.
+              <p className="hidden sm:block text-sm md:text-xl text-gray-500 font-montreal mb-4 md:mb-8 max-w-3xl leading-relaxed text-center px-2">
+                An AI-driven proof-of-skill platform for <span className="text-gray-900 font-medium">individuals</span>, <span className="text-gray-900 font-medium">enterprises</span>, <span className="text-gray-900 font-medium">institutions</span>, and <span className="text-gray-900 font-medium">smart cities</span> — all powered by a unique QR.
               </p>
 
               {/* Feature Grid - 2 columns on mobile, 3 on tablet, 5 on desktop */}
@@ -283,7 +283,7 @@ export const TruthReveal: React.FC = () => {
                     <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Personal AI</p>
+                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Personalized AI</p>
                     <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Smart guidance</p>
                   </div>
                 </div>
@@ -294,7 +294,7 @@ export const TruthReveal: React.FC = () => {
                     <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Q-Score</p>
+                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Q-SCORE™</p>
                     <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Readiness metric</p>
                   </div>
                 </div>
@@ -305,7 +305,7 @@ export const TruthReveal: React.FC = () => {
                     <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Verified</p>
+                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Verified Credentials</p>
                     <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Tamper-proof</p>
                   </div>
                 </div>
@@ -316,7 +316,7 @@ export const TruthReveal: React.FC = () => {
                     <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
                   </div>
                   <div className="text-center">
-                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Global Access</p>
+                    <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Global Opportunity</p>
                     <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Everywhere</p>
                   </div>
                 </div>
@@ -347,14 +347,14 @@ export const TruthReveal: React.FC = () => {
                 <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-orange/50 to-transparent my-1 sm:my-2"></div>
 
                 {/* Line 3: Description */}
-                <p className="text-sm sm:text-lg md:text-2xl text-gray-500 font-montreal leading-relaxed max-w-2xl px-2">
-                  Powered by AI & Science. One Verified Number Blending 25+ Human Attributes.
+                <p className="text-sm sm:text-lg md:text-2xl text-gray-500 font-montreal leading-relaxed max-w-3xl px-2">
+                  Powered by Artificial Intelligence & Human Intelligence Combined.
                 </p>
               </div>
 
-              <p className="text-xs sm:text-base md:text-xl text-gray-400 font-montreal mt-6 sm:mt-8 md:mt-10">
-                Enabled By Q-core Engine
-              </p>
+              {/* <p className="text-xs sm:text-base md:text-xl text-gray-400 font-montreal mt-6 sm:mt-8 md:mt-10">
+                Enabled By Q-SCORE™ Engine
+              </p> */}
             </div>
 
           </div>

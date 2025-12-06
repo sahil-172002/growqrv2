@@ -156,41 +156,28 @@ export const Calltoaction: React.FC<CalltoactionProps> = ({ onOpenWaitlist }) =>
                 </h2>
 
                 {/* Subtitle */}
-                <p
+                {/* <p
                     className="cta-subtitle text-base sm:text-lg md:text-xl tracking-tight text-gray-500 
                     max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2"
                 >
-                    Join thousands who've unlocked their verified Q-Score.
+                    Join thousands who've unlocked their verified Q-SCORE™.
                     <br className="hidden sm:block" />
                     <span className="sm:hidden"> </span>
                     <span className="text-gray-700 font-medium">One scan. Infinite possibilities.</span>
-                </p>
+                </p> */}
 
-                {/* CTA Buttons */}
-                <div className="cta-buttons flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-
-                    {/* Primary CTA */}
+                {/* CTA Button */}
+                <div className="cta-buttons flex items-center justify-center mt-10 sm:mt-12">
                     <button
                         onClick={() => onOpenWaitlist('individual')}
-                        className="group relative overflow-hidden w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-orange text-white rounded-full text-sm sm:text-base font-bold transition-all duration-300 shadow-[0_8px_30px_rgba(255,106,47,0.35)] hover:shadow-[0_12px_40px_rgba(255,106,47,0.5)] hover:-translate-y-0.5 touch-manipulation"
+                        className="group relative overflow-hidden w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-orange text-white rounded-full text-base sm:text-lg font-bold transition-all duration-300 shadow-[0_8px_30px_rgba(255,106,47,0.35)] hover:shadow-[0_12px_40px_rgba(255,106,47,0.5)] hover:-translate-y-0.5 touch-manipulation"
                     >
                         {/* Shine Effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
 
                         <span className="relative flex items-center justify-center gap-2">
-                            Early Access
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                    </button>
-
-                    {/* Secondary CTA */}
-                    <button
-                        onClick={() => onOpenWaitlist('individual')}
-                        className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-white/80 backdrop-blur-sm text-gray-800 rounded-full text-sm sm:text-base font-bold transition-all duration-300 border border-gray-200 hover:border-gray-300 hover:bg-white hover:-translate-y-0.5 hover:shadow-lg touch-manipulation"
-                    >
-                        <span className="flex items-center justify-center gap-2">
-                            Join Waitlist
-                            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange group-hover:translate-x-1 transition-all" />
+                            Join The Waitlist
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </span>
                     </button>
                 </div>

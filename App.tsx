@@ -20,7 +20,7 @@ import { WaitlistModal } from './components/WaitlistModal';
 
 // Page imports
 import { AboutPage } from './pages/About';
-import { MissionPage } from './pages/Mission';
+import { VisionPage } from './pages/Vision';
 import { ContactPage } from './pages/Contact';
 
 // Scroll to top on route change
@@ -154,10 +154,10 @@ export default function App() {
           element={<AboutPage onOpenWaitlist={handleOpenWaitlist} />}
         />
 
-        {/* Mission Page */}
+        {/* Vision Page */}
         <Route
-          path="/mission"
-          element={<MissionPage onOpenWaitlist={handleOpenWaitlist} />}
+          path="/vision"
+          element={<VisionPage onOpenWaitlist={handleOpenWaitlist} />}
         />
 
         {/* Contact Page */}

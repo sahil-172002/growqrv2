@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Twitter, Linkedin, Mail, ArrowUpRight, Loader2, Check } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -12,7 +13,7 @@ export const Footer: React.FC = () => {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) {
-      setError('Please enter a valid email');
+      setError('Enter valid email address');
       return;
     }
 
@@ -33,7 +34,7 @@ export const Footer: React.FC = () => {
       if (dbError) {
         if (dbError.code === '23505') {
           // Unique constraint violation - already subscribed
-          setError('Already subscribed!');
+          setError('Already subscribed');
         } else {
           throw dbError;
         }
@@ -44,7 +45,7 @@ export const Footer: React.FC = () => {
       }
     } catch (err: any) {
       console.error('Newsletter error:', err);
-      setError('Something went wrong');
+      setError('Try again');
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +71,7 @@ export const Footer: React.FC = () => {
               <form onSubmit={handleSubscribe} className="flex gap-1.5">
                 <div className="relative">
                   <input
-                    type="email"
+                    type="text"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(null); }}
                     placeholder="Your email"
@@ -147,11 +148,11 @@ export const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Company</h4>
             <ul className="space-y-3">
-              <li><a href="#truth-reveal" className="text-sm text-gray-600 hover:text-orange transition-colors">About Us</a></li>
-              <li><a href="#truth-reveal" className="text-sm text-gray-600 hover:text-orange transition-colors">Mission</a></li>
-              <li><a href="#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-Score</a></li>
+              <li><Link to="/about" className="text-sm text-gray-600 hover:text-orange transition-colors">About</Link></li>
+              <li><Link to="/vision" className="text-sm text-gray-600 hover:text-orange transition-colors">Vision</Link></li>
+              <li><a href="#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-SCORE™</a></li>
               <li><a href="#faq" className="text-sm text-gray-600 hover:text-orange transition-colors">FAQ</a></li>
-              <li><a href="#cta" className="text-sm text-gray-600 hover:text-orange transition-colors">Contact</a></li>
+              <li><Link to="/contact" className="text-sm text-gray-600 hover:text-orange transition-colors">Contact</Link></li>
             </ul>
           </div>
 

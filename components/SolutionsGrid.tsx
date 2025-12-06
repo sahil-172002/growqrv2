@@ -23,13 +23,13 @@ const solutions = [
     id: 'individual',
     icon: User,
     label: "For Individuals",
-    title: "GROW YOURSELF",
-    subtitle: "Your Q-Score & Personalized Dashboard",
+    title: "YOUR GROWTH",
+    subtitle: "Your Q-SCORE™ & Personalized Dashboard",
     description: "Get a clear, science-backed snapshot of your skills, readiness, and growth potential — all in one score.",
     features: [
-      { title: "Instant Self-Discovery", desc: "See your personalised Q-Readiness in seconds." },
-      { title: "Verified Matchmaking", desc: "Connect with opportunities that fit your actual potential." },
-      { title: "Personal AI Agents", desc: "Your AI buddy helps upskill and boost your Q-Profile." },
+      { title: "Instant Self-Discovery", desc: "See your personalised readiness in seconds." },
+      { title: "Verified Matchmaking", desc: "Connect with opportunities that matches your potential." },
+      { title: "Personalised AI Agents", desc: "Your AI buddy helps you upskill and boost your Profile." },
       { title: "Infinite Pathways", desc: "Unlock tailored opportunities fueling growth." }
     ],
     color: "orange"
@@ -37,14 +37,14 @@ const solutions = [
   {
     id: 'employer',
     icon: Building,
-    label: "For Employers",
-    title: "BUILD TEAMS",
-    subtitle: "Your Q-Score & Intelligent Dashboard",
+    label: "For Enterprises",
+    title: "UNLOCK CAPABILITIES",
+    subtitle: "Your Q-SCORE™ & Intelligent Dashboard",
     description: "Get an AI-analyzed snapshot of your organization's skills, culture, and perception.",
     features: [
       { title: "Instant Evaluation", desc: "Holistic view of internal skill sets and culture." },
       { title: "Smart Hiring", desc: "Autonomous hiring of relevant, verified profiles." },
-      { title: "Social Brand", desc: "Uplift perception with purposeful teams." },
+      { title: "Social Branding", desc: "Uplift perception with purposeful teams." },
       { title: "Maximize Growth", desc: "Unlock infinite growth with AI-powered profiles." }
     ],
     color: "black"
@@ -54,13 +54,13 @@ const solutions = [
     icon: GraduationCap,
     label: "For Institutes",
     title: "EMPOWER STUDENTS",
-    subtitle: "Your Q-Score & Student Dashboard",
+    subtitle: "Your Q-SCORE™ & Student Dashboard",
     description: "Unlock an intelligently analyzed, comprehensive view of student performance and progress.",
     features: [
       { title: "Industry Preparedness", desc: "Curricula aligned with real-world demands." },
-      { title: "Personalized Development", desc: "Adaptive pathways for unique journeys." },
+      { title: "Personalized Development", desc: "AI tailored pathways for relevant journeys." },
       { title: "Ranking Elevation", desc: "Boost reputation through superior placements." },
-      { title: "Faculty Enhancement", desc: "Elevate pedagogical excellence." }
+      { title: "Faculty Enhancement", desc: "Boost educator performance." }
     ],
     color: "orange"
   },
@@ -68,8 +68,8 @@ const solutions = [
     id: 'city',
     icon: Building2,
     label: "For Smart Cities",
-    title: "EMPOWER CITIZENS",
-    subtitle: "Your Q-Score & Smart City Dashboard",
+    title: "INTELLIGENT GOVERNANCE",
+    subtitle: "Your Q-SCORE™ & Smart City Dashboard",
     description: "Access a streamlined, integrated view of your population and skill categorizations.",
     features: [
       { title: "Human Readiness Score", desc: "Assessment of citizen capabilities." },
@@ -506,13 +506,9 @@ export const SolutionsGrid: React.FC = () => {
                   </span>
                 </div>
 
-                <h2 className="sg-anim text-3xl md:text-5xl font-black tracking-tighter text-black mb-3 leading-[0.95] font-montreal whitespace-nowrap">
+                <h2 className="sg-anim text-3xl md:text-5xl font-black tracking-tighter text-black mb-5 md:mb-6 leading-[0.95] font-montreal whitespace-nowrap">
                   {item.title}
                 </h2>
-
-                <h3 className="sg-anim text-lg md:text-xl font-bold mb-5 md:mb-6 text-gray-600">
-                  {item.subtitle}
-                </h3>
 
                 {/* <p className="sg-anim text-base md:text-lg text-gray-500 font-medium leading-relaxed mb-8 max-w-lg">
                   {item.description}
@@ -572,14 +568,6 @@ export const SolutionsGrid: React.FC = () => {
             <div ref={visualizerRef} className="relative transform-style-3d">
               {render3DObject(activeStage)}
             </div>
-
-            <div className="absolute -bottom-24 flex flex-col items-center animate-fade-in-up">
-              <span className="text-xs font-mono text-gray-500 tracking-[0.5em] uppercase mb-2">ACTIVE_MATRIX</span>
-              <div className={`text-3xl font-bold tracking-widest transition-all duration-500 ${activeStage === 0 || activeStage === 2 ? 'text-orange' : 'text-white'
-                }`}>
-                {solutions[activeStage].label.toUpperCase()}
-              </div>
-            </div>
           </div>
 
           {/* Animated Progress Line & Dots */}
@@ -593,21 +581,24 @@ export const SolutionsGrid: React.FC = () => {
               ></div>
             </div>
 
-            {solutions.map((item, i) => (
-              <div key={i} className={`relative transition-all duration-500 ${activeStage === i ? 'scale-125' : 'scale-100 opacity-50'
-                }`}>
-                <div className={`w-3 h-3 rounded-full transition-all duration-300 ${activeStage === i ?
-                  (item.color === 'orange' ? 'bg-orange shadow-[0_0_15px_#FF6A2F] ring-4 ring-orange/30' :
-                    'bg-white shadow-[0_0_15px_white] ring-4 ring-white/30')
-                  : 'bg-gray-700'
-                  }`}></div>
-                {activeStage === i && (
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-bold tracking-widest text-white/50 uppercase animate-fade-in">
-                    {item.id}
-                  </div>
-                )}
-              </div>
-            ))}
+            {solutions.map((item, i) => {
+              const pluralLabels = ['Individuals', 'Enterprises', 'Institutes', 'Smart Cities'];
+              return (
+                <div key={i} className={`relative transition-all duration-500 ${activeStage === i ? 'scale-125' : 'scale-100 opacity-50'
+                  }`}>
+                  <div className={`w-3 h-3 rounded-full transition-all duration-300 ${activeStage === i ?
+                    (item.color === 'orange' ? 'bg-orange shadow-[0_0_15px_#FF6A2F] ring-4 ring-orange/30' :
+                      'bg-white shadow-[0_0_15px_white] ring-4 ring-white/30')
+                    : 'bg-gray-700'
+                    }`}></div>
+                  {activeStage === i && (
+                    <div className="absolute left-6 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-bold tracking-widest text-white/50 uppercase animate-fade-in">
+                      {pluralLabels[i]}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
 

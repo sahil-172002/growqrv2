@@ -275,7 +275,7 @@ export const MockupShowcase: React.FC = () => {
             <div className="container mx-auto px-6 relative z-10">
 
                 <div className="text-center mb-24">
-                    <h2 className="text-4xl md:text-5xl font-black text-black mb-6 font-montreal">Q-Score Modules</h2>
+                    <h2 className="text-4xl md:text-5xl font-black text-black mb-6 font-montreal">Q-SCORE™ Modules</h2>
                     <p className="text-gray-500 text-lg max-w-2xl mx-auto">
                         The building blocks of your verified identity. Drag, spin, and flip any module to explore.
                     </p>

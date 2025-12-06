@@ -72,8 +72,8 @@ const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string
 // Tech Engine Data
 const techFeatures = [
   { icon: QrCode, label: "Unified QR", desc: "One identity across all platforms" },
-  { icon: Hash, label: "Q-Score", desc: "Real-time skill quantification" },
-  { icon: Brain, label: "AI Agents", desc: "Personalized growth assistants" },
+  { icon: Hash, label: "Q-SCORE™", desc: "Real-time skill quantification" },
+  { icon: Brain, label: "Personalized AI", desc: "Personalized growth assistants" },
   { icon: Link2, label: "Blockchain", desc: "Tamper-proof credential verification" },
   { icon: Atom, label: "Quantum Intel", desc: "Next-gen adaptive computing power" },
   { icon: Fingerprint, label: "Human Intel", desc: "Authentic human identity validation" },
@@ -194,14 +194,14 @@ export const TechEngine: React.FC = () => {
           {/* Badge */}
           <div ref={badgeRef} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-100/80 border border-gray-200 mb-8 backdrop-blur-sm">
             <div className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse"></div>
-            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">The Stack</span>
+            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em]">The Tech Stack</span>
           </div>
 
           {/* Title */}
-          <h2 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-montreal tracking-tight mb-6">
+          <h2 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-montreal tracking-tight mb-6 whitespace-nowrap">
             Powered by{' '}
             <span className="relative inline-block">
-              <span className="text-orange">Next-Gen</span>
+              <span className="text-orange">Adaptive</span>
               <svg className="absolute -bottom-1 left-0 w-full h-2 text-orange/20" viewBox="0 0 100 10" preserveAspectRatio="none">
                 <path d="M0 5 Q 25 0, 50 5 T 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
               </svg>
@@ -210,9 +210,9 @@ export const TechEngine: React.FC = () => {
           </h2>
 
           {/* Subtitle */}
-          <p ref={subtitleRef} className="text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mx-auto">
+          {/* <p ref={subtitleRef} className="text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mx-auto">
             Advanced AI, blockchain verification, and predictive analytics building the world's most accurate human capital graph.
-          </p>
+          </p> */}
         </div>
 
         {/* === TECH GRID === */}

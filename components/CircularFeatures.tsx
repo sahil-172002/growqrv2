@@ -7,7 +7,7 @@ import { CompactIDCard3D } from './EcoToken3D';
 
 // --- DATA: 9 Features ---
 const features = [
-    { label: "Live Q-Score", icon: Activity },
+    { label: "Live Q-SCORE™", icon: Activity },
     { label: "Smart Hiring", icon: Briefcase },
     { label: "Quick Rewards", icon: Gift },
     { label: "Skill Pathways", icon: Map },

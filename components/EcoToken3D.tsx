@@ -104,7 +104,7 @@ const MiniDataStream = () => {
         <div className="flex flex-col items-center justify-center w-full mt-4">
             {/* Label */}
             <div className="flex items-center gap-1 mb-1 opacity-80">
-                <span className="text-[8px] font-mono text-white tracking-[0.2em] uppercase font-bold">Q-Score</span>
+                <span className="text-[8px] font-mono text-white tracking-[0.2em] uppercase font-bold">Q-SCORE™</span>
             </div>
 
             {/* Score Display */}
@@ -222,7 +222,7 @@ export const CompactIDCard3D: React.FC = () => {
                         <div className="flex flex-col items-center justify-center w-full mt-2">
                             {/* Label */}
                             <div className="flex items-center gap-1 mb-1 opacity-60">
-                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-600 tracking-[0.2em] uppercase font-bold`}>Q-Score</span>
+                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-600 tracking-[0.2em] uppercase font-bold`}>Q-SCORE™</span>
                             </div>
 
                             {/* Score Display */}
@@ -269,7 +269,7 @@ export const CompactIDCard3D: React.FC = () => {
                         <div className="flex flex-col items-center justify-center w-full mt-2">
                             {/* Label */}
                             <div className="flex items-center gap-1 mb-1 opacity-80">
-                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white tracking-[0.2em] uppercase font-bold`}>Q-Score</span>
+                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white tracking-[0.2em] uppercase font-bold`}>Q-SCORE™</span>
                             </div>
 
                             {/* Score Display */}
@@ -405,11 +405,11 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 opacity-50 pointer-events-none z-30"></div>
 
                     <div className="w-full h-full flex items-center justify-center">
-                        <div className={`relative z-10 w-full h-full ${padding} flex items-center justify-center ${gap} ${layout === 'vertical' ? 'flex-col' : (layout === 'text-icon' ? 'flex-row' : 'flex-row-reverse')}`}>
+                        <div className={`relative z-10 w-full h-full ${padding} flex items-center ${gap} ${layout === 'vertical' ? 'flex-col justify-center' : 'justify-start'} ${layout === 'text-icon' ? 'flex-row' : ''} ${layout === 'icon-text' ? 'flex-row-reverse' : ''}`}>
                             <div className={`${iconContainerSize} rounded-full bg-white/20 border border-white/30 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0 backdrop-blur-sm`}>
                                 <Icon size={iconSize} className="relative z-10 text-white" />
                             </div>
-                            <span className={`${textSize} font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md`}>
+                            <span className={`${textSize} font-bold uppercase tracking-wide text-white leading-tight subpixel-antialiased drop-shadow-md ${layout === 'vertical' ? 'text-center' : ''}`}>
                                 {label}
                             </span>
                         </div>
@@ -429,12 +429,12 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
                     <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                     <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-transparent opacity-70 pointer-events-none z-30 mix-blend-overlay"></div>
 
-                    <div className={`relative z-10 w-full h-full ${padding} flex items-center justify-center ${gap} ${layout === 'vertical' ? 'flex-col' : (layout === 'text-icon' ? 'flex-row' : 'flex-row-reverse')}`}>
+                    <div className={`relative z-10 w-full h-full ${padding} flex items-center ${gap} ${layout === 'vertical' ? 'flex-col justify-center' : 'justify-start'} ${layout === 'text-icon' ? 'flex-row' : ''} ${layout === 'icon-text' ? 'flex-row-reverse' : ''}`}>
                         <div className={`${iconContainerSize} rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0`}>
                             <div className={`absolute inset-0 bg-orange/10`}></div>
                             <Icon size={iconSize} className="relative z-10 text-orange" />
                         </div>
-                        <span className={`${textSize} font-bold uppercase tracking-wide text-gray-600 text-center leading-tight subpixel-antialiased`}>
+                        <span className={`${textSize} font-bold uppercase tracking-wide text-gray-600 leading-tight subpixel-antialiased ${layout === 'vertical' ? 'text-center' : ''}`}>
                             {label}
                         </span>
                     </div>
@@ -454,11 +454,11 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/10 opacity-50 z-30"></div>
 
                     <div className="w-full h-full flex items-center justify-center">
-                        <div className={`relative z-10 w-full h-full ${padding} flex items-center justify-center ${gap} ${layout === 'vertical' ? 'flex-col' : (layout === 'text-icon' ? 'flex-row' : 'flex-row-reverse')}`}>
+                        <div className={`relative z-10 w-full h-full ${padding} flex items-center ${gap} ${layout === 'vertical' ? 'flex-col justify-center' : 'justify-start'} ${layout === 'text-icon' ? 'flex-row' : ''} ${layout === 'icon-text' ? 'flex-row-reverse' : ''}`}>
                             <div className={`${iconContainerSize} rounded-full bg-white/20 border border-white/30 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0 backdrop-blur-sm`}>
                                 <Icon size={iconSize} className="relative z-10 text-white" />
                             </div>
-                            <span className={`${textSize} font-bold uppercase tracking-wide text-white text-center leading-tight subpixel-antialiased drop-shadow-md`}>
+                            <span className={`${textSize} font-bold uppercase tracking-wide text-white leading-tight subpixel-antialiased drop-shadow-md ${layout === 'vertical' ? 'text-center' : ''}`}>
                                 {label}
                             </span>
                         </div>

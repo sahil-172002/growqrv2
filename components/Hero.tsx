@@ -1,5 +1,5 @@
 import React, { useRef, useLayoutEffect, useEffect, useState } from 'react';
-import { ArrowRight, QrCode, Activity, Briefcase, Gift, Map, Zap, Award, Share2, LayoutDashboard, Globe, User, FileText, Shield, Code, Database, Cpu, Layers, Fingerprint, Wifi } from 'lucide-react';
+import { ArrowRight, QrCode, Activity, Briefcase, Gift, Map, Zap, Award, Share2, Search, Globe, User, FileText, Shield, Code, Database, Cpu, Layers, Fingerprint, Wifi } from 'lucide-react';
 import { CompactIDCard3D } from './EcoToken3D';
 import { MatrixToken3D } from './MatrixToken3D';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
@@ -30,7 +30,7 @@ const LiveDataStream = () => {
           <span className="w-0.5 h-3 bg-orange/60 animate-pulse delay-75"></span>
           <span className="w-0.5 h-1.5 bg-orange/40 animate-pulse delay-150"></span>
         </div>
-        <span className="text-[9px] font-mono text-white/60 tracking-[0.2em] uppercase font-bold">Q-Score</span>
+        <span className="text-[9px] font-mono text-white/60 tracking-[0.2em] uppercase font-bold">Q-SCORE™</span>
       </div>
 
       {/* Score Display */}
@@ -98,14 +98,14 @@ export const Hero: React.FC = () => {
 
   // The 9 specific features
   const features = [
-    { label: "Live Q-Score", icon: Activity },
+    { label: "Live Q-SCORE™", icon: Activity },
     { label: "Smart Hiring", icon: Briefcase },
     { label: "Quick Rewards", icon: Gift },
     { label: "Skill Pathways", icon: Map },
     { label: "Opportunity", icon: Zap },
     { label: "Upskilling", icon: Award },
-    { label: "Branding", icon: Share2 },
-    { label: "Dashboard", icon: LayoutDashboard },
+    { label: "Social Branding", icon: Share2 },
+    { label: "Live Matchmaking", icon: Search },
     { label: "Global Benchmark", icon: Globe }
   ];
 
@@ -637,16 +637,12 @@ export const Hero: React.FC = () => {
 
             {/* Diagram Label - Positioned higher on mobile */}
             <div className="absolute bottom-16 sm:bottom-10 md:bottom-10 left-1/2 -translate-x-1/2 text-center w-full pointer-events-none z-30 px-4">
-              <div className="flex flex-col items-center gap-1 sm:gap-2">
+              <div className="flex flex-col items-center">
                 {/* Badge */}
-                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm">
-                  <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-orange animate-pulse"></div>
-                  <span className="text-xs sm:text-sm font-bold tracking-wider text-gray-900 uppercase font-montreal">Your Growth Matrix</span>
+                <div className="inline-flex items-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-full shadow-sm">
+                  <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-orange animate-pulse"></div>
+                  <span className="text-sm sm:text-base font-bold tracking-wider text-gray-900 uppercase font-montreal">Growth Matrix</span>
                 </div>
-                {/* Subtitle */}
-                <p className="text-sm sm:text-base md:text-lg text-gray-500 font-medium">
-                  9 Powerful Values Unlocked with One QR
-                </p>
               </div>
             </div>
           </div>

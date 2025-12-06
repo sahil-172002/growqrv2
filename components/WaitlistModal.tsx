@@ -106,7 +106,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                             </span>
                             <h2 className="text-4xl font-bold text-gray-900 mb-3 tracking-tight leading-tight">
                                 Claim Your <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-[#FF8C5F]">Q-Score Profile</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange to-[#FF8C5F]">Q-SCORE™ Profile</span>
                             </h2>
                             <p className="text-gray-500 text-lg">Join the future of verified identity.</p>
                         </div>
@@ -117,8 +117,8 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                                 type="button"
                                 onClick={() => setRole('individual')}
                                 className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${role === 'individual'
-                                        ? 'bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,0.08)] scale-[1.02]'
-                                        : 'text-gray-400 hover:text-gray-600'
+                                    ? 'bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,0.08)] scale-[1.02]'
+                                    : 'text-gray-400 hover:text-gray-600'
                                     }`}
                             >
                                 <User size={18} /> Individual
@@ -127,8 +127,8 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                                 type="button"
                                 onClick={() => setRole('organization')}
                                 className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${role === 'organization'
-                                        ? 'bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,0.08)] scale-[1.02]'
-                                        : 'text-gray-400 hover:text-gray-600'
+                                    ? 'bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,0.08)] scale-[1.02]'
+                                    : 'text-gray-400 hover:text-gray-600'
                                     }`}
                             >
                                 <Building2 size={18} /> Organization

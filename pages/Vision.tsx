@@ -1,13 +1,14 @@
 import React from 'react';
-import { Target, Rocket, Eye, Heart, Globe, Sparkles, ArrowRight, CheckCircle2, Zap } from 'lucide-react';
+import { Target, Rocket, Eye, Heart, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { Calltoaction } from '../components/Calltoaction';
 
-interface MissionPageProps {
+interface VisionPageProps {
     onOpenWaitlist: (role: 'individual' | 'organization') => void;
 }
 
-export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
+export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
     const pillars = [
         {
             icon: Eye,
@@ -30,18 +31,12 @@ export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
     ];
 
     const goals = [
-        'Verify 1 million credentials by 2025',
+        'Verify 1 million credentials by 2026',
         'Partner with 500+ universities globally',
         'Enable $1B+ in hiring matches',
         'Launch in 100+ countries',
         'Achieve carbon-neutral operations',
         'Open-source our verification protocol',
-    ];
-
-    const sdgs = [
-        { number: 4, title: 'Quality Education', description: 'Democratizing access to skill verification' },
-        { number: 8, title: 'Decent Work', description: 'Connecting talent with fair opportunities' },
-        { number: 10, title: 'Reduced Inequalities', description: 'Eliminating bias in talent discovery' },
     ];
 
     return (
@@ -61,7 +56,7 @@ export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
                     <div className="flex justify-center mb-6 sm:mb-8">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange/10 border border-orange/20 rounded-full">
                             <Target className="w-4 h-4 text-orange" />
-                            <span className="text-sm font-medium text-orange">Our Mission</span>
+                            <span className="text-sm font-medium text-orange">Our Vision</span>
                         </div>
                     </div>
 
@@ -74,25 +69,13 @@ export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
                         </span>
                     </h1>
 
-                    {/* Mission Statement */}
+                    {/* Vision Statement */}
                     <div className="max-w-3xl mx-auto text-center">
-                        <p className="text-lg sm:text-2xl text-gray-600 leading-relaxed mb-8 sm:mb-12">
-                            To create a world where every individual's potential is <span className="text-gray-900 font-semibold">visible</span>,
-                            <span className="text-gray-900 font-semibold"> verified</span>, and
-                            <span className="text-gray-900 font-semibold"> valued</span>—regardless of where they come from.
+                        <p className="text-lg sm:text-2xl text-gray-600 leading-relaxed">
+                            To enable a world where every <span className="text-gray-900 font-semibold">skill is recognized</span>,
+                            <span className="text-gray-900 font-semibold"> talent is verified</span> and
+                            <span className="text-gray-900 font-semibold"> opportunity is unlocked</span>.
                         </p>
-
-                        {/* Quote Box */}
-                        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 sm:p-10 relative">
-                            <Sparkles className="absolute top-4 right-4 sm:top-6 sm:right-6 w-6 h-6 text-orange/30" />
-                            <blockquote className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900 italic leading-snug">
-                                "The future of work isn't about where you went to school.
-                                It's about what you can do."
-                            </blockquote>
-                            <div className="mt-4 sm:mt-6 text-sm text-gray-500 font-medium">
-                                — The GrowQR Vision
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -104,9 +87,9 @@ export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
                         <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                             The Three <span className="text-orange">Pillars</span>
                         </h2>
-                        <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+                        {/* <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                             Every feature we build, every partnership we forge, serves these core principles.
-                        </p>
+                        </p> */}
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
@@ -138,7 +121,7 @@ export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full mb-6">
                                 <Rocket className="w-4 h-4 text-gray-600" />
-                                <span className="text-sm font-medium text-gray-600">2025 Roadmap</span>
+                                <span className="text-sm font-medium text-gray-600">2026 Roadmap</span>
                             </div>
                             <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
                                 Ambitious <span className="text-orange">Goals</span>
@@ -167,71 +150,7 @@ export const MissionPage: React.FC<MissionPageProps> = ({ onOpenWaitlist }) => {
                 </div>
             </section>
 
-            {/* SDG Alignment */}
-            <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-900 text-white">
-                <div className="max-w-6xl mx-auto">
-                    <div className="text-center mb-12 sm:mb-16">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-full mb-6">
-                            <Globe className="w-4 h-4 text-white" />
-                            <span className="text-sm font-medium">UN Sustainable Development Goals</span>
-                        </div>
-                        <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
-                            Purpose-Driven <span className="text-orange">Impact</span>
-                        </h2>
-                        <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
-                            Our work directly contributes to global sustainability goals.
-                        </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-                        {sdgs.map((sdg, index) => (
-                            <div
-                                key={index}
-                                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 text-center"
-                            >
-                                <div className="w-20 h-20 bg-orange/20 rounded-full flex items-center justify-center mx-auto mb-5">
-                                    <span className="text-3xl font-bold text-orange">#{sdg.number}</span>
-                                </div>
-                                <h3 className="text-lg sm:text-xl font-bold mb-2">
-                                    {sdg.title}
-                                </h3>
-                                <p className="text-sm text-gray-400">
-                                    {sdg.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-16 sm:py-24 px-4 sm:px-6">
-                <div className="max-w-3xl mx-auto text-center">
-                    <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
-                        Join the <span className="text-orange">Revolution</span>
-                    </h2>
-                    <p className="text-base sm:text-lg text-gray-600 mb-8 sm:mb-10">
-                        Whether you're an individual seeking recognition or an organization seeking talent—
-                        be part of the future of work.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button
-                            onClick={() => onOpenWaitlist('individual')}
-                            className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-orange text-white rounded-full font-semibold hover:shadow-lg hover:shadow-orange/30 transition-all duration-300 touch-manipulation"
-                        >
-                            <Zap className="w-4 h-4" />
-                            Get Early Access
-                        </button>
-                        <button
-                            onClick={() => onOpenWaitlist('organization')}
-                            className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gray-900 text-white rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 touch-manipulation"
-                        >
-                            Partner With Us
-                            <ArrowRight className="w-4 h-4" />
-                        </button>
-                    </div>
-                </div>
-            </section>
+            <Calltoaction onOpenWaitlist={onOpenWaitlist} />
 
             <Footer />
         </div>

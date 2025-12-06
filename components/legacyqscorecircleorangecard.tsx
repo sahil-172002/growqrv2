@@ -137,7 +137,7 @@ export const Qscore: React.FC = () => {
         <section ref={containerRef} className="py-24 md:py-40 bg-white overflow-hidden relative min-h-[140vh]">
             <div className="max-w-7xl mx-auto px-6 text-center mb-4 relative z-20">
                 <h2 className="text-3xl md:text-5xl font-black mb-4 md:mb-6 text-black font-montreal">
-                    25 Dimensions. <span className="text-orange">One Score.</span>
+                    25 Matrices. <span className="text-orange">One Score.</span>
                 </h2>
                 {/* <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto">
           From emotional intelligence to cognitive speed, we map the complete human potential matrix.
@@ -166,7 +166,7 @@ export const Qscore: React.FC = () => {
 
                                 <div className="flex flex-col items-center justify-center z-10 text-white text-center">
                                     <QrCode className="w-16 h-16 mb-2 drop-shadow-md" />
-                                    <span className="text-2xl font-black tracking-tight leading-none mb-1">Q-Core</span>
+                                    <span className="text-2xl font-black tracking-tight leading-none mb-1">Q-SCORE™</span>
                                     <span className="text-[10px] font-bold tracking-widest uppercase opacity-80 bg-white/20 px-2 py-0.5 rounded-full">
                                         25 Signals
                                     </span>

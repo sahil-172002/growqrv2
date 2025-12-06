@@ -30,7 +30,7 @@ const LiveDataStream = () => {
                     <span className="w-0.5 h-3 bg-orange/60 animate-pulse delay-75"></span>
                     <span className="w-0.5 h-1.5 bg-orange/40 animate-pulse delay-150"></span>
                 </div>
-                <span className="text-[9px] font-mono text-white/60 tracking-[0.2em] uppercase font-bold">Live Q-Score</span>
+                <span className="text-[9px] font-mono text-white/60 tracking-[0.2em] uppercase font-bold">Live Q-SCORE™</span>
             </div>
 
             {/* Score Display */}
@@ -563,7 +563,7 @@ export const Hero: React.FC = () => {
                             <div className="absolute inset-0 bg-orange translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
 
                             <div className="relative z-10 flex items-center gap-3">
-                                Get Your Q-Score
+                                Get Your Q-SCORE™
                                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                             </div>
                         </button>

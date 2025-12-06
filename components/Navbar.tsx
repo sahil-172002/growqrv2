@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, QrCode, ChevronRight } from 'lucide-react';
 
 interface NavbarProps {
@@ -70,11 +71,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
         ${isScrolled || isMobileMenuOpen ? 'py-2.5 sm:py-3' : 'py-3 sm:py-4 md:py-6'}`}>
 
         {/* Logo - Smaller on mobile */}
-        <img
-          src="/logo.webp"
-          alt="GrowQR"
-          className="h-6 sm:h-7 md:h-8 transition-all duration-300"
-        />
+        <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <img
+            src="/logo.webp"
+            alt="GrowQR"
+            className="h-6 sm:h-7 md:h-8 transition-all duration-300 cursor-pointer"
+          />
+        </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">

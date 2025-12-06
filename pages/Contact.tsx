@@ -83,9 +83,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
     ];
 
     const inquiryTypes = [
-        { value: 'general', label: 'General Inquiry', icon: MessageCircle },
-        { value: 'partnership', label: 'Partnership', icon: Building },
-        { value: 'enterprise', label: 'Enterprise Sales', icon: Users },
+        { value: 'general', label: 'General Enquiry', icon: MessageCircle },
+        { value: 'sales', label: 'Sales Enquiry', icon: Building },
     ];
 
     return (
@@ -147,193 +146,146 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
 
             {/* Contact Form Section */}
             <section className="py-12 sm:py-20 px-4 sm:px-6 bg-gray-50">
-                <div className="max-w-5xl mx-auto">
-                    <div className="grid md:grid-cols-5 gap-8 sm:gap-12">
-                        {/* Left Info */}
-                        <div className="md:col-span-2">
-                            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                                Send Us a <span className="text-orange">Message</span>
-                            </h2>
-                            <p className="text-gray-600 mb-6 sm:mb-8 leading-relaxed">
-                                Fill out the form and our team will get back to you shortly.
-                                We're here to help with any questions about GrowQR.
-                            </p>
+                <div className="max-w-3xl mx-auto">
+                    {/* Centered Heading */}
+                    <div className="text-center mb-8 sm:mb-10">
+                        <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">
+                            Send Us a <span className="text-orange">Message</span>
+                        </h2>
+                        <p className="text-gray-600 leading-relaxed max-w-xl mx-auto">
+                            Fill out the form and our team will get back to you shortly.
+                            <br className="hidden sm:block" />
+                            We're here to help with any questions about GrowQR.
+                        </p>
+                    </div>
 
-                            {/* Office Locations */}
-                            <div className="space-y-4">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 bg-orange/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <MapPin className="w-4 h-4 text-orange" />
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-900 flex items-center gap-2">
-                                            Princeton, NJ
-                                            <span className="text-[10px] px-1.5 py-0.5 bg-orange/10 text-orange rounded font-bold">HQ</span>
-                                        </div>
-                                        <div className="text-sm text-gray-500">103 Carnegie Center Drive</div>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 bg-orange/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <MapPin className="w-4 h-4 text-orange" />
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-900">Noida, India</div>
-                                        <div className="text-sm text-gray-500">2nd Floor, A-55, Sector 63</div>
-                                    </div>
-                                </div>
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm">
+                        {/* Inquiry Type */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                I'm reaching out for:
+                            </label>
+                            <div className="flex flex-wrap gap-2 sm:gap-3">
+                                {inquiryTypes.map((type) => (
+                                    <button
+                                        key={type.value}
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, type: type.value })}
+                                        className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 touch-manipulation
+                          ${formData.type === type.value
+                                                ? 'bg-orange text-white shadow-md'
+                                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                            }`}
+                                    >
+                                        <type.icon className="w-4 h-4" />
+                                        {type.label}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
-                        {/* Right Form */}
-                        <div className="md:col-span-3">
-                            <form onSubmit={handleSubmit} className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm">
-                                {/* Inquiry Type */}
-                                <div className="mb-6">
-                                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                                        I'm reaching out for:
-                                    </label>
-                                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                                        {inquiryTypes.map((type) => (
-                                            <button
-                                                key={type.value}
-                                                type="button"
-                                                onClick={() => setFormData({ ...formData, type: type.value })}
-                                                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 touch-manipulation
-                          ${formData.type === type.value
-                                                        ? 'bg-orange text-white shadow-md'
-                                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                                    }`}
-                                            >
-                                                <type.icon className="w-4 h-4" />
-                                                {type.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Name & Email Row */}
-                                <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                            Your Name <span className="text-orange">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={formData.name}
-                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            placeholder="John Doe"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
+                        {/* Name & Email Row */}
+                        <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    Your Name <span className="text-orange">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    placeholder="John Doe"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
                         focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                            Email Address <span className="text-orange">*</span>
-                                        </label>
-                                        <input
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            placeholder="john@company.com"
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    Email Address <span className="text-orange">*</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    placeholder="john@company.com"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
                         focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Subject */}
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                        Subject
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={formData.subject}
-                                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                        placeholder="How can we help?"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
-                      focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
-                                    />
-                                </div>
-
-                                {/* Message */}
-                                <div className="mb-6">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                        Your Message <span className="text-orange">*</span>
-                                    </label>
-                                    <textarea
-                                        value={formData.message}
-                                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                        placeholder="Tell us more about your inquiry..."
-                                        rows={5}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 resize-none
-                      focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
-                                        required
-                                    />
-                                </div>
-
-                                {/* Error/Success Messages */}
-                                {error && (
-                                    <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
-                                        {error}
-                                    </div>
-                                )}
-                                {isSuccess && (
-                                    <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl text-green-600 text-sm flex items-center gap-2">
-                                        <CheckCircle2 className="w-4 h-4" />
-                                        Message sent successfully! We'll get back to you soon.
-                                    </div>
-                                )}
-
-                                {/* Submit Button */}
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting || isSuccess}
-                                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-orange text-white rounded-xl font-semibold
-                    hover:shadow-lg hover:shadow-orange/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-                                >
-                                    {isSubmitting ? (
-                                        <>
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                            Sending...
-                                        </>
-                                    ) : isSuccess ? (
-                                        <>
-                                            <CheckCircle2 className="w-5 h-5" />
-                                            Sent!
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Send className="w-5 h-5" />
-                                            Send Message
-                                        </>
-                                    )}
-                                </button>
-                            </form>
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Quick CTA */}
-            <section className="py-12 sm:py-16 px-4 sm:px-6">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
-                        Ready to get started instead?
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                        Skip the form and join our early access program.
-                    </p>
-                    <button
-                        onClick={() => onOpenWaitlist('individual')}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-full font-semibold hover:bg-gray-800 transition-all duration-300 touch-manipulation"
-                    >
-                        Get Early Access
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
+                        {/* Subject */}
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                Subject
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.subject}
+                                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                                placeholder="How can we help?"
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
+                      focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
+                            />
+                        </div>
+
+                        {/* Message */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                Your Message <span className="text-orange">*</span>
+                            </label>
+                            <textarea
+                                value={formData.message}
+                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                placeholder="Tell us more about your inquiry..."
+                                rows={5}
+                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 resize-none
+                      focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
+                                required
+                            />
+                        </div>
+
+                        {/* Error/Success Messages */}
+                        {error && (
+                            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
+                                {error}
+                            </div>
+                        )}
+                        {isSuccess && (
+                            <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl text-green-600 text-sm flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4" />
+                                Message sent successfully! We'll get back to you soon.
+                            </div>
+                        )}
+
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={isSubmitting || isSuccess}
+                            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-orange text-white rounded-xl font-semibold
+                    hover:shadow-lg hover:shadow-orange/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                        >
+                            {isSubmitting ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Sending...
+                                </>
+                            ) : isSuccess ? (
+                                <>
+                                    <CheckCircle2 className="w-5 h-5" />
+                                    Sent!
+                                </>
+                            ) : (
+                                <>
+                                    <Send className="w-5 h-5" />
+                                    Send Message
+                                </>
+                            )}
+                        </button>
+                    </form>
                 </div>
             </section>
 

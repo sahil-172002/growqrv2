@@ -322,12 +322,12 @@ export const Qscore: React.FC = () => {
   return (
     <section id="qscore" ref={containerRef} className="py-12 sm:py-16 md:py-24 bg-white overflow-hidden relative min-h-[80vh] sm:min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center mb-4 sm:mb-6 relative z-20">
-        <h1 className="text-2xl sm:text-3xl md:text-6xl font-semibold text-gray-900 mb-1 sm:mb-2 font-montreal">
+        {/* <h1 className="text-2xl sm:text-3xl md:text-6xl font-semibold text-gray-900 mb-1 sm:mb-2 font-montreal">
           Deconstructing Skill Identity
+        </h1> */}
+        <h1 className="text-xl sm:text-2xl md:text-5xl font-semibold text-orange mb-2 font-montreal">
+          The Dimensions of Q-SCORE™
         </h1>
-        <h2 className="text-xl sm:text-2xl md:text-5xl font-semibold text-orange mb-2 font-montreal">
-          The Dimensions of Q-Core
-        </h2>
       </div>
 
       <div className="relative w-full h-[450px] sm:h-[550px] md:h-[800px] -mt-8 sm:-mt-16 md:-mt-24 flex items-center justify-center perspective-1000">
@@ -398,7 +398,7 @@ export const Qscore: React.FC = () => {
 
                 <div className="flex flex-col items-center justify-center z-10 text-white text-center">
                   <QrCode className={`drop-shadow-md ${isMobile ? 'w-8 h-8 mb-1' : 'w-16 h-16 mb-2'}`} />
-                  <span className={`font-black tracking-tight leading-none mb-0.5 sm:mb-1 ${isMobile ? 'text-sm' : 'text-2xl'}`}>Q-Core</span>
+                  <span className={`font-black tracking-tight leading-none mb-0.5 sm:mb-1 ${isMobile ? 'text-sm' : 'text-2xl'}`}>Q-SCORE™</span>
                   <span className={`font-bold tracking-widest uppercase opacity-80 bg-white/20 px-1.5 sm:px-2 py-0.5 rounded-full
                     ${isMobile ? 'text-[7px]' : 'text-[10px]'}`}>
                     25+ Signals

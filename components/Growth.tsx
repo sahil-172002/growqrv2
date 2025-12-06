@@ -292,73 +292,48 @@ export const Growth: React.FC = () => {
         const isMobileView = window.innerWidth < 768;
 
         const ctx = gsap.context(() => {
+            // --- INITIAL STATES - Everything starts hidden/centered ---
+            gsap.set(".monolith-wrapper", { scale: 0.5, opacity: 0, x: 0, y: 0 });
+            gsap.set(".growth-text", { opacity: 0, y: 30 });
+            gsap.set(cardRef.current, { scale: 0.7, opacity: 0 });
+            setBeamsVisible(false);
+            setMonolithsConnected(false);
+
+            // Entry animation timeline - AUTO PLAYS when section enters viewport
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top top",
-                    end: isMobileView ? "+=180%" : "+=255%", // Shorter on mobile
-                    scrub: 1,
-                    pin: true,
-                    anticipatePin: 1,
-                    onUpdate: (self: any) => {
-                        if (self.progress > 0.55) {
-                            setBeamsVisible(true);
-                        } else {
-                            setBeamsVisible(false);
-                        }
-                        if (self.progress > 0.65) {
-                            setMonolithsConnected(true);
-                        } else {
-                            setMonolithsConnected(false);
-                        }
-                    }
+                    start: "top 80%", // Triggers when section is 80% from top of viewport
+                    once: true, // Only plays once
                 }
             });
 
-            // --- INITIAL STATES ---
-            gsap.set(".monolith-wrapper", { scale: 0.5, opacity: 0, x: 0 });
-            gsap.set(".growth-text", { opacity: 0, y: 20, display: "none" });
-            gsap.set(".text-phase-1", { opacity: 1, y: 0, display: "block" });
+            // PHASE 1: TEXT ENTRY
+            tl.to(".growth-text", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
 
-            // --- SEQUENCE ---
+            // PHASE 2: CARD ENTRY
+            tl.to(cardRef.current, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.2)" }, 0.1);
 
-            // PHASE 1: THE SEED (0% - 20%)
-            tl.to(cardRef.current, { scale: isMobileView ? 1.1 : 1.2, duration: 2, ease: "power2.out" }, 0);
-
-            // Transition to Phase 2
-            tl.to(".text-phase-1", { opacity: 0, y: -20, duration: 1 }, 2);
-            tl.set(".text-phase-2", { display: "block" }, 2.1);
-            tl.to(".text-phase-2", { opacity: 1, y: 0, duration: 1 }, 2.5);
-
-            // PHASE 2: EXPANSION - Different layout for mobile (2x2) vs desktop (horizontal)
+            // PHASE 3: MONOLITHS EXPANSION
             if (isMobileView) {
-                // Mobile: 2x2 grid layout
-                // Top-left (Individuals)
-                tl.to(".monolith-left-1", { x: -layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1, duration: 2.5, ease: "power3.out" }, 2.5);
-                // Top-right (Institutes)
-                tl.to(".monolith-left-2", { x: layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1, duration: 2.5, ease: "power3.out", delay: 0.1 }, 2.5);
-                // Bottom-left (Companies)
-                tl.to(".monolith-right-2", { x: -layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1, duration: 2.5, ease: "power3.out", delay: 0.1 }, 2.5);
-                // Bottom-right (Smart Cities)
-                tl.to(".monolith-right-1", { x: layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1, duration: 2.5, ease: "power3.out" }, 2.5);
+                // Mobile: 2x2 grid layout expansion
+                tl.to(".monolith-left-1", { x: -layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.4);
+                tl.to(".monolith-left-2", { x: layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.5);
+                tl.to(".monolith-right-2", { x: -layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.5);
+                tl.to(".monolith-right-1", { x: layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.4);
             } else {
-                // Desktop/Tablet: Horizontal layout
-                tl.to(".monolith-left-1", { x: -layoutValues.far, scale: 1, opacity: 1, duration: 3, ease: "power3.out" }, 2.5);
-                tl.to(".monolith-left-2", { x: -layoutValues.near, scale: 1, opacity: 1, duration: 3, ease: "power3.out", delay: 0.1 }, 2.5);
-                tl.to(".monolith-right-1", { x: layoutValues.far, scale: 1, opacity: 1, duration: 3, ease: "power3.out" }, 2.5);
-                tl.to(".monolith-right-2", { x: layoutValues.near, scale: 1, opacity: 1, duration: 3, ease: "power3.out", delay: 0.1 }, 2.5);
+                // Desktop/Tablet: Horizontal layout expansion
+                tl.to(".monolith-left-1", { x: -layoutValues.far, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.4);
+                tl.to(".monolith-left-2", { x: -layoutValues.near, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.5);
+                tl.to(".monolith-right-2", { x: layoutValues.near, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.5);
+                tl.to(".monolith-right-1", { x: layoutValues.far, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.4);
             }
-            tl.to(cardRef.current, { scale: 1, duration: 3 }, 2.5);
 
-            // Transition to Phase 3
-            tl.to(".text-phase-2", { opacity: 0, y: -20, duration: 1 }, 5.5);
-            tl.set(".text-phase-3", { display: "block" }, 5.6);
-            tl.to(".text-phase-3", { opacity: 1, y: 0, duration: 1 }, 6);
-
-            // PHASE 3: CONNECTION (50% - 80%) - Beams handled via state
-
-            // PHASE 4: THE LOOP (80% - 100%)
-            tl.to(cardRef.current, { scale: isMobileView ? 1.05 : 1.1, duration: 2, ease: "sine.inOut" }, 8);
+            // PHASE 4: BEAMS APPEAR (after monoliths expand)
+            tl.call(() => {
+                setBeamsVisible(true);
+                setMonolithsConnected(true);
+            }, [], 0.9);
 
         }, containerRef);
 
@@ -401,36 +376,8 @@ export const Growth: React.FC = () => {
                 {/* --- SCROLLYTELLING TEXT (Top Center) --- */}
                 <div ref={textRef} className="absolute top-16 sm:top-20 md:top-24 w-full text-center z-30 px-4 sm:px-6 pointer-events-none">
 
-                    {/* Phase 1: Identity (Orange) */}
-                    <div className="growth-text text-phase-1 absolute w-full left-0 top-0">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange/10 border border-orange/20 mb-4 sm:mb-6 backdrop-blur-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse"></div>
-                            <span className="text-[9px] sm:text-[10px] font-bold text-orange uppercase tracking-widest">The Seed</span>
-                        </div>
-                        <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-gray-900 font-montreal mb-2 sm:mb-4 tracking-tight">
-                            Your Verified<span className="text-orange"> Q-SCORE™</span>
-                        </h2>
-                        <p className="text-sm sm:text-lg text-gray-500 max-w-2xl mx-auto font-medium px-4">
-                            The Single Key to Unlock the Entire Ecosystem.
-                        </p>
-                    </div>
-
-                    {/* Phase 2: Access (Black/Gray) */}
-                    <div className="growth-text text-phase-2 absolute w-full left-0 top-0 hidden">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 border border-gray-200 mb-4 sm:mb-6 backdrop-blur-sm">
-                            <div className="w-1.5 h-1.5 rounded-full bg-gray-900 animate-pulse"></div>
-                            <span className="text-[9px] sm:text-[10px] font-bold text-gray-900 uppercase tracking-widest">The Network</span>
-                        </div>
-                        <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-gray-900 font-montreal mb-2 sm:mb-4 tracking-tight">
-                            Access <span className="text-gray-500">Everything.</span>
-                        </h2>
-                        <p className="text-sm sm:text-lg text-gray-500 max-w-3xl mx-auto font-medium px-4">
-                            Connect with Institutions, Companies, and Smart Cities.
-                        </p>
-                    </div>
-
-                    {/* Phase 3: Growth (Orange/Black) */}
-                    <div className="growth-text text-phase-3 absolute w-full left-0 top-0 hidden">
+                    {/* Phase 3: Growth (Orange/Black) - Now the only visible phase */}
+                    <div className="growth-text text-phase-3 w-full">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange/10 border border-orange/20 mb-4 sm:mb-6 backdrop-blur-sm">
                             <div className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse"></div>
                             <span className="text-[9px] sm:text-[10px] font-bold text-orange uppercase tracking-widest">The Loop</span>
@@ -532,7 +479,7 @@ export const Growth: React.FC = () => {
 
                         {/* Right 2: Companies (Near) */}
                         <div className="monolith-wrapper monolith-right-2 absolute pointer-events-auto">
-                            <Monolith3D icon={Building} label="Companies" sub="Hiring" isConnected={monolithsConnected} isMobile={isMobile} />
+                            <Monolith3D icon={Building} label="Enterprises" sub="Hiring" isConnected={monolithsConnected} isMobile={isMobile} />
                         </div>
 
                         {/* Right 1: Cities (Far) */}

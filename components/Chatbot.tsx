@@ -15,20 +15,20 @@ const FAQ_ITEMS = [
     {
         id: 1,
         icon: HelpCircle,
-        question: "What is Q-Score?",
-        answer: "Q-Score is your verified readiness metric that showcases your skills, experience, and potential to employers. It's calculated using AI-driven analysis of your verified credentials."
+        question: "What is Q-SCORE™?",
+        answer: "Q-SCORE™ is your verified readiness metric that showcases your skills, experience, and potential to employers. It's calculated using AI-driven analysis of your verified credentials."
     },
     {
         id: 2,
         icon: Zap,
         question: "How do I get started?",
-        answer: "Getting started is easy! Simply click 'Get My Q-Score' to begin your verification journey. You'll be guided through a quick onboarding process."
+        answer: "Getting started is easy! Simply click 'Get My Q-SCORE™' to begin your verification journey. You'll be guided through a quick onboarding process."
     },
     {
         id: 3,
         icon: Shield,
         question: "Is my data secure?",
-        answer: "Absolutely! We use 256-bit encryption and are GDPR compliant. You have full control over who sees your Q-Score and profile information."
+        answer: "Absolutely! We use 256-bit encryption and are GDPR compliant. You have full control over who sees your Q-SCORE™ and profile information."
     },
     {
         id: 4,
@@ -40,7 +40,7 @@ const FAQ_ITEMS = [
 
 // Chat category options
 const CHAT_CATEGORIES = [
-    { id: 1, icon: HelpCircle, label: "Learn about Q-Score" },
+    { id: 1, icon: HelpCircle, label: "Learn about Q-SCORE™" },
     { id: 2, icon: Users, label: "For Organizations" },
     { id: 3, icon: Zap, label: "Getting Started" },
     { id: 4, icon: Shield, label: "Privacy & Security" },
@@ -137,7 +137,7 @@ export const Chatbot: React.FC = () => {
             setMessages([
                 {
                     id: 1,
-                    text: "Hi, welcome to GrowQR! 👋\nI'm your AI assistant powered by Gemini. Ask me anything about Q-Score, our platform, or how to get started!",
+                    text: "Hi, welcome to GrowQR! 👋\nI'm your AI assistant powered by Gemini. Ask me anything about Q-SCORE™, our platform, or how to get started!",
                     sender: 'bot',
                     timestamp: new Date(),
                 }

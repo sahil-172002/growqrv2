@@ -182,7 +182,7 @@ export const Challenge: React.FC = () => {
                                  <Cpu size={48} className="text-white" />
                               </div>
                               <div className="absolute -top-2 -right-2 text-xl animate-spin">⚡</div>
-                              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-white font-mono bg-black/30 px-2 py-1 rounded">2025</div>
+                              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-white font-mono bg-black/30 px-2 py-1 rounded">2026</div>
                            </div>
                         </div>
 
@@ -264,7 +264,7 @@ export const Challenge: React.FC = () => {
 
                   <div className="arch-label inline-flex items-center gap-2 mb-8 border-l-2 border-black pl-4">
                      <Building size={16} />
-                     <span className="text-sm font-bold tracking-[0.2em] uppercase">For Employers</span>
+                     <span className="text-sm font-bold tracking-[0.2em] uppercase">For Enterprises</span>
                   </div>
 
                   <h2 className="arch-title text-6xl md:text-8xl font-semibold font-black tracking-tighter text-black mb-8 leading-[0.9]">

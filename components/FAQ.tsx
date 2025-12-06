@@ -16,21 +16,21 @@ const faqData: FAQItem[] = [
         category: "Getting Started",
         categoryIcon: Zap,
         question: "What is GrowQR and how does it work?",
-        answer: "GrowQR is your unified digital identity platform that combines your skills, credentials, and achievements into one verified profile. When someone scans your unique QR code, they instantly see your complete professional profile: verified skills, certifications, experience, and your real-time Q-Score. Think of it as your digital professional passport."
+        answer: "GrowQR is your unified digital identity platform that combines your skills, credentials, and achievements into one verified profile. When someone scans your unique QR code, they instantly see your complete professional profile: verified skills, certifications, experience, and your real-time Q-SCORE™. Think of it as your digital professional passport."
     },
     {
         id: 2,
         category: "Getting Started",
         categoryIcon: Zap,
-        question: "What is Q-Score and why does it matter?",
-        answer: "Q-Score is your Growth Identity Score, a real-time metric that quantifies your professional readiness. It's calculated using AI across 25+ dimensions including technical skills, soft skills, verified credentials, and achievements. Unlike static resumes, your Q-Score updates dynamically, giving employers and opportunities a live snapshot of your potential."
+        question: "What is Q-SCORE™ and why does it matter?",
+        answer: "Q-SCORE™ is your Growth Identity Score, a real-time metric that quantifies your professional readiness. It's calculated using AI across 25+ dimensions including technical skills, soft skills, verified credentials, and achievements. Unlike static resumes, your Q-SCORE™ updates dynamically, giving employers and opportunities a live snapshot of your potential."
     },
     {
         id: 3,
         category: "Getting Started",
         categoryIcon: Zap,
         question: "How do I create my GrowQR profile?",
-        answer: "Creating your profile takes just 5 minutes. Click 'Get My Q-Score', sign up with your email, and follow our guided onboarding. Add your skills, upload credentials, and link achievements. Our AI will verify what it can automatically, and you'll have your QR code ready to share instantly."
+        answer: "Creating your profile takes just 5 minutes. Click 'Get My Q-SCORE™', sign up with your email, and follow our guided onboarding. Add your skills, upload credentials, and link achievements. Our AI will verify what it can automatically, and you'll have your QR code ready to share instantly."
     },
 
     // Security - 3 Questions
@@ -62,21 +62,21 @@ const faqData: FAQItem[] = [
         category: "For Organizations",
         categoryIcon: Users,
         question: "How can employers use GrowQR for hiring?",
-        answer: "GrowQR gives employers verified talent data, not just resumes. Search our talent pool by Q-Score, specific skills, or verified credentials. Instantly verify candidate claims, compare candidates objectively, and reduce hiring time by up to 60%. Our enterprise dashboard provides bulk verification and analytics."
+        answer: "GrowQR gives employers verified talent data, not just resumes. Search our talent pool by Q-SCORE™, specific skills, or verified credentials. Instantly verify candidate claims, compare candidates objectively, and reduce hiring time by up to 60%. Our enterprise dashboard provides bulk verification and analytics."
     },
     {
         id: 8,
         category: "For Organizations",
         categoryIcon: Users,
         question: "Can universities track student progress with GrowQR?",
-        answer: "Absolutely. Universities can issue verified credentials directly to student profiles, track skill development across cohorts, identify gaps in curriculum, and showcase placement outcomes. Students graduate with a verified Q-Score that gives them a competitive edge in the job market."
+        answer: "Absolutely. Universities can issue verified credentials directly to student profiles, track skill development across cohorts, identify gaps in curriculum, and showcase placement outcomes. Students graduate with a verified Q-SCORE™ that gives them a competitive edge in the job market."
     },
     {
         id: 9,
         category: "For Organizations",
         categoryIcon: Users,
         question: "Is there an API for system integration?",
-        answer: "Yes, we offer comprehensive REST APIs for seamless integration with your existing HRMS, ATS, LMS, or custom systems. Our API allows you to verify credentials, fetch Q-Scores, and sync talent data. Enterprise clients get dedicated support for custom integrations."
+        answer: "Yes, we offer comprehensive REST APIs for seamless integration with your existing HRMS, ATS, LMS, or custom systems. Our API allows you to verify credentials, fetch Q-SCORE™, and sync talent data. Enterprise clients get dedicated support for custom integrations."
     },
 
 
@@ -87,14 +87,14 @@ const faqData: FAQItem[] = [
         category: "Global",
         categoryIcon: Globe,
         question: "Does GrowQR work for international credentials?",
-        answer: "Yes! We verify credentials from institutions worldwide. Our network includes universities and certification bodies across 50+ countries. Your Q-Score is calculated using global benchmarks, making it valuable whether you're applying for jobs in India, the US, Europe, or anywhere else."
+        answer: "Yes! We verify credentials from institutions worldwide. Our network includes universities and certification bodies across 50+ countries. Your Q-SCORE™ is calculated using global benchmarks, making it valuable whether you're applying for jobs in India, the US, Europe, or anywhere else."
     },
     {
         id: 14,
         category: "Global",
         categoryIcon: Globe,
         question: "Is GrowQR available in multiple languages?",
-        answer: "Currently, GrowQR is available in English, with Hindi, Spanish, and French coming soon. Your profile content can be in any language as we support Unicode. The Q-Score is universal and works across all languages and regions."
+        answer: "Currently, GrowQR is available in English, with Hindi, Spanish, and French coming soon. Your profile content can be in any language as we support Unicode. The Q-SCORE™ is universal and works across all languages and regions."
     },
     {
         id: 15,
@@ -141,11 +141,11 @@ export const FAQ: React.FC = () => {
                     </div>
 
                     <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-gray-900 font-montreal mb-3 sm:mb-4">
-                        Questions? <span className="text-orange">Answers.</span>
+                        Your Guide to <span className="text-orange">GrowQR</span>
                     </h2>
-                    <p className="text-sm sm:text-lg text-gray-500 max-w-2xl mx-auto px-2">
+                    {/* <p className="text-sm sm:text-lg text-gray-500 max-w-2xl mx-auto px-2">
                         Everything you need to know about GrowQR and your Q-Score journey.
-                    </p>
+                    </p> */}
                 </div>
 
                 {/* Category Filter Pills - Horizontal scroll on mobile */}

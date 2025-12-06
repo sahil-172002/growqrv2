@@ -10,24 +10,24 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // System prompt remains the same...
-const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly and professional AI support bot for GrowQR - a revolutionary platform that provides verified skill identity through Q-Score.
+const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly and professional AI support bot for GrowQR - a revolutionary platform that provides verified skill identity through Q-SCORE™.
 
 ## About GrowQR:
 - GrowQR is an AI-driven proof-of-skill platform that creates a unified digital identity
 - It serves individuals, enterprises, educational institutions, and smart cities
 - Every user gets a unique QR code that contains their verified professional profile
 
-## About Q-Score:
-- Q-Score is the core innovation - a real-time readiness metric calculated using AI
+## About Q-SCORE™:
+- Q-SCORE™ is the core innovation - a real-time readiness metric calculated using AI
 - It analyzes 25+ human dimensions including skills, credentials, experience, and achievements
-- Q-Score updates dynamically as users add more verified credentials
+- Q-SCORE™ updates dynamically as users add more verified credentials
 - It's like a credit score but for professional readiness
 
 ## Key Features:
 1. **Unified QR** - One QR code containing your entire verified identity
-2. **AI-Powered Analysis** - Advanced AI calculates your Q-Score across 25+ dimensions
+2. **AI-Powered Analysis** - Advanced AI calculates your Q-SCORE™ across 25+ Dimensions
 3. **Blockchain Verification** - All credentials are tamper-proof and verifiable
-4. **Real-time Updates** - Your Q-Score updates as you grow
+4. **Real-time Updates** - Your Q-SCORE™ updates as you grow
 5. **Universal Access** - Works globally across platforms
 
 ## IMPORTANT - Pricing:
@@ -118,7 +118,7 @@ export const generateGeminiResponse = async (userMessage: string): Promise<strin
                     },
                     {
                         role: "model",
-                        parts: [{ text: "Understood! I'm GrowQR Assistant, ready to help users learn about Q-Score and our platform. How can I help you today?" }],
+                        parts: [{ text: "Understood! I'm GrowQR Assistant, ready to help users learn about Q-SCORE™ and our platform. How can I help you today?" }],
                     },
                 ],
                 generationConfig: {
@@ -177,7 +177,7 @@ const getFallbackResponse = (userMessage: string): string => {
         },
         {
             keywords: ['q-score', 'qscore', 'score', 'calculate'],
-            response: "Q-Score is your verified readiness metric, calculated using AI across 25+ dimensions. It updates in real-time as you grow! Ready to get yours?"
+            response: "Q-SCORE™ is your verified readiness metric, calculated using AI across 25+ dimensions. It updates in real-time as you grow! Ready to get yours?"
         },
         {
             keywords: ['verify', 'verification', 'credential', 'certificate'],
@@ -193,7 +193,7 @@ const getFallbackResponse = (userMessage: string): string => {
         },
         {
             keywords: ['hi', 'hello', 'hey', 'good morning', 'good evening'],
-            response: "Hello! 👋 I'm here to help you with GrowQR and Q-Score. Whether you have questions or need to troubleshoot an issue, I'm here to assist!"
+            response: "Hello! 👋 I'm here to help you with GrowQR and Q-SCORE™. Whether you have questions or need to troubleshoot an issue, I'm here to assist!"
         },
         {
             keywords: ['thank', 'thanks', 'awesome', 'great', 'works', 'solved', 'fixed'],
@@ -207,5 +207,5 @@ const getFallbackResponse = (userMessage: string): string => {
         }
     }
 
-    return "I'd be happy to help! 🙂 You can ask me about:\n• Q-Score and how it works\n• Troubleshooting login or account issues\n• Security and privacy\n• Getting started with GrowQR\n\nOr email hello@growqr.ai for detailed support!";
+    return "I'd be happy to help! 🙂 You can ask me about:\n• Q-SCORE™ and how it works\n• Troubleshooting login or account issues\n• Security and privacy\n• Getting started with GrowQR\n\nOr email hello@growqr.ai for detailed support!";
 };
