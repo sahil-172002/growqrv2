@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, MapPin, Phone, Send, MessageCircle, Clock, CheckCircle2, Loader2, ArrowRight, Building, Users } from 'lucide-react';
+import { Mail, MapPin, Send, MessageCircle, Clock, CheckCircle2, Loader2, Building } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { supabase } from '../lib/supabase';
@@ -92,16 +92,19 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
             <Navbar onOpenWaitlist={() => onOpenWaitlist('individual')} />
 
             {/* Hero Section */}
-            <section className="pt-32 sm:pt-40 pb-12 sm:pb-16 px-4 sm:px-6">
-                <div className="max-w-4xl mx-auto text-center">
+            <section className="pt-32 sm:pt-40 pb-12 sm:pb-16 px-4 sm:px-6 relative overflow-hidden">
+                {/* Subtle gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-white pointer-events-none" />
+
+                <div className="max-w-4xl mx-auto text-center relative z-10">
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange/10 border border-orange/20 rounded-full mb-6 sm:mb-8">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm mb-6 sm:mb-8">
                         <MessageCircle className="w-4 h-4 text-orange" />
-                        <span className="text-sm font-medium text-orange">Get in Touch</span>
+                        <span className="text-sm font-medium text-gray-600">Get in Touch</span>
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 mb-4 sm:mb-6 tracking-tight leading-[1.1]">
+                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 tracking-tight leading-[1.1] font-montreal">
                         Let's Build
                         <br />
                         <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">
@@ -109,33 +112,34 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                         </span>
                     </h1>
 
-                    <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                        Have a question? Want to partner? We'd love to hear from you.
-                        Our team typically responds within 24 hours.
+                    <p className="text-base sm:text-lg text-gray-500 max-w-xl mx-auto leading-relaxed">
+                        Have a question? We'd love to hear from you.
                     </p>
                 </div>
             </section>
 
             {/* Contact Cards */}
             <section className="pb-12 sm:pb-16 px-4 sm:px-6">
-                <div className="max-w-5xl mx-auto">
-                    <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
+                <div className="max-w-4xl mx-auto">
+                    <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
                         {contactInfo.map((info, index) => (
                             <a
                                 key={index}
                                 href={info.href}
-                                className="bg-gray-50 border border-gray-100 rounded-2xl p-5 sm:p-6 hover:shadow-lg hover:border-orange/20 transition-all duration-300 group"
+                                className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 
+                                    hover:shadow-xl hover:shadow-orange/5 hover:border-orange/20 hover:-translate-y-1
+                                    transition-all duration-300 group"
                             >
-                                <div className="w-12 h-12 bg-orange/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-orange/20 transition-colors">
-                                    <info.icon className="w-6 h-6 text-orange" />
+                                <div className="w-11 h-11 bg-gradient-to-br from-orange/10 to-orange/5 rounded-xl flex items-center justify-center mb-4 group-hover:from-orange/20 group-hover:to-orange/10 transition-all">
+                                    <info.icon className="w-5 h-5 text-orange" />
                                 </div>
-                                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
                                     {info.title}
                                 </div>
-                                <div className="text-lg sm:text-xl font-bold text-gray-900 mb-1">
+                                <div className="text-base sm:text-lg font-semibold text-gray-900 mb-0.5 font-montreal">
                                     {info.value}
                                 </div>
-                                <div className="text-sm text-gray-500">
+                                <div className="text-sm text-gray-400">
                                     {info.description}
                                 </div>
                             </a>
@@ -145,36 +149,43 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
             </section>
 
             {/* Contact Form Section */}
-            <section className="py-12 sm:py-20 px-4 sm:px-6 bg-gray-50">
-                <div className="max-w-3xl mx-auto">
+            <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50 relative overflow-hidden">
+                {/* Subtle dot pattern */}
+                <div
+                    className="absolute inset-0 opacity-40 pointer-events-none"
+                    style={{
+                        backgroundImage: `radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0)`,
+                        backgroundSize: '20px 20px'
+                    }}
+                />
+
+                <div className="max-w-2xl mx-auto relative z-10">
                     {/* Centered Heading */}
-                    <div className="text-center mb-8 sm:mb-10">
-                        <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4">
+                    <div className="text-center mb-10 sm:mb-12">
+                        <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-gray-900 mb-4 font-montreal">
                             Send Us a <span className="text-orange">Message</span>
                         </h2>
-                        <p className="text-gray-600 leading-relaxed max-w-xl mx-auto">
+                        <p className="text-gray-500 leading-relaxed max-w-md mx-auto text-sm sm:text-base">
                             Fill out the form and our team will get back to you shortly.
-                            <br className="hidden sm:block" />
-                            We're here to help with any questions about GrowQR.
                         </p>
                     </div>
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm">
+                    <form onSubmit={handleSubmit} className="bg-white border border-gray-100 rounded-3xl p-6 sm:p-10 shadow-xl shadow-gray-100/50">
                         {/* Inquiry Type */}
-                        <div className="mb-6">
-                            <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        <div className="mb-7">
+                            <label className="block text-sm font-semibold text-gray-800 mb-3">
                                 I'm reaching out for:
                             </label>
-                            <div className="flex flex-wrap gap-2 sm:gap-3">
+                            <div className="flex flex-wrap gap-3">
                                 {inquiryTypes.map((type) => (
                                     <button
                                         key={type.value}
                                         type="button"
                                         onClick={() => setFormData({ ...formData, type: type.value })}
-                                        className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 touch-manipulation
-                          ${formData.type === type.value
-                                                ? 'bg-orange text-white shadow-md'
+                                        className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 touch-manipulation
+                                            ${formData.type === type.value
+                                                ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20'
                                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                             }`}
                                     >
@@ -186,9 +197,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                         </div>
 
                         {/* Name & Email Row */}
-                        <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                        <div className="grid sm:grid-cols-2 gap-5 mb-5">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Your Name <span className="text-orange">*</span>
                                 </label>
                                 <input
@@ -196,13 +207,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     placeholder="John Doe"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
-                        focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
+                                    className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
+                                        focus:outline-none focus:border-orange/40 focus:bg-white focus:ring-4 focus:ring-orange/5 transition-all duration-200"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Email Address <span className="text-orange">*</span>
                                 </label>
                                 <input
@@ -210,16 +221,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     placeholder="john@company.com"
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
-                        focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
+                                    className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
+                                        focus:outline-none focus:border-orange/40 focus:bg-white focus:ring-4 focus:ring-orange/5 transition-all duration-200"
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Subject */}
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        <div className="mb-5">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Subject
                             </label>
                             <input
@@ -227,14 +238,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                                 value={formData.subject}
                                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                                 placeholder="How can we help?"
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
-                      focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
+                                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
+                                    focus:outline-none focus:border-orange/40 focus:bg-white focus:ring-4 focus:ring-orange/5 transition-all duration-200"
                             />
                         </div>
 
                         {/* Message */}
-                        <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        <div className="mb-7">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Your Message <span className="text-orange">*</span>
                             </label>
                             <textarea
@@ -242,21 +253,21 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                 placeholder="Tell us more about your inquiry..."
                                 rows={5}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 resize-none
-                      focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200"
+                                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 resize-none
+                                    focus:outline-none focus:border-orange/40 focus:bg-white focus:ring-4 focus:ring-orange/5 transition-all duration-200"
                                 required
                             />
                         </div>
 
                         {/* Error/Success Messages */}
                         {error && (
-                            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
+                            <div className="mb-5 p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm font-medium">
                                 {error}
                             </div>
                         )}
                         {isSuccess && (
-                            <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl text-green-600 text-sm flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4" />
+                            <div className="mb-5 p-4 bg-green-50 border border-green-100 rounded-xl text-green-600 text-sm font-medium flex items-center gap-2">
+                                <CheckCircle2 className="w-5 h-5" />
                                 Message sent successfully! We'll get back to you soon.
                             </div>
                         )}
@@ -265,8 +276,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                         <button
                             type="submit"
                             disabled={isSubmitting || isSuccess}
-                            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-orange text-white rounded-xl font-semibold
-                    hover:shadow-lg hover:shadow-orange/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                            className="w-full flex items-center justify-center gap-2.5 px-6 py-4 bg-orange text-white rounded-xl font-semibold text-base
+                                shadow-lg shadow-orange/25 hover:shadow-xl hover:shadow-orange/30 hover:-translate-y-0.5
+                                transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-lg touch-manipulation"
                         >
                             {isSubmitting ? (
                                 <>

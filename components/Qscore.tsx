@@ -325,8 +325,8 @@ export const Qscore: React.FC = () => {
         {/* <h1 className="text-2xl sm:text-3xl md:text-6xl font-semibold text-gray-900 mb-1 sm:mb-2 font-montreal">
           Deconstructing Skill Identity
         </h1> */}
-        <h1 className="text-xl sm:text-2xl md:text-5xl font-semibold text-orange mb-2 font-montreal">
-          The Dimensions of Q-SCORE™
+        <h1 className="text-xl sm:text-2xl md:text-5xl font-semibold text-gray-900 mb-2 font-montreal">
+          The Dimensions of <span className="text-orange">Q-SCORE™</span>
         </h1>
       </div>
 
