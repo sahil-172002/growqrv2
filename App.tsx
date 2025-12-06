@@ -4,16 +4,15 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TruthReveal } from './components/TruthReveal';
-import { Challenge } from './components/Challenge';
+
 import { SolutionsGrid } from './components/SolutionsGrid';
-import { UnifiedShowcase } from './components/UnifiedShowcase';
+
 import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
-import { Reveal } from './components/ui/Reveal';
+
 import { Qscore } from './components/Qscore';
 import { Growth } from './components/Growth';
 import { Calltoaction } from './components/Calltoaction';
-import { MockupShowcase } from './components/MockupShowcase';
 import { Chatbot } from './components/Chatbot';
 import { FAQ } from './components/FAQ';
 import { LoadingScreen, ScrollProgress, ScrollToTop } from './components/ui/PageUtils';

@@ -166,7 +166,7 @@ export const Hero: React.FC = () => {
 
     const ctx = gsap.context(() => {
       // Cache DOM queries for performance
-      const textElements = text1Ref.current?.querySelectorAll('h2, p, .absolute.bottom-2');
+      const textElements = text1Ref.current?.querySelectorAll('h2, p, .dive-in-hint');
       const qrShards = gsap.utils.toArray(".qr-shard");
       const ecoHubWrapper = gsap.utils.toArray(".eco-hub-wrapper");
       const featureNodes = gsap.utils.toArray(".feature-node");
@@ -726,7 +726,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Scroll hint - more visible on mobile */}
-          <div className="absolute bottom-4 sm:bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 sm:gap-2">
+          <div className="dive-in-hint absolute bottom-4 sm:bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 sm:gap-2">
             <span className="text-xs sm:text-sm font-medium text-gray-400 animate-pulse">Dive In</span>
             <div className="w-0.5 h-8 sm:h-12 bg-gradient-to-b from-orange to-transparent rounded-full"></div>
           </div>
