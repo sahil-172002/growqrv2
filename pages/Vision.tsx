@@ -62,7 +62,7 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                     <div className="flex justify-center mb-6 sm:mb-8">
                         <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-white border border-gray-200 rounded-full shadow-sm">
                             <Target className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
-                            <span className="text-sm sm:text-base font-medium text-gray-600">Our Moto</span>
+                            <span className="text-sm sm:text-base font-medium text-gray-600">Our Motto</span>
                         </div>
                     </div>
 

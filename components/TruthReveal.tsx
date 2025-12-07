@@ -251,7 +251,7 @@ export const TruthReveal: React.FC = () => {
               <div className="relative inline-block mb-3 sm:mb-6 md:mb-10">
                 <div className="absolute -inset-6 md:-inset-10 bg-orange/10 blur-2xl md:blur-3xl rounded-full"></div>
                 <p className="relative text-2xl sm:text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal">
-                  To Change,
+                  To Bring Change,
                 </p>
                 <p className="relative text-2xl sm:text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal mt-0.5 sm:mt-1">
                   We Built <span className="text-orange">GrowQR</span>
