@@ -138,6 +138,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
               Solutions
               <ChevronRight size={18} className="text-gray-400" />
             </a>
+            <a
+              href="/#faq"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between py-4 px-2 text-lg font-semibold text-gray-800 hover:text-orange border-b border-gray-100 transition-colors touch-manipulation"
+            >
+              FAQ
+              <ChevronRight size={18} className="text-gray-400" />
+            </a>
             <Link
               to="/contact"
               onClick={() => setIsMobileMenuOpen(false)}

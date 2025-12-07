@@ -259,7 +259,7 @@ export const Chatbot: React.FC = () => {
                 {/* FAQ Popup on Hover */}
                 <div
                     className={`absolute bottom-16 right-0 
-                        w-[320px] bg-white rounded-2xl
+                        w-[calc(100vw-48px)] sm:w-[320px] bg-white rounded-2xl
                         shadow-[0_20px_60px_rgba(0,0,0,0.12)]
                         border border-gray-100
                         transition-all duration-300 ease-out origin-bottom-right
@@ -363,16 +363,26 @@ export const Chatbot: React.FC = () => {
 
             {/* Full Chat Panel */}
             <div
-                className={`fixed bottom-24 right-6 z-50 
-                    w-[380px] max-w-[calc(100vw-48px)] 
-                    bg-white backdrop-blur-xl
-                    rounded-3xl shadow-[0_25px_80px_rgba(0,0,0,0.15)]
-                    border border-gray-100
-                    overflow-hidden
+                className={`fixed z-50 flex flex-col
                     transition-all duration-400 ease-out origin-bottom-right
+                    
+                    /* Mobile: Bottom Sheet */
+                    bottom-0 right-0 left-0
+                    w-full h-[85dvh] sm:h-auto
+                    rounded-t-3xl sm:rounded-3xl
+                    border-t border-gray-100 sm:border
+                    shadow-[0_-10px_40px_rgba(0,0,0,0.1)] sm:shadow-[0_25px_80px_rgba(0,0,0,0.15)]
+
+                    /* Desktop: Floating Bubble */
+                    sm:fixed sm:bottom-24 sm:right-6 sm:left-auto
+                    sm:w-[380px] sm:max-w-[calc(100vw-48px)]
+
+                    bg-white backdrop-blur-xl
+                    overflow-hidden
+                    
                     ${viewState === 'chat'
-                        ? 'opacity-100 scale-100 translate-y-0'
-                        : 'opacity-0 scale-90 translate-y-8 pointer-events-none'
+                        ? 'opacity-100 translate-y-0 scale-100'
+                        : 'opacity-0 translate-y-full sm:translate-y-8 sm:scale-90 pointer-events-none'
                     }`}
             >
                 {/* Header */}
@@ -409,7 +419,7 @@ export const Chatbot: React.FC = () => {
                 </div>
 
                 {/* Messages Container */}
-                <div className="h-[340px] overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50/50 to-white">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50/50 to-white sm:h-[340px]">
                     {messages.map((message, index) => (
                         <div
                             key={message.id}

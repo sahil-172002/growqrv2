@@ -84,8 +84,8 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                     </div>
 
                     {/* Vision Title */}
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-center text-gray-900 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal max-w-6xl mx-auto">
-                        To enable a world where every <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">skill is recognized</span>, talent is verified and <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">opportunity is unlocked</span>.
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-center text-gray-600 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal max-w-6xl mx-auto">
+                        To enable a world where every skill is recognized, talent is verified and opportunity is unlocked.
                     </h1>
                 </div>
             </section>

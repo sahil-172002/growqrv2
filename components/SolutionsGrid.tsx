@@ -504,7 +504,7 @@ export const SolutionsGrid: React.FC = () => {
         {/* Mobile: Same 3D plate but with full-width dark box container */}
         <div className="md:hidden relative w-full">
           {/* Full-width dark box background */}
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-56 rounded-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 shadow-2xl border border-gray-700 -mx-6">
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-56 rounded-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 shadow-2xl border border-gray-700">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange/10 to-transparent"></div>
           </div>
           <div className="relative z-10 flex justify-center py-8">
