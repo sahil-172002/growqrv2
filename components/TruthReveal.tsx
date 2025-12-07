@@ -250,17 +250,18 @@ export const TruthReveal: React.FC = () => {
               {/* Main Header - More compact on mobile */}
               <div className="relative inline-block mb-3 sm:mb-6 md:mb-10">
                 <div className="absolute -inset-6 md:-inset-10 bg-orange/10 blur-2xl md:blur-3xl rounded-full"></div>
-                <p className="relative text-xl sm:text-2xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal">
+                <p className="relative text-2xl sm:text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal">
                   To Change,
                 </p>
-                <p className="relative text-xl sm:text-2xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal mt-0.5 sm:mt-1">
+                <p className="relative text-2xl sm:text-3xl md:text-6xl font-semibold text-black tracking-tight leading-tight font-montreal mt-0.5 sm:mt-1">
                   We Built <span className="text-orange">GrowQR</span>
                 </p>
               </div>
 
-              {/* Subtext - Hidden on smallest screens, shorter on mobile */}
-              <p className="hidden sm:block text-sm md:text-xl text-gray-500 font-montreal mb-4 md:mb-8 max-w-3xl leading-relaxed text-center px-2">
-                An AI-driven proof-of-skill platform for <span className="text-gray-900 font-medium">individuals</span>, <span className="text-gray-900 font-medium">enterprises</span>, <span className="text-gray-900 font-medium">institutions</span>, and <span className="text-gray-900 font-medium">smart cities</span> — all powered by a unique QR.
+              {/* Subtext - Responsive sizing */}
+              <p className="text-xs sm:text-sm md:text-lg text-gray-500 font-montreal mb-4 md:mb-8 max-w-3xl md:max-w-6xl leading-relaxed text-center px-0 sm:px-2">
+                An AI-driven proof-of-skill platform for <span className="text-gray-900 font-medium">individuals</span>, <span className="text-gray-900 font-medium">enterprises</span>, <span className="text-gray-900 font-medium">institutions</span>, and <span className="text-gray-900 font-medium whitespace-nowrap">smart cities</span>.
+                <span className="block mt-1 text-gray-900">All powered by a unique QR.</span>
               </p>
 
               {/* Feature Grid - 2 columns on mobile, 3 on tablet, 5 on desktop */}
@@ -273,7 +274,7 @@ export const TruthReveal: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Unified QR</p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Your identity</p>
+                    <p className="text-[9px] sm:text-xs text-gray-500">Your identity</p>
                   </div>
                 </div>
 
@@ -284,7 +285,7 @@ export const TruthReveal: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Personalized AI</p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Smart guidance</p>
+                    <p className="text-[9px] sm:text-xs text-gray-500">Smart guidance</p>
                   </div>
                 </div>
 
@@ -295,7 +296,7 @@ export const TruthReveal: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Q-SCORE™</p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Readiness metric</p>
+                    <p className="text-[9px] sm:text-xs text-gray-500">Readiness metric</p>
                   </div>
                 </div>
 
@@ -306,7 +307,7 @@ export const TruthReveal: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Verified Credentials</p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Tamper-proof</p>
+                    <p className="text-[9px] sm:text-xs text-gray-500">Tamper-proof</p>
                   </div>
                 </div>
 
@@ -317,7 +318,7 @@ export const TruthReveal: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="font-semibold text-gray-900 text-xs sm:text-sm leading-tight">Global Opportunity</p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 hidden sm:block">Everywhere</p>
+                    <p className="text-[9px] sm:text-xs text-gray-500">Everywhere</p>
                   </div>
                 </div>
 

@@ -199,7 +199,7 @@ export const UnifiedShowcase: React.FC = () => {
           <div className="order-2 md:order-2 text-center md:text-left pb-12 md:pb-0">
             <div className="inline-flex items-center gap-2 mb-4 md:mb-6 px-4 py-2 bg-black/10 rounded-full border border-black/10">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-              <span className="text-xs font-bold tracking-widest text-white/90 uppercase">For Universities</span>
+              <span className="text-xs font-bold tracking-widest text-white/90 uppercase">For Institutions</span>
             </div>
             <h2 className="text-4xl md:text-7xl font-black text-white mb-4 md:mb-6 leading-tight font-montreal">
               EDUCATE FOR <br />

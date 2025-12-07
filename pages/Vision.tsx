@@ -35,7 +35,7 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
 
     const goals = [
         'Verify 1 million credentials by 2026',
-        'Partner with 500+ universities globally',
+        'Partner with 500+ institutions globally',
         'Enable $1B+ in hiring matches',
         'Launch in 100+ countries',
         'Achieve carbon-neutral operations',
@@ -57,17 +57,17 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                     <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
                 </div>
 
-                <div className="max-w-4xl mx-auto relative z-10">
+                <div className="max-w-7xl mx-auto relative z-10">
                     {/* Badge */}
                     <div className="flex justify-center mb-6 sm:mb-8">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm">
-                            <Target className="w-4 h-4 text-orange" />
-                            <span className="text-sm font-medium text-gray-600">Our Vision</span>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-white border border-gray-200 rounded-full shadow-sm">
+                            <Target className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
+                            <span className="text-sm sm:text-base font-medium text-gray-600">Our Moto</span>
                         </div>
                     </div>
 
                     {/* Main Title */}
-                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold text-center text-gray-900 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal">
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl font-semibold text-center text-gray-900 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal">
                         A World Where
                         <br />
                         <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">
@@ -75,20 +75,24 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                         </span>
                     </h1>
 
-                    {/* Vision Statement */}
-                    <div className="max-w-2xl mx-auto text-center">
-                        <p className="text-base sm:text-xl text-gray-500 leading-relaxed">
-                            To enable a world where every <span className="text-gray-900 font-semibold">skill is recognized</span>,
-                            <span className="text-gray-900 font-semibold"> talent is verified</span> and
-                            <span className="text-gray-900 font-semibold"> opportunity is unlocked</span>.
-                        </p>
+                    {/* Vision Badge */}
+                    <div className="flex justify-center mb-6 sm:mb-8 mt-16 sm:mt-24">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-white border border-gray-200 rounded-full shadow-sm">
+                            <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
+                            <span className="text-sm sm:text-base font-medium text-gray-600">Our Vision</span>
+                        </div>
                     </div>
+
+                    {/* Vision Title */}
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-center text-gray-900 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal max-w-6xl mx-auto">
+                        To enable a world where every <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">skill is recognized</span>, talent is verified and <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">opportunity is unlocked</span>.
+                    </h1>
                 </div>
             </section>
 
             {/* Three Pillars */}
-            <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50 relative overflow-hidden">
-                {/* Subtle dot pattern */}
+            {/* Three Pillars */}
+            {/* <section className="py-16 sm:py-24 px-4 sm:px-6 bg-gray-50 relative overflow-hidden">
                 <div
                     className="absolute inset-0 opacity-40 pointer-events-none"
                     style={{
@@ -112,10 +116,8 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                                     hover:shadow-2xl hover:shadow-gray-200/60 hover:-translate-y-2 hover:border-transparent
                                     transition-all duration-500 group overflow-hidden"
                             >
-                                {/* Subtle gradient accent at top */}
                                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange/60 via-orange to-orange/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                {/* Icon + Title row */}
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className="w-11 h-11 rounded-xl bg-orange/10 flex items-center justify-center flex-shrink-0 group-hover:bg-orange/20 transition-all duration-300">
                                         <pillar.icon className="w-5 h-5 text-orange" />
@@ -132,7 +134,7 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Goals Section */}
             <section className="py-16 sm:py-24 px-4 sm:px-6 relative overflow-hidden">

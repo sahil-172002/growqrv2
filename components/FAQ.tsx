@@ -109,7 +109,7 @@ const faqData: FAQItem[] = [
 const categories = [...new Set(faqData.map(item => item.category))];
 
 export const FAQ: React.FC = () => {
-    const [openId, setOpenId] = useState<number | null>(1);
+    const [openId, setOpenId] = useState<number | null>(null);
     const [activeCategory, setActiveCategory] = useState<string>("Getting Started");
 
     const filteredFaqs = activeCategory === "all"
@@ -141,7 +141,7 @@ export const FAQ: React.FC = () => {
                     </div>
 
                     <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-gray-900 font-montreal mb-3 sm:mb-4">
-                        Your Guide to <span className="text-orange">GrowQR</span>
+                        Common Questions about <span className="text-orange">GrowQR</span>
                     </h2>
                     {/* <p className="text-sm sm:text-lg text-gray-500 max-w-2xl mx-auto px-2">
                         Everything you need to know about GrowQR and your Q-Score journey.

@@ -38,6 +38,28 @@ export const Qscore: React.FC = () => {
     return () => window.removeEventListener('resize', checkSize);
   }, []);
 
+  // Handle hash navigation and cleanup
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash === '#qscore') {
+        const element = document.getElementById('qscore');
+        if (element) {
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Clear hash after scroll completes
+            setTimeout(() => {
+              window.history.replaceState(null, '', window.location.pathname);
+            }, 800);
+          }, 100);
+        }
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
   // Split Data
   const leftItems = attributes.slice(0, 5);
   const rightItems = attributes.slice(5, 10);

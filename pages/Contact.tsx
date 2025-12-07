@@ -104,12 +104,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 tracking-tight leading-[1.1] font-montreal">
-                        Let's Build
-                        <br />
-                        <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">
-                            Together
-                        </span>
+                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 tracking-tight leading-[1.1] font-montreal whitespace-nowrap">
+                        Let's Build <span className="bg-gradient-to-r from-orange via-[#FF8F5C] to-orange bg-clip-text text-transparent">Together</span>
                     </h1>
 
                     <p className="text-base sm:text-lg text-gray-500 max-w-xl mx-auto leading-relaxed">
@@ -165,8 +161,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                         <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold text-gray-900 mb-4 font-montreal">
                             Send Us a <span className="text-orange">Message</span>
                         </h2>
-                        <p className="text-gray-500 leading-relaxed max-w-md mx-auto text-sm sm:text-base">
-                            Fill out the form and our team will get back to you shortly.
+                        <p className="text-gray-500 leading-relaxed max-w-lg mx-auto text-sm sm:text-base">
+                            Kindly fill out the form and our team will get back to you shortly.
                         </p>
                     </div>
 

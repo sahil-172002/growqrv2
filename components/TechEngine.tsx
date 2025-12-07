@@ -29,29 +29,29 @@ const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string
         <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent"></div>
 
         {/* Content Container */}
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-4 sm:p-6">
 
           {/* Icon Container with Glowing Ring */}
-          <div className="relative mb-4">
+          <div className="relative mb-3 sm:mb-4">
             {/* Glow Ring */}
             <div className="absolute -inset-2 bg-gradient-to-br from-orange/20 to-orange/5 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
             {/* Icon Background */}
-            <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-200/50 shadow-inner group-hover:from-orange/5 group-hover:to-orange/10 group-hover:border-orange/20 transition-all duration-500">
+            <div className="relative w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center border border-gray-200/50 shadow-inner group-hover:from-orange/5 group-hover:to-orange/10 group-hover:border-orange/20 transition-all duration-500">
               <Icon
-                className="w-6 h-6 text-gray-600 group-hover:text-orange transition-colors duration-500"
+                className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 group-hover:text-orange transition-colors duration-500"
                 strokeWidth={1.5}
               />
             </div>
           </div>
 
           {/* Label */}
-          <h3 className="text-[10px] font-bold text-gray-900 uppercase tracking-[0.12em] mb-2 group-hover:text-gray-800 transition-colors duration-300 text-center">
+          <h3 className="text-[9px] sm:text-[10px] font-bold text-gray-900 uppercase tracking-[0.1em] sm:tracking-[0.12em] mb-1 sm:mb-2 group-hover:text-gray-800 transition-colors duration-300 text-center">
             {label}
           </h3>
 
           {/* Description */}
-          <p className="text-[9px] font-medium text-gray-500 text-center leading-relaxed max-w-[130px] group-hover:text-gray-600 transition-colors duration-300">
+          <p className="text-[8px] sm:text-[9px] font-medium text-gray-500 text-center leading-relaxed max-w-[100px] sm:max-w-[130px] group-hover:text-gray-600 transition-colors duration-300">
             {desc}
           </p>
 
@@ -198,15 +198,15 @@ export const TechEngine: React.FC = () => {
           </div>
 
           {/* Title */}
-          <h2 ref={titleRef} className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-montreal tracking-tight mb-6 whitespace-nowrap">
-            Powered by{' '}
+          <h2 ref={titleRef} className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 font-montreal tracking-tight mb-6 md:whitespace-nowrap">
+            <span className="block sm:inline">Powered by</span>{' '}
             <span className="relative inline-block">
               <span className="text-orange">Adaptive</span>
               <svg className="absolute -bottom-1 left-0 w-full h-2 text-orange/20" viewBox="0 0 100 10" preserveAspectRatio="none">
                 <path d="M0 5 Q 25 0, 50 5 T 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
               </svg>
             </span>
-            {' '}Intelligence
+            <span className="block sm:inline">{' '}Intelligence</span>
           </h2>
 
           {/* Subtitle */}

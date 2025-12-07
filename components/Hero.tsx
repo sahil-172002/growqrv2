@@ -643,6 +643,10 @@ export const Hero: React.FC = () => {
                   <div className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-orange animate-pulse"></div>
                   <span className="text-sm sm:text-base font-bold tracking-wider text-gray-900 uppercase font-montreal">Growth Matrix</span>
                 </div>
+                {/* Subtitle */}
+                <p className="text-sm sm:text-base md:text-lg text-gray-500 font-medium mt-3">
+                  Powerful Values Unlocked with One QR
+                </p>
               </div>
             </div>
           </div>

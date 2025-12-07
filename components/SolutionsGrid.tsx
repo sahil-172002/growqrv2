@@ -52,7 +52,7 @@ const solutions = [
   {
     id: 'institute',
     icon: GraduationCap,
-    label: "For Institutes",
+    label: "For Institutions",
     title: "EMPOWER STUDENTS",
     subtitle: "Your Q-SCORE™ & Student Dashboard",
     description: "Unlock an intelligently analyzed, comprehensive view of student performance and progress.",
@@ -86,6 +86,46 @@ export const SolutionsGrid: React.FC = () => {
   const visualPanelRef = useRef<HTMLDivElement>(null);
   const visualizerRef = useRef<HTMLDivElement>(null);
   const [activeStage, setActiveStage] = useState(0);
+
+  // Handle URL hash to jump to specific solution
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      const stageMap: { [key: string]: number } = {
+        '#solutions-individuals': 0,
+        '#solutions-enterprises': 1,
+        '#solutions-institutions': 2,
+        '#solutions-cities': 3,
+      };
+
+      if (hash in stageMap) {
+        const stageIndex = stageMap[hash];
+
+        // Scroll to the specific slide after a small delay to let the page render
+        setTimeout(() => {
+          const slides = document.querySelectorAll('.solution-slide');
+          const targetSlide = slides[stageIndex] as HTMLElement;
+
+          if (targetSlide) {
+            // Scroll to the specific slide
+            targetSlide.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Clear the hash from URL after scroll completes (clean URL)
+            setTimeout(() => {
+              window.history.replaceState(null, '', window.location.pathname);
+            }, 800); // Wait for scroll animation to finish
+          }
+        }, 200);
+      }
+    };
+
+    // Check on mount
+    handleHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   useLayoutEffect(() => {
     const gsap = (window as any).gsap;
@@ -439,32 +479,49 @@ export const SolutionsGrid: React.FC = () => {
   };
 
   const render3DObject = (stage: number, scale = 1) => {
-    const CommonPlate = ({ Icon }: { Icon: any }) => (
-      <div className="relative w-48 h-48 md:w-64 md:h-64 animate-[spinEntry_1s_ease-out_forwards]" style={{ transform: `scale(${scale})` }}>
-        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,106,47,0.5),rgba(0,0,0,0.9))] shadow-[0_0_60px_rgba(255,106,47,0.4)]"></div>
-        <div className="absolute inset-[-20px] rounded-full border border-orange/30 border-t-transparent animate-[spin_3s_linear_infinite]"></div>
-        <div className="absolute inset-[-40px] rounded-full border border-orange/10 border-b-transparent animate-[spin_5s_linear_infinite_reverse]"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Icon size={scale * 80} className="text-white drop-shadow-lg" />
-        </div>
-      </div>
-    );
+    const icons = [User, Briefcase, BookOpen, Building2];
+    const Icon = icons[stage] || User;
 
-    switch (stage) {
-      case 0: // Individual
-        return <CommonPlate Icon={User} />;
-      case 1: // Employers
-        return <CommonPlate Icon={Briefcase} />;
-      case 2: // Institutes
-        return <CommonPlate Icon={BookOpen} />;
-      case 3: // Smart Cities
-        return <CommonPlate Icon={Building2} />;
-      default: return null;
-    }
+    // Same 3D plate design for both mobile and desktop
+    const Plate3D = ({ isMobile = false }: { isMobile?: boolean }) => {
+      const size = isMobile ? 'w-40 h-40' : 'w-64 h-64';
+      const iconSize = isMobile ? 50 : scale * 80;
+
+      return (
+        <div className={`relative ${size} animate-[spinEntry_1s_ease-out_forwards]`} style={{ transform: `scale(${scale})` }}>
+          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.9),rgba(255,106,47,0.5),rgba(0,0,0,0.9))] shadow-[0_0_60px_rgba(255,106,47,0.4)]"></div>
+          <div className="absolute inset-[-20px] rounded-full border border-orange/30 border-t-transparent animate-[spin_3s_linear_infinite]"></div>
+          <div className="absolute inset-[-40px] rounded-full border border-orange/10 border-b-transparent animate-[spin_5s_linear_infinite_reverse]"></div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Icon size={iconSize} className="text-white drop-shadow-lg" />
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <>
+        {/* Mobile: Same 3D plate but with full-width dark box container */}
+        <div className="md:hidden relative w-full">
+          {/* Full-width dark box background */}
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-56 rounded-2xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 shadow-2xl border border-gray-700 -mx-6">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange/10 to-transparent"></div>
+          </div>
+          <div className="relative z-10 flex justify-center py-8">
+            <Plate3D isMobile={true} />
+          </div>
+        </div>
+
+        {/* Desktop: Original design */}
+        <div className="hidden md:block">
+          <Plate3D isMobile={false} />
+        </div>
+      </>
+    );
   };
 
   return (
-    <section ref={containerRef} className="relative border-t border-gray-100 overflow-hidden">
+    <section id="solutions" ref={containerRef} className="relative border-t border-gray-100 overflow-hidden">
       {/* Premium Ambient Background - Left Side */}
       <div className="absolute inset-0 md:w-1/2 pointer-events-none z-0">
         {/* Floating Gradient Orbs (Hero-style) */}
@@ -491,10 +548,8 @@ export const SolutionsGrid: React.FC = () => {
                 )}
 
                 {/* Mobile Visualizer Injection */}
-                <div className="md:hidden w-full flex justify-center mb-12 sg-anim">
-                  <div className="w-64 h-64 flex items-center justify-center">
-                    {render3DObject(index, 0.7)}
-                  </div>
+                <div className="md:hidden w-full mb-10 sg-anim">
+                  {render3DObject(index, 0.7)}
                 </div>
 
                 <div className="sg-anim inline-flex items-center gap-1.5 mb-4 md:mb-6 pl-2.5 pr-3 py-1.5 rounded-full bg-gray-900 border border-gray-800 shadow-lg w-fit">
@@ -506,7 +561,7 @@ export const SolutionsGrid: React.FC = () => {
                   </span>
                 </div>
 
-                <h2 className="sg-anim text-3xl md:text-5xl font-black tracking-tighter text-black mb-5 md:mb-6 leading-[0.95] font-montreal whitespace-nowrap">
+                <h2 className="sg-anim text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter text-black mb-4 md:mb-6 leading-[0.95] font-montreal whitespace-nowrap">
                   {item.title}
                 </h2>
 
@@ -514,18 +569,18 @@ export const SolutionsGrid: React.FC = () => {
                   {item.description}
                 </p> */}
 
-                <div className="sg-anim space-y-4 mb-8 md:mb-10">
+                <div className="sg-anim space-y-3 sm:space-y-4 mb-6 md:mb-10">
                   {item.features.map((feature, i) => (
                     <div
                       key={i}
-                      className="flex gap-4 items-start p-4 rounded-xl bg-white/40 backdrop-blur-sm border border-gray-100 transition-all duration-300 hover:bg-white/60 hover:shadow-md hover:-translate-y-0.5 group"
+                      className="flex gap-3 sm:gap-4 items-start p-3 sm:p-4 rounded-xl bg-white/60 backdrop-blur-sm border border-gray-100 transition-all duration-300 hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 group"
                     >
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 bg-orange shadow-md shadow-orange/30">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 bg-orange shadow-md shadow-orange/30">
                         {i + 1}
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-black text-base md:text-lg leading-tight mb-1.5">{feature.title}</h4>
-                        <p className="text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-black text-sm sm:text-base md:text-lg leading-tight mb-1">{feature.title}</h4>
+                        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -582,7 +637,7 @@ export const SolutionsGrid: React.FC = () => {
             </div>
 
             {solutions.map((item, i) => {
-              const pluralLabels = ['Individuals', 'Enterprises', 'Institutes', 'Smart Cities'];
+              const pluralLabels = ['Individuals', 'Enterprises', 'Institutions', 'Smart Cities'];
               return (
                 <div key={i} className={`relative transition-all duration-500 ${activeStage === i ? 'scale-125' : 'scale-100 opacity-50'
                   }`}>

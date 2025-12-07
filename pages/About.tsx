@@ -12,7 +12,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenWaitlist }) => {
     const stats = [
         { value: '25+', label: 'Skill Dimensions', description: 'Comprehensive assessment' },
         { value: '5+', label: 'Countries', description: 'Global credential network' },
-        { value: '4', label: 'Solutions', description: 'For every stakeholder' },
+        { value: '100k+', label: 'User Pipelines', description: 'Active talent network' },
         { value: '10+', label: 'Enterprises', description: 'Instant updates' },
     ];
 
@@ -32,7 +32,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenWaitlist }) => {
         {
             name: 'Global Operations',
             role: 'Partners',
-            description: 'Connecting universities, enterprises, and governments across 5+ countries to build a unified talent ecosystem.',
+            description: 'Connecting institutions, enterprises, and governments across 5+ countries to build a unified talent ecosystem.',
             icon: Globe
         },
     ];

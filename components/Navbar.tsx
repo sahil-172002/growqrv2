@@ -114,21 +114,38 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
         {/* Navigation Links */}
         <div className="flex-1 flex flex-col px-6 pt-8">
           <div className="space-y-1">
-            {[
-              { label: 'Home', href: '#' },
-              { label: 'Solutions', href: '#' },
-              { label: 'About', href: '#' },
-              { label: 'FAQ', href: '#' },
-            ].map((item, i) => (
-              <button
-                key={i}
-                onClick={() => scrollToSection(item.href)}
-                className="w-full flex items-center justify-between py-4 px-2 text-lg font-semibold text-gray-800 hover:text-orange border-b border-gray-100 transition-colors touch-manipulation"
-              >
-                {item.label}
-                <ChevronRight size={18} className="text-gray-400" />
-              </button>
-            ))}
+            <Link
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between py-4 px-2 text-lg font-semibold text-gray-800 hover:text-orange border-b border-gray-100 transition-colors touch-manipulation"
+            >
+              Home
+              <ChevronRight size={18} className="text-gray-400" />
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between py-4 px-2 text-lg font-semibold text-gray-800 hover:text-orange border-b border-gray-100 transition-colors touch-manipulation"
+            >
+              About
+              <ChevronRight size={18} className="text-gray-400" />
+            </Link>
+            <a
+              href="/#solutions-individuals"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between py-4 px-2 text-lg font-semibold text-gray-800 hover:text-orange border-b border-gray-100 transition-colors touch-manipulation"
+            >
+              Solutions
+              <ChevronRight size={18} className="text-gray-400" />
+            </a>
+            <Link
+              to="/contact"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-between py-4 px-2 text-lg font-semibold text-gray-800 hover:text-orange border-b border-gray-100 transition-colors touch-manipulation"
+            >
+              Contact
+              <ChevronRight size={18} className="text-gray-400" />
+            </Link>
           </div>
         </div>
 
