@@ -12,7 +12,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenWaitlist }) => {
     const stats = [
         { value: '25+', label: 'Skill Dimensions', description: 'Comprehensive assessment' },
         { value: '5+', label: 'Countries', description: 'Global credential network' },
-        { value: '100k+', label: 'User Pipelines', description: 'Active talent network' },
+        { value: '100k+', label: 'Users Pipeline', description: 'Active talent network' },
         { value: '10+', label: 'Enterprises', description: 'Instant updates' },
     ];
 
