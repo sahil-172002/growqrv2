@@ -1,0 +1,12 @@
+# robots.txt for GrowQR.ai
+# https://growqr.ai
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://growqr.ai/sitemap.xml
+
+# Block access to private/api routes
+Disallow: /api/

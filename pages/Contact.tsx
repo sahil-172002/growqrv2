@@ -32,6 +32,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
         setError(null);
 
         try {
+            // 1. Save to Supabase
             const { error: dbError } = await supabase
                 .from('contact_messages')
                 .insert([
@@ -46,6 +47,30 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                 ]);
 
             if (dbError) throw dbError;
+
+            // 2. Send emails via Resend API
+            try {
+                const emailResponse = await fetch('/api/send-contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: formData.name,
+                        email: formData.email,
+                        subject: formData.subject || 'General Inquiry',
+                        message: formData.message,
+                        type: formData.type
+                    }),
+                });
+
+                if (!emailResponse.ok) {
+                    console.warn('Email sending failed, but form was saved');
+                }
+            } catch (emailError) {
+                // Don't fail the whole submission if email fails
+                console.warn('Email API error:', emailError);
+            }
 
             setIsSuccess(true);
             setFormData({ name: '', email: '', subject: '', message: '', type: 'general' });
@@ -64,21 +89,32 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
             title: 'Email Us',
             value: 'support@growqr.ai',
             description: 'We respond within 24 hours',
-            href: 'mailto:support@growqr.ai'
-        },
-        {
-            icon: MapPin,
-            title: 'US Headquarters',
-            value: 'Princeton, NJ',
-            description: '103 Carnegie Center Drive',
-            href: '#'
+            href: 'mailto:support@growqr.ai',
+            isHQ: false
         },
         {
             icon: Clock,
             title: 'Business Hours',
             value: 'Mon - Fri, 9AM - 6PM EST',
             description: 'Weekend support available',
-            href: '#'
+            href: '#',
+            isHQ: false
+        },
+        {
+            icon: MapPin,
+            title: 'US Office',
+            value: 'New Jersey, USA',
+            description: '103 Carnegie Center Drive, Princeton, NJ 08540',
+            href: '#',
+            isHQ: true
+        },
+        {
+            icon: MapPin,
+            title: 'India Office',
+            value: 'Noida, India',
+            description: '2nd Floor, A-55, Noida, Gautam Budh Nagar, Uttar Pradesh 201301',
+            href: '#',
+            isHQ: false
         },
     ];
 
@@ -116,26 +152,34 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
 
             {/* Contact Cards */}
             <section className="pb-12 sm:pb-16 px-4 sm:px-6">
-                <div className="max-w-4xl mx-auto">
-                    <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
+                <div className="max-w-5xl mx-auto">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         {contactInfo.map((info, index) => (
                             <a
                                 key={index}
                                 href={info.href}
-                                className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 
+                                className={`bg-white border border-gray-100 rounded-2xl p-4 sm:p-5
                                     hover:shadow-xl hover:shadow-orange/5 hover:border-orange/20 hover:-translate-y-1
-                                    transition-all duration-300 group"
+                                    transition-all duration-300 group ${info.href === '#' ? 'cursor-default' : ''}`}
+                                onClick={(e) => info.href === '#' && e.preventDefault()}
                             >
-                                <div className="w-11 h-11 bg-gradient-to-br from-orange/10 to-orange/5 rounded-xl flex items-center justify-center mb-4 group-hover:from-orange/20 group-hover:to-orange/10 transition-all">
-                                    <info.icon className="w-5 h-5 text-orange" />
+                                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-gradient-to-br from-orange/10 to-orange/5 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:from-orange/20 group-hover:to-orange/10 transition-all">
+                                    <info.icon className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
                                 </div>
-                                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                                    {info.title}
+                                <div className="flex items-center gap-1.5 mb-1">
+                                    <span className="text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                        {info.title}
+                                    </span>
+                                    {info.isHQ && (
+                                        <span className="text-[8px] sm:text-[9px] px-1.5 py-0.5 bg-orange/10 text-orange rounded font-semibold">
+                                            HQ
+                                        </span>
+                                    )}
                                 </div>
-                                <div className="text-base sm:text-lg font-semibold text-gray-900 mb-0.5 font-montreal">
+                                <div className="text-sm sm:text-base font-semibold text-gray-900 mb-0.5 font-montreal leading-tight">
                                     {info.value}
                                 </div>
-                                <div className="text-sm text-gray-400">
+                                <div className="text-xs sm:text-sm text-gray-400 leading-relaxed">
                                     {info.description}
                                 </div>
                             </a>
