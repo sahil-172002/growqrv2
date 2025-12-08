@@ -92,10 +92,9 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                         <div className="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                             <Check size={40} strokeWidth={2.5} />
                         </div>
-                        <h3 className="text-3xl font-bold text-gray-900 mb-3 tracking-tight">You're In! 🚀</h3>
+                        <h3 className="text-3xl font-bold text-gray-900 mb-3 tracking-tight">You are in! 🚀</h3>
                         <p className="text-gray-500 text-lg leading-relaxed">
-                            We've secured your spot. <br />
-                            Watch your inbox for early access.
+                            We will keep you updated on our progress and notify you when we launch.
                         </p>
                     </div>
                 ) : (
@@ -144,7 +143,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     className="w-full px-5 py-4 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-orange/20 focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-lg"
-                                    placeholder="e.g. Sahil Sharma"
+                                    placeholder="e.g. Ally Jackson"
                                 />
                             </div>
 
@@ -156,7 +155,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full px-5 py-4 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-orange/20 focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-lg"
-                                    placeholder="name@company.com"
+                                    placeholder="name@email.com"
                                 />
                             </div>
 
@@ -178,7 +177,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                                     </>
                                 ) : (
                                     <>
-                                        Join Waitlist <span className="opacity-50">→</span>
+                                        Join the Waitlist <span className="opacity-50">→</span>
                                     </>
                                 )}
                             </button>

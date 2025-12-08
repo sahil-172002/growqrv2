@@ -62,9 +62,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
         {
             icon: Mail,
             title: 'Email Us',
-            value: 'hello@growqr.ai',
+            value: 'support@growqr.ai',
             description: 'We respond within 24 hours',
-            href: 'mailto:hello@growqr.ai'
+            href: 'mailto:support@growqr.ai'
         },
         {
             icon: MapPin,
@@ -216,7 +216,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    placeholder="john@company.com"
+                                    placeholder="john@email.com"
                                     className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400
                                         focus:outline-none focus:border-orange/40 focus:bg-white focus:ring-4 focus:ring-orange/5 transition-all duration-200"
                                     required

@@ -59,12 +59,12 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
 
                 <div className="max-w-7xl mx-auto relative z-10">
                     {/* Badge */}
-                    <div className="flex justify-center mb-6 sm:mb-8">
+                    {/* <div className="flex justify-center mb-6 sm:mb-8">
                         <div className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-white border border-gray-200 rounded-full shadow-sm">
                             <Target className="w-4 h-4 sm:w-5 sm:h-5 text-orange" />
                             <span className="text-sm sm:text-base font-medium text-gray-600">Our Motto</span>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Main Title */}
                     <h1 className="text-3xl sm:text-4xl md:text-6xl font-semibold text-center text-gray-900 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal">

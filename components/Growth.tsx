@@ -469,22 +469,22 @@ export const Growth: React.FC = () => {
 
                         {/* Left 1: Individuals (Far) */}
                         <div className="monolith-wrapper monolith-left-1 absolute pointer-events-auto">
-                            <Monolith3D icon={User} label="Individuals" sub="Talent & Skills" isConnected={monolithsConnected} isMobile={isMobile} />
+                            <Monolith3D icon={User} label="Individuals" sub="Your Growth" isConnected={monolithsConnected} isMobile={isMobile} />
                         </div>
 
                         {/* Left 2: Institutes (Near) */}
                         <div className="monolith-wrapper monolith-left-2 absolute pointer-events-auto">
-                            <Monolith3D icon={GraduationCap} label="Institutes" sub="Education" isConnected={monolithsConnected} isMobile={isMobile} />
+                            <Monolith3D icon={GraduationCap} label="Institutes" sub="Unlock Capabilities" isConnected={monolithsConnected} isMobile={isMobile} />
                         </div>
 
                         {/* Right 2: Companies (Near) */}
                         <div className="monolith-wrapper monolith-right-2 absolute pointer-events-auto">
-                            <Monolith3D icon={Building} label="Enterprises" sub="Hiring" isConnected={monolithsConnected} isMobile={isMobile} />
+                            <Monolith3D icon={Building} label="Enterprises" sub="Empower Students" isConnected={monolithsConnected} isMobile={isMobile} />
                         </div>
 
                         {/* Right 1: Cities (Far) */}
                         <div className="monolith-wrapper monolith-right-1 absolute pointer-events-auto">
-                            <Monolith3D icon={Globe} label="Smart Cities" sub="Data" isConnected={monolithsConnected} isMobile={isMobile} />
+                            <Monolith3D icon={Globe} label="Smart Cities" sub="Intelligent Governance" isConnected={monolithsConnected} isMobile={isMobile} />
                         </div>
 
                     </div>

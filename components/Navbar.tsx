@@ -173,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
 
         {/* Footer */}
         <div className="text-center text-gray-300 text-xs py-3 border-t border-gray-100">
-          GrowQR.ai © 2025
+          © 2025-2026 GrowQR. All rights reserved.
         </div>
       </div>
     </nav>

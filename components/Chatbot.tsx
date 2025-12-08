@@ -137,7 +137,7 @@ export const Chatbot: React.FC = () => {
             setMessages([
                 {
                     id: 1,
-                    text: "Hi, welcome to GrowQR! 👋\nI'm your AI assistant powered by Gemini. Ask me anything about Q-SCORE™, our platform, or how to get started!",
+                    text: "Hi, welcome to GrowQR! 👋\nI'm your AI assistant powered by GrowQR. Ask me anything about Q-SCORE™, our platform, or how to get started!",
                     sender: 'bot',
                     timestamp: new Date(),
                 }
@@ -177,7 +177,7 @@ export const Chatbot: React.FC = () => {
             setIsTyping(false);
             const errorMessage: Message = {
                 id: Date.now() + 1,
-                text: "I encountered an issue. Please try again or email us at hello@growqr.ai for help!",
+                text: "I encountered an issue. Please try again or email us at support@growqr.ai for help!",
                 sender: 'bot',
                 timestamp: new Date(),
             };
@@ -219,7 +219,7 @@ export const Chatbot: React.FC = () => {
             setIsTyping(false);
             const errorMessage: Message = {
                 id: Date.now() + 1,
-                text: "Sorry, I'm having trouble connecting. Please try again or email hello@growqr.ai for assistance!",
+                text: "Sorry, I'm having trouble connecting. Please try again or email support@growqr.ai for assistance!",
                 sender: 'bot',
                 timestamp: new Date(),
             };

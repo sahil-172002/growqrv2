@@ -4,7 +4,7 @@ import { Linkedin, Mail, ArrowUpRight, Loader2, Check, Instagram } from 'lucide-
 import { supabase } from '../lib/supabase';
 
 export const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
+
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -101,6 +101,11 @@ export const Footer: React.FC = () => {
                   )}
                 </button>
               </form>
+              {isSuccess && (
+                <p className="text-xs text-green-600 mt-1.5">
+                  Thank you! We'll keep you posted.
+                </p>
+              )}
               {error && (
                 <p className="text-xs text-red-500 mt-1.5">{error}</p>
               )}
@@ -109,7 +114,7 @@ export const Footer: React.FC = () => {
             {/* Social Links */}
             <div className="flex gap-2 sm:gap-3">
               <a
-                href="https://x.com/Growqrai"
+                href="https://x.com/Growqr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-orange hover:text-white transition-all duration-300 touch-manipulation"
@@ -138,7 +143,7 @@ export const Footer: React.FC = () => {
                 <Instagram size={16} />
               </a>
               <a
-                href="mailto:hello@growqr.ai"
+                href="mailto:support@growqr.ai"
                 className="w-10 h-10 sm:w-9 sm:h-9 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-orange hover:text-white transition-all duration-300 touch-manipulation"
                 aria-label="Email"
               >
@@ -164,8 +169,8 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li><a href="/#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-SCORE™</a></li>
               <li><Link to="/about" className="text-sm text-gray-600 hover:text-orange transition-colors">About</Link></li>
-              <li><Link to="/vision" className="text-sm text-gray-600 hover:text-orange transition-colors">Our Motto</Link></li>
-              <li><Link to="/contact" className="text-sm text-gray-600 hover:text-orange transition-colors">Contact</Link></li>
+              <li><Link to="/vision" className="text-sm text-gray-600 hover:text-orange transition-colors">Vision</Link></li>
+              <li><Link to="/contact" className="text-sm text-gray-600 hover:text-orange transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -204,21 +209,10 @@ export const Footer: React.FC = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-100">
-        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-5 pb-[calc(1rem+env(safe-area-inset-bottom))] flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
-          <p className="text-xs text-gray-400">
-            © {currentYear} GrowQR.ai. All rights reserved.
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-5 pb-[calc(1rem+env(safe-area-inset-bottom))] flex flex-col md:flex-row justify-center items-center gap-3 sm:gap-4">
+          <p className="text-xs text-gray-400 text-center">
+            © 2025-2026 GrowQR. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <a href="#" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-              Terms of Service
-            </a>
-            <a href="#" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
-              Cookies
-            </a>
-          </div>
         </div>
       </div>
 

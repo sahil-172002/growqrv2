@@ -32,7 +32,7 @@ const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly and professional AI 
 
 ## IMPORTANT - Pricing:
 - Pricing is NOT finalized yet
-- If asked about pricing, cost, or plans, say: "Our pricing is being finalized. Please join our waitlist or email hello@growqr.ai to be notified when we launch and get early access benefits!"
+- If asked about pricing, cost, or plans, say: "Our pricing is being finalized. Please join our waitlist or email support@growqr.ai to be notified when we launch and get early access benefits!"
 - Do NOT mention any specific prices or plans
 
 ## Security:
@@ -49,7 +49,7 @@ const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly and professional AI 
 3. Check if caps lock is on
 4. Use "Forgot Password" to reset credentials
 5. Disable browser extensions temporarily
-6. If issue persists, email hello@growqr.ai with details
+6. If issue persists, email support@growqr.ai with details
 
 ### QR Code Issues:
 1. Ensure good lighting when scanning
@@ -69,7 +69,7 @@ const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly and professional AI 
 2. Check internet connection
 3. Try incognito/private browsing mode
 4. Update your browser to latest version
-5. If nothing works, email hello@growqr.ai with:
+5. If nothing works, email support@growqr.ai with:
    - Device type (phone/computer)
    - Browser name and version
    - Screenshot of the error (if any)
@@ -153,15 +153,15 @@ const getFallbackResponse = (userMessage: string): string => {
     const responses: { keywords: string[], response: string }[] = [
         {
             keywords: ['sign in', 'signin', 'login', 'log in', 'cant login', "can't login", 'unable to login'],
-            response: "Sorry to hear you're having sign-in issues! 😟 Try these steps:\n\n1. Clear your browser cache & cookies\n2. Check if caps lock is on\n3. Try 'Forgot Password' to reset\n4. Use a different browser\n5. Disable browser extensions\n\nStill stuck? Email hello@growqr.ai with your device info and we'll help! 🛠️"
+            response: "Sorry to hear you're having sign-in issues! 😟 Try these steps:\n\n1. Clear your browser cache & cookies\n2. Check if caps lock is on\n3. Try 'Forgot Password' to reset\n4. Use a different browser\n5. Disable browser extensions\n\nStill stuck? Email support@growqr.ai with your device info and we'll help! 🛠️"
         },
         {
             keywords: ['issue', 'problem', 'error', 'bug', 'not working', "doesn't work", 'broken', 'stuck', 'failed'],
-            response: "I'm sorry you're experiencing issues! 😟 Let's troubleshoot:\n\n1. Refresh the page\n2. Try incognito/private browsing\n3. Clear browser cache\n4. Check your internet connection\n5. Update your browser\n\nIf the problem continues, please email hello@growqr.ai with:\n- What you were trying to do\n- Any error message you see\n- Your device & browser info"
+            response: "I'm sorry you're experiencing issues! 😟 Let's troubleshoot:\n\n1. Refresh the page\n2. Try incognito/private browsing\n3. Clear browser cache\n4. Check your internet connection\n5. Update your browser\n\nIf the problem continues, please email support@growqr.ai with:\n- What you were trying to do\n- Any error message you see\n- Your device & browser info"
         },
         {
             keywords: ['account', 'profile', 'settings', 'update', 'change'],
-            response: "For account-related help:\n\n1. Check your email for any verification links (check spam too!)\n2. Make sure you're logged in\n3. Try logging out and back in\n4. Clear your browser cache\n\nNeed more help? Email hello@growqr.ai with your account email! 📧"
+            response: "For account-related help:\n\n1. Check your email for any verification links (check spam too!)\n2. Make sure you're logged in\n3. Try logging out and back in\n4. Clear your browser cache\n\nNeed more help? Email support@growqr.ai with your account email! 📧"
         },
         {
             keywords: ['qr', 'scan', 'scanning', 'camera'],
@@ -169,11 +169,11 @@ const getFallbackResponse = (userMessage: string): string => {
         },
         {
             keywords: ['password', 'forgot', 'reset', 'recover'],
-            response: "To reset your password:\n\n1. Click 'Forgot Password' on the login page\n2. Enter your registered email\n3. Check your inbox (and spam folder!)\n4. Click the reset link within 24 hours\n5. Create a strong new password\n\nDon't see the email? Contact hello@growqr.ai 📧"
+            response: "To reset your password:\n\n1. Click 'Forgot Password' on the login page\n2. Enter your registered email\n3. Check your inbox (and spam folder!)\n4. Click the reset link within 24 hours\n5. Create a strong new password\n\nDon't see the email? Contact support@growqr.ai 📧"
         },
         {
             keywords: ['price', 'pricing', 'cost', 'pay', 'free', 'plan', 'subscription'],
-            response: "Our pricing is being finalized! 🚀 Join our waitlist or email hello@growqr.ai to be notified when we launch and get early access benefits!"
+            response: "Our pricing is being finalized! 🚀 Join our waitlist or email support@growqr.ai to be notified when we launch and get early access benefits!"
         },
         {
             keywords: ['q-score', 'qscore', 'score', 'calculate'],
@@ -189,7 +189,7 @@ const getFallbackResponse = (userMessage: string): string => {
         },
         {
             keywords: ['contact', 'email', 'support', 'help', 'human', 'talk', 'call'],
-            response: "You can reach our support team at hello@growqr.ai - we typically respond within 24 hours! 📧 For urgent issues, mention 'URGENT' in the subject line."
+            response: "You can reach our support team at support@growqr.ai - we typically respond within 24 hours! 📧 For urgent issues, mention 'URGENT' in the subject line."
         },
         {
             keywords: ['hi', 'hello', 'hey', 'good morning', 'good evening'],
@@ -207,5 +207,5 @@ const getFallbackResponse = (userMessage: string): string => {
         }
     }
 
-    return "I'd be happy to help! 🙂 You can ask me about:\n• Q-SCORE™ and how it works\n• Troubleshooting login or account issues\n• Security and privacy\n• Getting started with GrowQR\n\nOr email hello@growqr.ai for detailed support!";
+    return "I'd be happy to help! 🙂 You can ask me about:\n• Q-SCORE™ and how it works\n• Troubleshooting login or account issues\n• Security and privacy\n• Getting started with GrowQR\n\nOr email support@growqr.ai for detailed support!";
 };

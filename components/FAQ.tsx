@@ -10,98 +10,96 @@ interface FAQItem {
 }
 
 const faqData: FAQItem[] = [
-    // Getting Started - 3 Questions
+    // Overview - 3 Questions
     {
         id: 1,
-        category: "Getting Started",
-        categoryIcon: Zap,
-        question: "What is GrowQR and how does it work?",
-        answer: "GrowQR is your unified digital identity platform that combines your skills, credentials, and achievements into one verified profile. When someone scans your unique QR code, they instantly see your complete professional profile: verified skills, certifications, experience, and your real-time Q-SCORE™. Think of it as your digital professional passport."
+        category: "Overview",
+        categoryIcon: HelpCircle,
+        question: "What exactly is GrowQR?",
+        answer: "GrowQR is the world’s first AI-powered Skill Identity & Readiness platform. One lifetime QR Key links you forever to your dynamic Q-Score — a living, verifiable composite of 25+ readiness attributes (IQ, EQ, AQ, SQ, and more)."
     },
     {
         id: 2,
-        category: "Getting Started",
-        categoryIcon: Zap,
-        question: "What is Q-SCORE™ and why does it matter?",
-        answer: "Q-SCORE™ is your Growth Identity Score, a real-time metric that quantifies your professional readiness. It's calculated using AI across 25+ dimensions including technical skills, soft skills, verified credentials, and achievements. Unlike static resumes, your Q-SCORE™ updates dynamically, giving employers and opportunities a live snapshot of your potential."
+        category: "Overview",
+        categoryIcon: HelpCircle,
+        question: "How is GrowQR different from Resumes or any other profile?",
+        answer: "Unlike static profiles or generic Resumes, your single GrowQR is a permanent, evolving digital identity. It powers real-time Q-Score updates, personalized AI coaching, crypto rewards for upskilling, and trusted matchmaking across individuals, organizations, institutions, and governments."
     },
     {
         id: 3,
-        category: "Getting Started",
-        categoryIcon: Zap,
-        question: "How do I create my GrowQR profile?",
-        answer: "Creating your profile takes just 5 minutes. Click 'Get My Q-SCORE™', sign up with your email, and follow our guided onboarding. Add your skills, upload credentials, and link achievements. Our AI will verify what it can automatically, and you'll have your QR code ready to share instantly."
+        category: "Overview",
+        categoryIcon: HelpCircle,
+        question: "How do I get my unique GrowQR right now?",
+        answer: "The platform is in active development. Join the waitlist at growqr.ai — the earliest members will claim their lifetime QR first when we open private beta in Q1–Q2 2026."
     },
 
-    // Security - 3 Questions
+    // Q-Score - 3 Questions
     {
         id: 4,
-        category: "Security",
-        categoryIcon: Shield,
-        question: "How is my personal data protected?",
-        answer: "We use bank-grade 256-bit encryption for all data, both in transit and at rest. Your profile is stored on secure, GDPR-compliant servers. We never sell your data to third parties. You have complete control over what's visible. Enable or disable any section of your profile with one click."
+        category: "Q-Score",
+        categoryIcon: Zap,
+        question: "What is Q-Score?",
+        answer: "Q-Score is your Cumulative Readiness Quotient — an AI-computed single score that aggregates 25+ human capability dimensions (Adaptability, Social Branding, Perception, Body Language, Efficiency, Technical, Emotional, etc.) into one trusted, evolving metric."
     },
     {
         id: 5,
-        category: "Security",
-        categoryIcon: Shield,
-        question: "How does credential verification work?",
-        answer: "We partner directly with universities, certification bodies, and employers to verify credentials at the source. Verified credentials are timestamped and recorded on blockchain, making them tamper-proof. You'll see a verification badge on each credential: verified, pending, or self-reported."
+        category: "Q-Score",
+        categoryIcon: Zap,
+        question: "How does my Q-Score improve over time?",
+        answer: "Through AI-powered assessments, micro-courses, real-world practice, and verified milestones. Your personal AI agent designs custom growth paths and rewards every step with badges and crypto."
     },
     {
         id: 6,
-        category: "Security",
-        categoryIcon: Shield,
-        question: "Who can see my profile when they scan my QR?",
-        answer: "You're always in control. Set your profile to public (anyone can view), private (only approved connections), or custom (choose exactly which sections are visible). You can also create multiple QR codes with different visibility settings for different purposes, like one for job applications and another for networking."
+        category: "Q-Score",
+        categoryIcon: Zap,
+        question: "Why is Q-Score more trusted than a resume or certificate?",
+        answer: "It’s dynamic, multi-dimensional, and continuously verified — employers, universities, and governments see your real readiness, not just what you claim."
     },
 
-    // For Organizations - 3 Questions
+    // Ecosystem - 3 Questions
     {
         id: 7,
-        category: "For Organizations",
-        categoryIcon: Users,
-        question: "How can employers use GrowQR for hiring?",
-        answer: "GrowQR gives employers verified talent data, not just resumes. Search our talent pool by Q-SCORE™, specific skills, or verified credentials. Instantly verify candidate claims, compare candidates objectively, and reduce hiring time by up to 60%. Our enterprise dashboard provides bulk verification and analytics."
+        category: "Ecosystem",
+        categoryIcon: Globe,
+        question: "How does the entire GrowQR ecosystem work together?",
+        answer: "One QR connects four pillars in real time: Individuals (grow & earn), Organizations (smart hiring), Institutions (curriculum & placement), and Governments/Smart Cities (citizen readiness & development programs)."
     },
     {
         id: 8,
-        category: "For Organizations",
-        categoryIcon: Users,
-        question: "Can universities track student progress with GrowQR?",
-        answer: "Absolutely. Universities can issue verified credentials directly to student profiles, track skill development across cohorts, identify gaps in curriculum, and showcase placement outcomes. Students graduate with a verified Q-SCORE™ that gives them a competitive edge in the job market."
+        category: "Ecosystem",
+        categoryIcon: Globe,
+        question: "What’s in it for organizations and universities?",
+        answer: "Instant access to pre-verified talent via Q-Score filters, talent intelligence dashboards, industry-aligned training insights, and dramatically better hiring/placement outcomes."
     },
     {
         id: 9,
-        category: "For Organizations",
+        category: "Ecosystem",
+        categoryIcon: Globe,
+        question: "Can governments and smart cities really use GrowQR?",
+        answer: "Yes — they use population-level Q-Score insights to design targeted upskilling programs, measure community readiness, and connect citizens to relevant jobs and opportunities at scale."
+    },
+
+    // Audience - 3 Questions
+    {
+        id: 10,
+        category: "Audience",
         categoryIcon: Users,
-        question: "Is there an API for system integration?",
-        answer: "Yes, we offer comprehensive REST APIs for seamless integration with your existing HRMS, ATS, LMS, or custom systems. Our API allows you to verify credentials, fetch Q-SCORE™, and sync talent data. Enterprise clients get dedicated support for custom integrations."
-    },
-
-
-
-    // Global - 3 Questions
-    {
-        id: 13,
-        category: "Global",
-        categoryIcon: Globe,
-        question: "Does GrowQR work for international credentials?",
-        answer: "Yes! We verify credentials from institutions worldwide. Our network includes universities and certification bodies across 50+ countries. Your Q-SCORE™ is calculated using global benchmarks, making it valuable whether you're applying for jobs in India, the US, Europe, or anywhere else."
+        question: "Who can join GrowQR?",
+        answer: "Everyone: Individuals (professionals, students, career changers), Organizations (companies of any size), Institutions (universities, training providers), and Governments/Smart Cities."
     },
     {
-        id: 14,
-        category: "Global",
-        categoryIcon: Globe,
-        question: "Is GrowQR available in multiple languages?",
-        answer: "Currently, GrowQR is available in English, with Hindi, Spanish, and French coming soon. Your profile content can be in any language as we support Unicode. The Q-SCORE™ is universal and works across all languages and regions."
+        id: 11,
+        category: "Audience",
+        categoryIcon: Users,
+        question: "As an individual, what do I actually gain?",
+        answer: "Your lifelong QR, a trusted Q-Score, a personal AI coach, crypto rewards for learning, and direct connections to verified roles and gigs that match your exact readiness."
     },
     {
-        id: 15,
-        category: "Global",
-        categoryIcon: Globe,
-        question: "Can I use GrowQR if I'm relocating internationally?",
-        answer: "GrowQR is perfect for global mobility. Your verified credentials travel with you, so there's no need to re-verify degrees or certifications in a new country. Employers worldwide can scan your QR and instantly see your verified professional history, making international job searches much easier."
+        id: 12,
+        category: "Audience",
+        categoryIcon: Users,
+        question: "Do organizations and institutions pay differently?",
+        answer: "Yes — individuals start free with limited access and pay for premium features. Organizations, universities, and government partners will have tailored enterprise plans (details released closer to launch)."
     }
 ];
 
@@ -110,7 +108,7 @@ const categories = [...new Set(faqData.map(item => item.category))];
 
 export const FAQ: React.FC = () => {
     const [openId, setOpenId] = useState<number | null>(null);
-    const [activeCategory, setActiveCategory] = useState<string>("Getting Started");
+    const [activeCategory, setActiveCategory] = useState<string>("Overview");
 
     const filteredFaqs = activeCategory === "all"
         ? faqData
@@ -250,7 +248,7 @@ export const FAQ: React.FC = () => {
                     <p className="text-gray-500 mb-4">Still have questions?</p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         <a
-                            href="mailto:hello@growqr.ai"
+                            href="mailto:support@growqr.ai"
                             className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-full text-gray-700 font-medium hover:border-gray-300 hover:shadow-md transition-all duration-300"
                         >
                             Contact Support
