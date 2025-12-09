@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Email configuration
 const FROM_EMAIL = 'GrowQR <noreply@growqr.ai>';
-const TEAM_EMAIL = 'sahil172002@gmail.com'; // Your team's email to receive notifications
+const TEAM_EMAIL = 'support@growqr.ai'; // Team email to receive contact form notifications
 
 interface ContactFormData {
     name: string;
@@ -78,7 +78,9 @@ export default async function handler(req: any, res: any) {
             html: `
                 <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
                     <div style="text-align: center; margin-bottom: 32px;">
-                        <img src="https://growqr.ai/logo.jpg" alt="GrowQR" style="height: 40px; max-width: 160px;">
+                        <div style="display: inline-block; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                            <span style="color: #111827;">Grow</span><span style="color: #FF6B35;">QR</span>
+                        </div>
                     </div>
                     
                     <div style="background: white; padding: 40px; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
