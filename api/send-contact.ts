@@ -78,7 +78,7 @@ export default async function handler(req: any, res: any) {
             html: `
                 <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
                     <div style="text-align: center; margin-bottom: 32px;">
-                        <img src="https://growqr.ai/logo.webp" alt="GrowQR" style="height: 32px;">
+                        <img src="https://growqr.ai/logo.jpg" alt="GrowQR" style="height: 40px; max-width: 160px;">
                     </div>
                     
                     <div style="background: white; padding: 40px; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
