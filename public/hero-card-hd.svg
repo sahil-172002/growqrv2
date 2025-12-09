@@ -1,0 +1,260 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 690" width="576" height="690">
+  <defs>
+    <!-- Main gradient for the card -->
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF6A2F"/>
+      <stop offset="100%" stop-color="#E65100"/>
+    </linearGradient>
+    
+    <!-- Glass overlay gradient -->
+    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+    </linearGradient>
+    
+    <!-- Badge gradient -->
+    <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FF7A4A"/>
+      <stop offset="100%" stop-color="#FF6A2F"/>
+    </linearGradient>
+    
+    <!-- Scan line gradient -->
+    <linearGradient id="scanGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+      <stop offset="30%" stop-color="rgba(255,255,255,0.4)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.9)"/>
+      <stop offset="70%" stop-color="rgba(255,255,255,0.4)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    
+    <!-- Frequency bar gradient -->
+    <linearGradient id="barGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.1)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,1)"/>
+    </linearGradient>
+    
+    <!-- Outer glow filter -->
+    <filter id="cardShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="40" stdDeviation="60" flood-color="#FF6A2F" flood-opacity="0.5"/>
+    </filter>
+    
+    <!-- Subtle QR glow -->
+    <filter id="qrGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="rgba(0,0,0,0.3)" flood-opacity="1"/>
+    </filter>
+    
+    <!-- Badge shadow -->
+    <filter id="badgeShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.3)" flood-opacity="1"/>
+    </filter>
+    
+    <!-- Carbon fiber pattern (2x scale) -->
+    <pattern id="carbonFiber" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="rgba(0,0,0,0.02)"/>
+      <rect width="4" height="4" fill="rgba(0,0,0,0.04)"/>
+      <rect x="4" y="4" width="4" height="4" fill="rgba(0,0,0,0.04)"/>
+    </pattern>
+    
+    <!-- Clip path for inner frame -->
+    <clipPath id="innerFrameClip">
+      <rect x="12" y="12" width="552" height="666" rx="70" ry="70"/>
+    </clipPath>
+    
+    <!-- Subtle noise texture -->
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" result="noise"/>
+      <feComposite in="SourceGraphic" in2="noise" operator="in"/>
+    </filter>
+  </defs>
+  
+  <!-- Main Card Body -->
+  <rect x="0" y="0" width="576" height="690" rx="80" ry="80" fill="url(#cardGradient)" filter="url(#cardShadow)"/>
+  
+  <!-- Card border -->
+  <rect x="1" y="1" width="574" height="688" rx="80" ry="80" fill="none" stroke="rgba(255,150,100,0.3)" stroke-width="2"/>
+  
+  <!-- Glass Inner Frame -->
+  <rect x="12" y="12" width="552" height="666" rx="70" ry="70" fill="url(#glassGradient)"/>
+  <rect x="13" y="13" width="550" height="664" rx="70" ry="70" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+  
+  <!-- Carbon fiber texture overlay -->
+  <rect x="12" y="12" width="552" height="666" rx="70" ry="70" fill="url(#carbonFiber)" opacity="0.5" clip-path="url(#innerFrameClip)"/>
+  
+  <!-- Animated Scan Line -->
+  <rect x="12" y="60" width="552" height="4" fill="url(#scanGradient)" clip-path="url(#innerFrameClip)">
+    <animate attributeName="y" values="12;678;12" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+  </rect>
+  <!-- Scan line glow -->
+  <rect x="12" y="60" width="552" height="4" fill="rgba(255,255,255,0.3)" clip-path="url(#innerFrameClip)">
+    <animate attributeName="y" values="12;678;12" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
+    <animate attributeName="height" values="4;20;4" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Unified ID Badge -->
+  <g transform="translate(288, 64)" filter="url(#badgeShadow)">
+    <!-- Badge background -->
+    <rect x="-80" y="-20" width="160" height="40" rx="20" ry="20" fill="#FF6A2F"/>
+    <rect x="-79" y="-19" width="158" height="38" rx="19" ry="19" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    
+    <!-- Pulsing dot -->
+    <g transform="translate(-52, 0)">
+      <!-- Ping animation circle -->
+      <circle cx="0" cy="0" r="5" fill="white" opacity="0.6">
+        <animate attributeName="r" values="5;12;5" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.75;0;0.75" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Static dot -->
+      <circle cx="0" cy="0" r="5" fill="white"/>
+    </g>
+    
+    <!-- Badge text -->
+    <text x="8" y="5" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="700" fill="white" letter-spacing="2.5" text-anchor="middle">UNIFIED ID</text>
+  </g>
+  
+  <!-- QR Code Icon (centered, detailed) -->
+  <g transform="translate(288, 280)" filter="url(#qrGlow)">
+    <g fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Outer frame -->
+      <rect x="-100" y="-100" width="200" height="200" rx="12" ry="12"/>
+      
+      <!-- Top-left position detection pattern -->
+      <rect x="-85" y="-85" width="60" height="60" rx="6" ry="6"/>
+      <rect x="-73" y="-73" width="36" height="36" rx="4" ry="4" fill="white" stroke="none"/>
+      
+      <!-- Top-right position detection pattern -->
+      <rect x="25" y="-85" width="60" height="60" rx="6" ry="6"/>
+      <rect x="37" y="-73" width="36" height="36" rx="4" ry="4" fill="white" stroke="none"/>
+      
+      <!-- Bottom-left position detection pattern -->
+      <rect x="-85" y="25" width="60" height="60" rx="6" ry="6"/>
+      <rect x="-73" y="37" width="36" height="36" rx="4" ry="4" fill="white" stroke="none"/>
+      
+      <!-- Alignment pattern (center-ish) -->
+      <rect x="-15" y="-15" width="30" height="30" rx="4" ry="4"/>
+      <rect x="-6" y="-6" width="12" height="12" rx="2" ry="2" fill="white" stroke="none"/>
+      
+      <!-- Data modules - Bottom right quadrant -->
+      <rect x="35" y="35" width="16" height="16" rx="2" ry="2"/>
+      <rect x="55" y="35" width="16" height="16" rx="2" ry="2"/>
+      <rect x="75" y="35" width="10" height="16" rx="2" ry="2"/>
+      <rect x="35" y="55" width="16" height="16" rx="2" ry="2"/>
+      <rect x="55" y="55" width="16" height="16" rx="2" ry="2"/>
+      <rect x="35" y="75" width="16" height="10" rx="2" ry="2"/>
+      
+      <!-- Timing patterns (horizontal lines) -->
+      <line x1="-18" y1="40" x2="18" y2="40" stroke-width="3"/>
+      <line x1="-18" y1="55" x2="18" y2="55" stroke-width="3"/>
+      <line x1="-18" y1="70" x2="18" y2="70" stroke-width="3"/>
+      <line x1="-18" y1="85" x2="18" y2="85" stroke-width="3"/>
+      
+      <!-- Timing patterns (vertical lines) -->
+      <line x1="40" y1="-18" x2="40" y2="18" stroke-width="3"/>
+      <line x1="55" y1="-18" x2="55" y2="18" stroke-width="3"/>
+      <line x1="70" y1="-18" x2="70" y2="18" stroke-width="3"/>
+      <line x1="85" y1="-18" x2="85" y2="18" stroke-width="3"/>
+      
+      <!-- Small data elements -->
+      <rect x="-85" y="-12" width="8" height="8" rx="1" ry="1" fill="white"/>
+      <rect x="-72" y="-12" width="8" height="8" rx="1" ry="1" fill="white"/>
+      <rect x="-85" y="4" width="8" height="8" rx="1" ry="1" fill="white"/>
+    </g>
+  </g>
+  
+  <!-- Q-SCORE Section -->
+  <g transform="translate(288, 560)">
+    <!-- Q-SCORE Label with icon -->
+    <g transform="translate(0, -55)">
+      <!-- Animated signal bars icon -->
+      <g transform="translate(-50, 0)">
+        <rect x="0" y="-8" width="3" height="12" rx="1.5" fill="rgba(255,106,47,0.9)">
+          <animate attributeName="height" values="12;16;12" dur="0.8s" repeatCount="indefinite"/>
+          <animate attributeName="y" values="-8;-10;-8" dur="0.8s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="6" y="-12" width="3" height="18" rx="1.5" fill="rgba(255,106,47,0.7)">
+          <animate attributeName="height" values="18;14;18" dur="1s" repeatCount="indefinite" begin="0.2s"/>
+          <animate attributeName="y" values="-12;-10;-12" dur="1s" repeatCount="indefinite" begin="0.2s"/>
+        </rect>
+        <rect x="12" y="-6" width="3" height="10" rx="1.5" fill="rgba(255,106,47,0.5)">
+          <animate attributeName="height" values="10;14;10" dur="0.7s" repeatCount="indefinite" begin="0.1s"/>
+          <animate attributeName="y" values="-6;-8;-6" dur="0.7s" repeatCount="indefinite" begin="0.1s"/>
+        </rect>
+      </g>
+      
+      <!-- Q-SCORE text -->
+      <text x="8" y="2" font-family="'SF Mono', 'Monaco', 'Consolas', monospace" font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" letter-spacing="4" text-anchor="middle">Q-SCORE™</text>
+    </g>
+    
+    <!-- Score display -->
+    <g transform="translate(0, 0)">
+      <text x="-12" y="14" font-family="'SF Mono', 'Monaco', 'Consolas', monospace" font-size="64" font-weight="900" fill="white" text-anchor="middle">87</text>
+      <text x="52" y="2" font-family="'SF Mono', 'Monaco', 'Consolas', monospace" font-size="16" font-weight="700" fill="rgba(255,255,255,0.4)">/ 100</text>
+    </g>
+    
+    <!-- Frequency visualizer bars (animated) -->
+    <g transform="translate(-72, 46)">
+      <rect x="0" y="0" width="3" height="14" rx="1.5" fill="url(#barGradient)" opacity="0.6">
+        <animate attributeName="height" values="14;8;14" dur="0.3s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="9" y="-6" width="3" height="20" rx="1.5" fill="url(#barGradient)" opacity="0.8">
+        <animate attributeName="height" values="20;12;20" dur="0.4s" repeatCount="indefinite" begin="0.1s"/>
+        <animate attributeName="y" values="-6;0;-6" dur="0.4s" repeatCount="indefinite" begin="0.1s"/>
+      </rect>
+      <rect x="18" y="2" width="3" height="12" rx="1.5" fill="url(#barGradient)" opacity="0.5">
+        <animate attributeName="height" values="12;18;12" dur="0.35s" repeatCount="indefinite" begin="0.05s"/>
+        <animate attributeName="y" values="2;-4;2" dur="0.35s" repeatCount="indefinite" begin="0.05s"/>
+      </rect>
+      <rect x="27" y="-4" width="3" height="18" rx="1.5" fill="url(#barGradient)" opacity="0.9">
+        <animate attributeName="height" values="18;10;18" dur="0.45s" repeatCount="indefinite" begin="0.15s"/>
+        <animate attributeName="y" values="-4;2;-4" dur="0.45s" repeatCount="indefinite" begin="0.15s"/>
+      </rect>
+      <rect x="36" y="0" width="3" height="14" rx="1.5" fill="url(#barGradient)" opacity="0.6">
+        <animate attributeName="height" values="14;20;14" dur="0.25s" repeatCount="indefinite" begin="0.2s"/>
+        <animate attributeName="y" values="0;-6;0" dur="0.25s" repeatCount="indefinite" begin="0.2s"/>
+      </rect>
+      <rect x="45" y="-8" width="3" height="22" rx="1.5" fill="url(#barGradient)" opacity="1">
+        <animate attributeName="height" values="22;14;22" dur="0.5s" repeatCount="indefinite"/>
+        <animate attributeName="y" values="-8;-4;-8" dur="0.5s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="54" y="1" width="3" height="13" rx="1.5" fill="url(#barGradient)" opacity="0.5">
+        <animate attributeName="height" values="13;19;13" dur="0.38s" repeatCount="indefinite" begin="0.08s"/>
+        <animate attributeName="y" values="1;-5;1" dur="0.38s" repeatCount="indefinite" begin="0.08s"/>
+      </rect>
+      <rect x="63" y="-5" width="3" height="19" rx="1.5" fill="url(#barGradient)" opacity="0.7">
+        <animate attributeName="height" values="19;11;19" dur="0.42s" repeatCount="indefinite" begin="0.12s"/>
+        <animate attributeName="y" values="-5;-1;-5" dur="0.42s" repeatCount="indefinite" begin="0.12s"/>
+      </rect>
+      <rect x="72" y="0" width="3" height="14" rx="1.5" fill="url(#barGradient)" opacity="0.6">
+        <animate attributeName="height" values="14;8;14" dur="0.32s" repeatCount="indefinite" begin="0.18s"/>
+      </rect>
+      <rect x="81" y="-3" width="3" height="17" rx="1.5" fill="url(#barGradient)" opacity="0.8">
+        <animate attributeName="height" values="17;21;17" dur="0.28s" repeatCount="indefinite" begin="0.22s"/>
+        <animate attributeName="y" values="-3;-5;-3" dur="0.28s" repeatCount="indefinite" begin="0.22s"/>
+      </rect>
+      <rect x="90" y="2" width="3" height="12" rx="1.5" fill="url(#barGradient)" opacity="0.5">
+        <animate attributeName="height" values="12;16;12" dur="0.36s" repeatCount="indefinite" begin="0.06s"/>
+        <animate attributeName="y" values="2;0;2" dur="0.36s" repeatCount="indefinite" begin="0.06s"/>
+      </rect>
+      <rect x="99" y="-6" width="3" height="20" rx="1.5" fill="url(#barGradient)" opacity="0.7">
+        <animate attributeName="height" values="20;12;20" dur="0.48s" repeatCount="indefinite" begin="0.14s"/>
+        <animate attributeName="y" values="-6;-2;-6" dur="0.48s" repeatCount="indefinite" begin="0.14s"/>
+      </rect>
+      <rect x="108" y="0" width="3" height="14" rx="1.5" fill="url(#barGradient)" opacity="0.6">
+        <animate attributeName="height" values="14;18;14" dur="0.33s" repeatCount="indefinite" begin="0.25s"/>
+        <animate attributeName="y" values="0;-4;0" dur="0.33s" repeatCount="indefinite" begin="0.25s"/>
+      </rect>
+      <rect x="117" y="-4" width="3" height="18" rx="1.5" fill="url(#barGradient)" opacity="0.8">
+        <animate attributeName="height" values="18;10;18" dur="0.4s" repeatCount="indefinite" begin="0.02s"/>
+        <animate attributeName="y" values="-4;0;-4" dur="0.4s" repeatCount="indefinite" begin="0.02s"/>
+      </rect>
+      <rect x="126" y="1" width="3" height="13" rx="1.5" fill="url(#barGradient)" opacity="0.5">
+        <animate attributeName="height" values="13;17;13" dur="0.3s" repeatCount="indefinite" begin="0.16s"/>
+        <animate attributeName="y" values="1;-3;1" dur="0.3s" repeatCount="indefinite" begin="0.16s"/>
+      </rect>
+      <rect x="135" y="-7" width="3" height="21" rx="1.5" fill="url(#barGradient)" opacity="0.9">
+        <animate attributeName="height" values="21;13;21" dur="0.44s" repeatCount="indefinite" begin="0.1s"/>
+        <animate attributeName="y" values="-7;-3;-7" dur="0.44s" repeatCount="indefinite" begin="0.1s"/>
+      </rect>
+    </g>
+  </g>
+</svg>
