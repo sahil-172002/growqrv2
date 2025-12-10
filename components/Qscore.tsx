@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import {
   Brain, Heart, RefreshCw, Lightbulb, Flag,
-  Shield, Scan, Timer, Mic, Trophy, QrCode
+  BarChart3, Scan, Timer, GraduationCap, Trophy, QrCode
 } from 'lucide-react';
 import { EcoToken3D } from './EcoToken3D';
 
@@ -15,10 +15,10 @@ const attributes = [
   { label: "Leadership", icon: Flag },
 
   // Right Side
-  { label: "Resilience", icon: Shield },
+  { label: "Analysis", icon: BarChart3 },
   { label: "Focus", icon: Scan },
   { label: "Decision", icon: Timer },
-  { label: "Communication", icon: Mic },
+  { label: "Aptitude", icon: GraduationCap },
   { label: "Confidence", icon: Trophy },
 ];
 
