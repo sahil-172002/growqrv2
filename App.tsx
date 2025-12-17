@@ -1,8 +1,9 @@
 
-import React, { useLayoutEffect, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { Navbar } from './components/Navbar';
+import { Navbar1 } from './components/ui/navbar-1';
 import { Hero } from './components/Hero';
+import { EcosystemRing } from './components/EcosystemRing';
 import { TruthReveal } from './components/TruthReveal';
 
 import { SolutionsGrid } from './components/SolutionsGrid';
@@ -47,9 +48,9 @@ function LandingPage({
   return (
     <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden ${perfClasses}
       ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>
-      <Navbar onOpenWaitlist={() => handleOpenWaitlist('individual')} />
 
-      <Hero />
+      <Hero onOpenWaitlist={() => handleOpenWaitlist('individual')} />
+      <EcosystemRing />
       <TruthReveal />
       <Qscore />
       <Growth />
@@ -82,16 +83,12 @@ export default function App() {
   const perfSettings = { tier: 'high' as const };
   const perfClasses = '';
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
       }
-    }
-
-    if (typeof window !== 'undefined' && (window as any).gsap && (window as any).ScrollTrigger) {
-      (window as any).gsap.registerPlugin((window as any).ScrollTrigger);
     }
   }, []);
 
