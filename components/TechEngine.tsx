@@ -5,7 +5,7 @@ import { QrCode, Brain, Hash, Link2, Atom, Fingerprint } from 'lucide-react';
 const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string, desc: string, index: number }) => (
   <div className="tech-tile group relative perspective-1000">
     {/* Main Tile Container */}
-    <div className="relative w-full aspect-square rounded-2xl transition-all duration-500 ease-out transform-style-3d group-hover:-translate-y-3 group-hover:rotate-x-2 group-hover:rotate-y-2">
+    <div className="relative w-full aspect-square rounded-2xl ease-out transform-style-3d group-hover:-translate-y-3 group-hover:rotate-x-2 group-hover:rotate-y-2 hover:transition-all hover:duration-500">
 
       {/* Outer Glow on Hover */}
       <div className="absolute -inset-1 bg-gradient-to-br from-orange/20 via-orange/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500"></div>
@@ -98,11 +98,12 @@ export const TechEngine: React.FC = () => {
       // Get all tiles
       const tiles = gsap.utils.toArray('.tech-tile');
 
-      // Set initial states
+      // Set initial states - tiles immediately visible
       gsap.set(badgeRef.current, { y: 30, opacity: 0 });
       gsap.set(titleRef.current, { y: 50, opacity: 0 });
       gsap.set(subtitleRef.current, { y: 40, opacity: 0 });
-      gsap.set(tiles, { y: 80, opacity: 0, scale: 0.8, rotateX: 15 });
+      // Tiles start fully visible - no animation
+      gsap.set(tiles, { y: 0, opacity: 1, scale: 1, rotateX: 0 });
       gsap.set(footerRef.current, { y: 30, opacity: 0 });
 
       // Create master timeline
@@ -135,20 +136,7 @@ export const TechEngine: React.FC = () => {
           ease: "power3.out"
         }, "-=0.5");
 
-      // Staggered tile animation with wave effect
-      tl.to(tiles, {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        rotateX: 0,
-        duration: 0.8,
-        stagger: {
-          each: 0.1,
-          from: "center", // Wave from center
-          ease: "power2.out"
-        },
-        ease: "back.out(1.2)"
-      }, "-=0.3");
+      // No tile animation - they're already visible
 
       // Footer animation
       tl.to(footerRef.current, {

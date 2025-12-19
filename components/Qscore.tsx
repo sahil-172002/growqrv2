@@ -161,21 +161,30 @@ export const Qscore: React.FC = () => {
       const beams = gsap.utils.toArray(".beam-line");
       const centralHub = document.querySelector(".qscore-hub");
 
-      // === INITIAL STATE: Hidden in deep space ===
-      gsap.set([...leftNodes, ...rightNodes], {
-        x: 0,
-        y: 0,
-        scale: 0.3,
-        opacity: 0,
-        rotateY: isMobileView ? 90 : 180,  // Less rotation on mobile
-        z: isMobileView ? -200 : -500,       // Less depth on mobile
-        force3D: true
+      // === INITIAL STATE: Tiles already in position (no hidden state) ===
+
+      // Set tiles to their final positions immediately
+      [...leftNodes, ...rightNodes].forEach((node: any, i: number) => {
+        const isLeft = i < 5;
+        const indexInSide = isLeft ? i : i - 5;
+        const targetY = (indexInSide - 2) * ySpacing;
+        const targetX = isLeft ? -xOffset : xOffset;
+
+        gsap.set(node, {
+          x: targetX,
+          y: targetY,
+          scale: 1,
+          opacity: 1,
+          rotateY: 0,
+          z: 0,
+          force3D: true
+        });
       });
 
       gsap.set(centralHub, {
         scale: 0,
         opacity: 0,
-        rotateY: isMobileView ? 360 : 720,  // Less spin on mobile
+        rotateY: isMobileView ? 360 : 720,
         z: isMobileView ? -400 : -800,
         force3D: true
       });
@@ -192,7 +201,10 @@ export const Qscore: React.FC = () => {
         strokeDashoffset: 1000
       });
 
-      // === PHASE 1: HEROIC HUB ENTRY (0-20% scroll) ===
+      // Update all paths immediately
+      updateAllPaths();
+
+      // === PHASE 1: HUB ENTRY (0-20% scroll) ===
       tl.to(centralHub, {
         scale: 1,
         opacity: 1,
@@ -203,47 +215,13 @@ export const Qscore: React.FC = () => {
         force3D: true
       }, "start");
 
-      // === PHASE 2: QUANTUM NODE MATERIALIZATION (20-60% scroll) ===
-      [...leftNodes, ...rightNodes].forEach((node: any, i: number) => {
-        const isLeft = i < 5;
-        const indexInSide = isLeft ? i : i - 5;
-        const targetY = (indexInSide - 2) * ySpacing;
-        const targetX = isLeft ? -xOffset : xOffset;
-
-        // Calculate spiral angle for dramatic entry (reduced on mobile)
-        const spiralAngle = isMobileView ? (i / 10) * 180 : (i / 10) * 360;
-
-        tl.fromTo(node,
-          {
-            x: 0,
-            y: 0,
-            scale: 0.3,
-            opacity: 0,
-            rotateY: (isMobileView ? 90 : 180) + spiralAngle,
-            z: isMobileView ? -200 : -500,
-          },
-          {
-            x: targetX,
-            y: targetY,
-            scale: 1,
-            opacity: 1,
-            rotateY: 0,
-            z: 0,
-            duration: isMobileView ? 2.5 : 4,
-            ease: "back.out(1.2)",
-            force3D: true
-          },
-          `start+=1+=${i * (isMobileView ? 0.08 : 0.15)}`
-        );
-      });
-
-      // === PHASE 3: CONNECTION DRAWING (40-70% scroll) ===
+      // === PHASE 2: CONNECTION DRAWING (20-50% scroll) ===
       connections.forEach((path: any, i: number) => {
         tl.to(path, {
           opacity: 0.3,
           duration: isMobileView ? 2 : 3,
           ease: "power1.inOut",
-        }, `start+=2+=${i * 0.08}`);
+        }, `start+=1+=${i * 0.08}`);
       });
 
       // === CONTINUOUS BEAM LOOP (Runs independent of scroll) ===
@@ -295,40 +273,9 @@ export const Qscore: React.FC = () => {
         }
       }
 
-      // === PHASE 4: IDLE PRESENCE (Brief pause) ===
-      tl.to({}, { duration: isMobileView ? 1 : 2 });
+      // === PHASE 3: IDLE PRESENCE (animations continue playing) ===
+      tl.to({}, { duration: isMobileView ? 2 : 3 });
 
-      // === PHASE 5: GRAVITATIONAL COLLAPSE EXIT (85-100% scroll) ===
-      [...leftNodes, ...rightNodes].forEach((node: any, i: number) => {
-        tl.to(node, {
-          x: 0,
-          y: 0,
-          scale: 0.2,
-          opacity: 0,
-          rotateY: isMobileView ? -180 : -360,
-          z: isMobileView ? -300 : -600,
-          duration: isMobileView ? 2 : 3,
-          ease: "power2.in",
-          force3D: true
-        }, `exit+=${i * 0.05}`);
-      });
-
-      // Hub collapses last with pulse
-      tl.to(centralHub, {
-        scale: 0,
-        opacity: 0,
-        rotateY: isMobileView ? -360 : -720,
-        z: isMobileView ? -500 : -1000,
-        duration: isMobileView ? 1.5 : 2.5,
-        ease: "expo.in",
-        force3D: true
-      }, "exit+=0.8");
-
-      // Connections fade gracefully
-      tl.to(connections, {
-        opacity: 0,
-        duration: 1.5
-      }, "exit");
 
     }, containerRef);
 

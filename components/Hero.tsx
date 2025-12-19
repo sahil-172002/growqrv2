@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { QrCode } from 'lucide-react';
+import { QrCode, User, FileText, Shield, Zap, Code, Database, Cpu, Layers } from 'lucide-react';
 import { Navbar1 } from './ui/navbar-1';
 
 // Live Data Component for Animated Numbers
@@ -103,6 +103,23 @@ const heroStyles = `
     0%, 100% { top: 0; }
     50% { top: 100%; }
   }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes spin-reverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 40s linear infinite;
+  }
+  .animate-spin-reverse {
+    animation: spin-reverse 35s linear infinite;
+  }
+  .animate-counter-spin {
+    animation: spin-reverse 40s linear infinite;
+  }
 `;
 
 interface HeroProps {
@@ -110,6 +127,18 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
+  // Icons for the rotating ring
+  const orbitIcons = [
+    <User key="user" size={20} />,
+    <FileText key="file" size={20} />,
+    <Shield key="shield" size={20} />,
+    <Zap key="zap" size={20} />,
+    <Code key="code" size={20} />,
+    <Database key="database" size={20} />,
+    <Cpu key="cpu" size={20} />,
+    <Layers key="layers" size={20} />
+  ];
+
   return (
     <>
       <style>{heroStyles}</style>
@@ -123,23 +152,57 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
         {/* Main Content */}
         <div className="relative z-10 container mx-auto px-6 flex flex-col items-center justify-center text-center pt-16 pb-8">
 
-          {/* Dynamic 3D QR Hero Element */}
-          <div className="relative z-30 mb-8 md:mb-10 group cursor-pointer animate-gentle-float">
+          {/* Dynamic 3D QR Hero Element with Rotating Ring */}
+          <div className="relative z-30 mb-16 md:mb-20 group cursor-pointer animate-gentle-float">
 
-            {/* Unified QR Badge - Moved outside */}
-            <div className="flex justify-center mb-4">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange rounded-full shadow-lg">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
-                <span className="text-[10px] font-bold tracking-widest text-white uppercase font-montreal">
-                  Unified QR
-                </span>
+            {/* Rotating Ring Container - Behind the card - Centered with card - Reduced size to prevent text overlap */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] md:w-[620px] md:h-[620px] pointer-events-none -z-10">
+
+              {/* Orbit Rings - Decorative */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {/* Inner Ring - Solid */}
+                <div className="absolute w-[65%] h-[65%] border border-gray-300/40 rounded-full animate-spin-reverse"></div>
+                {/* New Ring - Between Inner and Middle - Solid (Icons attached here) */}
+                <div className="absolute w-[72.5%] h-[72.5%] border border-gray-300/35 rounded-full"></div>
+                {/* Middle Ring - Dashed */}
+                <div className="absolute w-[80%] h-[80%] border border-dashed border-gray-300/30 rounded-full animate-spin-slow"></div>
               </div>
+
+              {/* Rotating Icons - Attached to New Ring (72.5%) */}
+              <div className="absolute inset-0 animate-spin-slow">
+                {orbitIcons.map((icon, i) => {
+                  const angle = (i * (360 / orbitIcons.length)) * (Math.PI / 180);
+                  // Radius matches new ring (72.5% of container) - adjusted for smaller container
+                  const radius = typeof window !== 'undefined' && window.innerWidth < 768 ? 188.5 : 224.25; // 72.5% of 520px/620px / 2
+                  const x = Math.cos(angle) * radius;
+                  const y = Math.sin(angle) * radius;
+
+                  return (
+                    <div
+                      key={i}
+                      className="absolute flex items-center justify-center hover:scale-110 transition-transform duration-300"
+                      style={{
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                      }}
+                    >
+                      {/* Counter-rotate to keep icons upright */}
+                      <div className="text-gray-400 animate-counter-spin">
+                        {icon}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Ambient glow behind ring */}
+              <div className="absolute inset-0 bg-orange/5 blur-3xl rounded-full"></div>
             </div>
 
-            <div className="relative w-[200px] h-[260px] md:w-72 md:h-[345px]">
+
+
+            <div className="relative w-[200px] h-[260px] md:w-72 md:h-[345px] z-10">
               {/* Ambient Glow */}
               <div className="absolute inset-0 bg-orange/30 blur-[60px] rounded-full animate-pulse-slow"></div>
 
@@ -149,9 +212,26 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
                 {/* Glass Inner Frame */}
                 <div className="absolute inset-[6px] bg-white/10 backdrop-blur-md rounded-[2.2rem] border border-white/25 flex flex-col items-center overflow-hidden">
 
+                  {/* Unified ID Badge - Inside card at top */}
+                  <div className="absolute top-5 left-0 w-full flex justify-center z-30 pointer-events-none">
+                    <div className="flex justify-center">
+                      <div className="bg-orange px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 pointer-events-auto">
+                        <div className="flex items-center gap-2">
+                          <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                          </span>
+                          <span className="text-[10px] font-bold tracking-widest text-white uppercase font-montreal">
+                            Unified QR
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="absolute top-0 left-0 w-full h-1 bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.4)] animate-[scan_3s_ease-in-out_infinite] z-20"></div>
 
-                  <div className="flex-1 w-full flex items-center justify-center pt-8">
+                  <div className="flex-1 w-full flex items-center justify-center pt-12">
                     <QrCode className="w-28 h-28 md:w-40 md:h-40 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
                   </div>
 
@@ -166,7 +246,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
           </div>
 
           {/* Hero Text */}
-          <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
+          <div className="relative z-20 w-full max-w-[1200px] mx-auto px-4 sm:px-6 text-center">
             <h1 className="text-[1.75rem] sm:text-3xl md:text-5xl lg:text-6xl text-gray-900 font-light leading-[1.15] font-montreal tracking-tight">
               One QR. <span className="text-orange font-semibold">Infinite</span> <span className="text-black font-semibold">Possibilities.</span>
             </h1>

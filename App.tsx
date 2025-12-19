@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar1 } from './components/ui/navbar-1';
 import { Hero } from './components/Hero';
 import { EcosystemRing } from './components/EcosystemRing';
-import { TruthReveal } from './components/TruthReveal';
+import { TruthRevealTraditional } from './components/TruthRevealTraditional';
 
 import { SolutionsGrid } from './components/SolutionsGrid';
 
@@ -51,7 +51,7 @@ function LandingPage({
 
       <Hero onOpenWaitlist={() => handleOpenWaitlist('individual')} />
       <EcosystemRing />
-      <TruthReveal />
+      <TruthRevealTraditional />
       <Qscore />
       <Growth />
 

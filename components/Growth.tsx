@@ -292,8 +292,21 @@ export const Growth: React.FC = () => {
         const isMobileView = window.innerWidth < 768;
 
         const ctx = gsap.context(() => {
-            // --- INITIAL STATES - Everything starts hidden/centered ---
-            gsap.set(".monolith-wrapper", { scale: 0.5, opacity: 0, x: 0, y: 0 });
+            // --- INITIAL STATES - Set monoliths to final positions immediately ---
+            if (isMobileView) {
+                // Mobile: 2x2 grid layout - already in position
+                gsap.set(".monolith-left-1", { x: -layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1 });
+                gsap.set(".monolith-left-2", { x: layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1 });
+                gsap.set(".monolith-right-2", { x: -layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1 });
+                gsap.set(".monolith-right-1", { x: layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1 });
+            } else {
+                // Desktop/Tablet: Horizontal layout - already in position
+                gsap.set(".monolith-left-1", { x: -layoutValues.far, scale: 1, opacity: 1 });
+                gsap.set(".monolith-left-2", { x: -layoutValues.near, scale: 1, opacity: 1 });
+                gsap.set(".monolith-right-2", { x: layoutValues.near, scale: 1, opacity: 1 });
+                gsap.set(".monolith-right-1", { x: layoutValues.far, scale: 1, opacity: 1 });
+            }
+
             gsap.set(".growth-text", { opacity: 0, y: 30 });
             gsap.set(cardRef.current, { scale: 0.7, opacity: 0 });
             setBeamsVisible(false);
@@ -314,26 +327,11 @@ export const Growth: React.FC = () => {
             // PHASE 2: CARD ENTRY
             tl.to(cardRef.current, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.2)" }, 0.1);
 
-            // PHASE 3: MONOLITHS EXPANSION
-            if (isMobileView) {
-                // Mobile: 2x2 grid layout expansion
-                tl.to(".monolith-left-1", { x: -layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.4);
-                tl.to(".monolith-left-2", { x: layoutValues.topX, y: layoutValues.topY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.5);
-                tl.to(".monolith-right-2", { x: -layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.5);
-                tl.to(".monolith-right-1", { x: layoutValues.bottomX, y: layoutValues.bottomY, scale: 1, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.4);
-            } else {
-                // Desktop/Tablet: Horizontal layout expansion
-                tl.to(".monolith-left-1", { x: -layoutValues.far, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.4);
-                tl.to(".monolith-left-2", { x: -layoutValues.near, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.5);
-                tl.to(".monolith-right-2", { x: layoutValues.near, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.5);
-                tl.to(".monolith-right-1", { x: layoutValues.far, scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.4);
-            }
-
-            // PHASE 4: BEAMS APPEAR (after monoliths expand)
+            // PHASE 3: BEAMS APPEAR (monoliths already visible)
             tl.call(() => {
                 setBeamsVisible(true);
                 setMonolithsConnected(true);
-            }, [], 0.9);
+            }, [], 0.4);
 
         }, containerRef);
 

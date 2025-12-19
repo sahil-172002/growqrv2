@@ -229,33 +229,96 @@ export const SolutionsGrid: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  // Enhanced 3D Flip - Showing TRUE side/thickness
+  // Scroll-synchronized slide-up animation for visualizer
   useLayoutEffect(() => {
     const gsap = (window as any).gsap;
-    if (!gsap || !visualizerRef.current) return;
+    const ScrollTrigger = (window as any).ScrollTrigger;
 
-    // Dramatic side flip to showcase 3D thickness
-    gsap.fromTo(visualizerRef.current,
-      {
-        scale: 0.4,
-        opacity: 0,
-        z: -200,
-        rotateY: 120, // Show SIDE view (showcases depth/layers)
-        rotateX: -15,  // Slight top tilt
-      },
-      {
-        scale: 1,
+    if (!gsap || !ScrollTrigger || !visualizerRef.current || typeof window === 'undefined' || window.innerWidth < 768) return;
+
+    const ctx = gsap.context(() => {
+      const slides = gsap.utils.toArray('.solution-slide');
+
+      // Initial state - first plate visible
+      gsap.set(visualizerRef.current, {
+        y: 0,
         opacity: 1,
-        z: 0,
-        rotateY: 0,
-        rotateX: 0,
-        duration: 1,
-        ease: "power3.out",
-        overwrite: true,
-        force3D: true
-      }
-    );
-  }, [activeStage]);
+        scale: 1,
+      });
+
+      slides.forEach((slide: any, index: number) => {
+        if (index === slides.length - 1) return; // Skip last slide (no transition after it)
+
+        ScrollTrigger.create({
+          trigger: slide,
+          start: "bottom center",
+          end: "bottom top",
+          onEnter: () => {
+            // Current plate moves up and fades out
+            gsap.to(visualizerRef.current, {
+              y: -150,
+              opacity: 0,
+              scale: 0.8,
+              duration: 0.6,
+              ease: "power2.in",
+              onComplete: () => {
+                // Update the stage to next
+                setActiveStage(index + 1);
+
+                // Reset position to bottom for slide-in
+                gsap.set(visualizerRef.current, {
+                  y: 150,
+                  opacity: 0,
+                  scale: 0.8,
+                });
+
+                // Slide in from bottom
+                gsap.to(visualizerRef.current, {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.8,
+                  ease: "power3.out",
+                });
+              }
+            });
+          },
+          onLeaveBack: () => {
+            // Scrolling back up - reverse animation
+            gsap.to(visualizerRef.current, {
+              y: 150,
+              opacity: 0,
+              scale: 0.8,
+              duration: 0.6,
+              ease: "power2.in",
+              onComplete: () => {
+                // Update to previous stage
+                setActiveStage(index);
+
+                // Reset position to top for slide-in
+                gsap.set(visualizerRef.current, {
+                  y: -150,
+                  opacity: 0,
+                  scale: 0.8,
+                });
+
+                // Slide in from top
+                gsap.to(visualizerRef.current, {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.8,
+                  ease: "power3.out",
+                });
+              }
+            });
+          }
+        });
+      });
+    }, visualizerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   // --- 3D CARD COMPONENT (from MockupShowcase) ---
   type MaterialType = 'glass' | 'matte' | 'dark' | 'orange';

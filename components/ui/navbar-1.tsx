@@ -14,24 +14,23 @@ const Navbar1: React.FC<Navbar1Props> = ({ onOpenWaitlist }) => {
     const toggleMenu = () => setIsOpen(!isOpen)
 
     const navLinks = [
-        { label: "About", to: "/about" },
         { label: "Vision", to: "/vision" },
+        { label: "About", to: "/about" },
         { label: "Contact", to: "/contact" }
     ];
 
     return (
         <>
-            {/* Clean Glassmorphism Navbar */}
-            <div className="absolute top-6 left-0 right-0 w-full px-4 z-50">
-                <div className="container mx-auto max-w-6xl">
+            {/* Minimal Overlay Navigation */}
+            <div className="absolute top-0 left-0 right-0 w-full px-4 sm:px-6 pt-6 z-50">
+                <div className="container mx-auto max-w-7xl">
                     <motion.div
-                        className="flex items-center justify-between px-6 py-3.5 backdrop-blur-md bg-white/80 border border-white/40 shadow-lg shadow-black/5 rounded-full"
+                        className="flex items-center justify-between"
                         initial={{ y: -20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.6, ease: "easeOut" }}
                     >
-
-                        {/* Logo - Left Corner */}
+                        {/* Logo - Left Side */}
                         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                             <motion.div
                                 className="flex items-center"
@@ -41,129 +40,141 @@ const Navbar1: React.FC<Navbar1Props> = ({ onOpenWaitlist }) => {
                                 <img
                                     src="/logo.webp"
                                     alt="GrowQR"
-                                    className="h-5 md:h-6 transition-all duration-300 cursor-pointer"
+                                    className="h-6 md:h-7 transition-all duration-300 cursor-pointer drop-shadow-sm"
                                 />
                             </motion.div>
                         </Link>
 
-                        {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center space-x-1">
-                            {navLinks.map((item, index) => (
-                                <motion.div
-                                    key={item.label}
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                                >
-                                    <Link
-                                        to={item.to}
-                                        className="relative px-4 py-2 text-sm font-medium text-gray-700 hover:text-orange transition-colors duration-200 group"
+                        {/* Right Side - Menu Button + Early Access Button */}
+                        <div className="flex items-center gap-3">
+                            {/* Menu Toggle Button - Hamburger/Cross with smooth transition */}
+                            <motion.button
+                                className="relative p-2.5 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200/50 shadow-lg shadow-black/5 hover:bg-white transition-all duration-300"
+                                onClick={toggleMenu}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                aria-label="Toggle menu"
+                            >
+                                <div className="relative w-5 h-5 flex items-center justify-center">
+                                    {/* Animated Icon Container */}
+                                    <motion.div
+                                        className="absolute"
+                                        initial={false}
+                                        animate={{ rotate: isOpen ? 180 : 0 }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
                                     >
-                                        {item.label}
-                                        {/* Hover underline effect */}
-                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-orange rounded-full group-hover:w-3/4 transition-all duration-300"></span>
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </nav>
+                                        <AnimatePresence mode="wait" initial={false}>
+                                            {!isOpen ? (
+                                                <motion.div
+                                                    key="menu"
+                                                    initial={{ opacity: 0, rotate: -90 }}
+                                                    animate={{ opacity: 1, rotate: 0 }}
+                                                    exit={{ opacity: 0, rotate: 90 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <Menu className="w-5 h-5 text-gray-700" />
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div
+                                                    key="close"
+                                                    initial={{ opacity: 0, rotate: -90 }}
+                                                    animate={{ opacity: 1, rotate: 0 }}
+                                                    exit={{ opacity: 0, rotate: 90 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <X className="w-5 h-5 text-gray-700" />
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </motion.div>
+                                </div>
+                            </motion.button>
 
-                        {/* Desktop CTA Button */}
-                        <motion.div
-                            className="hidden md:block"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.4, delay: 0.3 }}
-                        >
+                            {/* Early Access Button - Hidden on mobile, shown on desktop */}
                             <motion.button
                                 onClick={onOpenWaitlist}
-                                className="relative group px-6 py-2.5 bg-gradient-to-r from-orange to-orange/90 text-white text-sm font-medium rounded-full overflow-hidden shadow-lg shadow-orange/25 transition-all duration-300"
-                                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(255, 106, 47, 0.3)" }}
+                                className="hidden md:flex relative group px-5 py-2.5 bg-gradient-to-r from-orange to-orange/90 text-white text-sm font-medium rounded-xl overflow-hidden shadow-lg shadow-orange/25 transition-all duration-300 items-center"
+                                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(255, 106, 47, 0.35)" }}
                                 whileTap={{ scale: 0.95 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.4, delay: 0.2 }}
                             >
                                 {/* Shine effect on hover */}
                                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
-                                <span className="relative">Early Access</span>
+                                <span className="relative font-semibold">Early Access</span>
                             </motion.button>
-                        </motion.div>
-
-                        {/* Mobile Menu Button */}
-                        <motion.button
-                            className="md:hidden p-2 rounded-lg hover:bg-gray-100/50 transition-colors"
-                            onClick={toggleMenu}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            <Menu className="h-5 w-5 text-gray-700" />
-                        </motion.button>
+                        </div>
                     </motion.div>
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
+            {/* Dropdown Menu - Elegant slide down from top */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        className="fixed inset-0 z-50 md:hidden"
+                        className="fixed inset-0 z-40"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        {/* Backdrop blur */}
-                        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={toggleMenu}></div>
-
-                        {/* Menu content */}
+                        {/* Backdrop */}
                         <motion.div
-                            className="absolute top-0 right-0 w-full max-w-sm h-full bg-white shadow-2xl"
-                            initial={{ x: "100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "100%" }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+                            onClick={toggleMenu}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        ></motion.div>
+
+                        {/* Dropdown Panel */}
+                        <motion.div
+                            className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-2xl"
+                            initial={{ y: "-100%", opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: "-100%", opacity: 0 }}
+                            transition={{ type: "spring", damping: 30, stiffness: 300 }}
                         >
-                            {/* Close button */}
-                            <motion.button
-                                className="absolute top-6 right-6 p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                onClick={toggleMenu}
-                                whileTap={{ scale: 0.9 }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.2 }}
-                            >
-                                <X className="h-6 w-6 text-gray-700" />
-                            </motion.button>
-
-                            {/* Menu items */}
-                            <div className="flex flex-col pt-24 px-8 space-y-2">
-                                {navLinks.map((item, i) => (
-                                    <motion.div
-                                        key={item.label}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.1 + 0.1 }}
-                                        exit={{ opacity: 0, x: 20 }}
-                                    >
-                                        <Link
-                                            to={item.to}
-                                            className="block py-3 px-4 text-base font-medium text-gray-700 hover:text-orange hover:bg-orange/5 rounded-lg transition-all duration-200"
-                                            onClick={toggleMenu}
+                            <div className="container mx-auto max-w-7xl px-6 pt-24 pb-8">
+                                {/* Menu Links */}
+                                <nav className="flex flex-col space-y-1">
+                                    {navLinks.map((item, i) => (
+                                        <motion.div
+                                            key={item.label}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: i * 0.08 + 0.1, duration: 0.3 }}
+                                            exit={{ opacity: 0, x: -20 }}
                                         >
-                                            {item.label}
-                                        </Link>
-                                    </motion.div>
-                                ))}
+                                            <Link
+                                                to={item.to}
+                                                className="group block py-4 px-6 text-2xl md:text-3xl font-light text-gray-800 hover:text-orange hover:bg-orange/5 rounded-xl transition-all duration-300"
+                                                onClick={toggleMenu}
+                                            >
+                                                <span className="relative">
+                                                    {item.label}
+                                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange rounded-full group-hover:w-full transition-all duration-300"></span>
+                                                </span>
+                                            </Link>
+                                        </motion.div>
+                                    ))}
+                                </nav>
 
+                                {/* CTA in Dropdown - Always shown */}
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.5 }}
+                                    transition={{ delay: 0.4 }}
                                     exit={{ opacity: 0, y: 20 }}
-                                    className="pt-6"
+                                    className="mt-6 pt-6 border-t border-gray-200 md:hidden"
                                 >
                                     <button
                                         onClick={() => {
                                             toggleMenu();
                                             onOpenWaitlist();
                                         }}
-                                        className="w-full py-3 px-6 bg-gradient-to-r from-orange to-orange/90 text-white text-base font-medium rounded-full shadow-lg shadow-orange/25 hover:shadow-orange/40 transition-all duration-300"
+                                        className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-orange to-orange/90 text-white text-base font-semibold rounded-xl shadow-lg shadow-orange/25 hover:shadow-orange/40 hover:scale-105 transition-all duration-300"
                                     >
                                         Get Early Access
                                     </button>
