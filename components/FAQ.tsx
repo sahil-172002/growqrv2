@@ -146,8 +146,31 @@ export const FAQ: React.FC = () => {
                     </p> */}
                 </div>
 
-                {/* Category Filter Pills - Horizontal scroll on mobile */}
-                <div className="flex gap-2 mb-8 sm:mb-10 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-hide">
+                {/* Mobile Layout: Single row with compact buttons (no icons) */}
+                <div className="sm:hidden flex justify-center gap-1.5 mb-8">
+                    {categories.map(category => {
+                        return (
+                            <button
+                                key={category}
+                                onClick={() => {
+                                    if (activeCategory !== category) {
+                                        setActiveCategory(category);
+                                    }
+                                }}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 whitespace-nowrap touch-manipulation
+                                    ${activeCategory === category
+                                        ? 'bg-gray-900 text-white shadow-lg cursor-default'
+                                        : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Desktop Layout: Wrapped flex */}
+                <div className="hidden sm:flex gap-2 mb-10 flex-wrap justify-center">
                     {categories.map(category => {
                         const CategoryIcon = faqData.find(f => f.category === category)?.categoryIcon || HelpCircle;
                         return (
@@ -158,13 +181,13 @@ export const FAQ: React.FC = () => {
                                         setActiveCategory(category);
                                     }
                                 }}
-                                className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap flex-shrink-0 touch-manipulation
-                  ${activeCategory === category
+                                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 whitespace-nowrap
+                                    ${activeCategory === category
                                         ? 'bg-gray-900 text-white shadow-lg cursor-default'
                                         : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:shadow-sm cursor-pointer'
                                     }`}
                             >
-                                <CategoryIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                <CategoryIcon className="w-4 h-4" />
                                 {category}
                             </button>
                         );

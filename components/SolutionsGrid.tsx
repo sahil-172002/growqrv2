@@ -158,71 +158,73 @@ export const SolutionsGrid: React.FC = () => {
         });
       });
 
-      // 2. SNAPPY TEXT ANIMATIONS (TruthReveal-style)
-      slides.forEach((slide: HTMLElement) => {
-        const anims = slide.querySelectorAll('.sg-anim');
+      // 2. SNAPPY TEXT ANIMATIONS (TruthReveal-style) - Desktop only
+      if (window.innerWidth >= 768) {
+        slides.forEach((slide: HTMLElement) => {
+          const anims = slide.querySelectorAll('.sg-anim');
 
-        // Set initial state
-        gsap.set(anims, {
-          y: 40,
-          opacity: 0,
-          filter: "blur(10px)"
-        });
+          // Set initial state
+          gsap.set(anims, {
+            y: 40,
+            opacity: 0,
+            filter: "blur(10px)"
+          });
 
-        ScrollTrigger.create({
-          trigger: slide,
-          start: "top 70%",
-          end: "bottom 30%",
-          onEnter: () => {
-            // Quick, snappy entrance
-            gsap.to(anims, {
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 0.6,
-              stagger: 0.05,
-              ease: "power4.out",
-              overwrite: true
-            });
-          },
-          onLeave: () => {
-            // Exit upward
-            gsap.to(anims, {
-              y: -30,
-              opacity: 0,
-              filter: "blur(10px)",
-              duration: 0.5,
-              stagger: 0.03,
-              ease: "power3.in",
-              overwrite: true
-            });
-          },
-          onEnterBack: () => {
-            // Re-enter quickly
-            gsap.to(anims, {
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 0.6,
-              stagger: 0.05,
-              ease: "power4.out",
-              overwrite: true
-            });
-          },
-          onLeaveBack: () => {
-            // Exit downward
-            gsap.to(anims, {
-              y: 40,
-              opacity: 0,
-              filter: "blur(10px)",
-              duration: 0.5,
-              stagger: 0.03,
-              ease: "power3.in",
-              overwrite: true
-            });
-          }
+          ScrollTrigger.create({
+            trigger: slide,
+            start: "top 70%",
+            end: "bottom 30%",
+            onEnter: () => {
+              // Quick, snappy entrance
+              gsap.to(anims, {
+                y: 0,
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 0.6,
+                stagger: 0.05,
+                ease: "power4.out",
+                overwrite: true
+              });
+            },
+            onLeave: () => {
+              // Exit upward
+              gsap.to(anims, {
+                y: -30,
+                opacity: 0,
+                filter: "blur(10px)",
+                duration: 0.5,
+                stagger: 0.03,
+                ease: "power3.in",
+                overwrite: true
+              });
+            },
+            onEnterBack: () => {
+              // Re-enter quickly
+              gsap.to(anims, {
+                y: 0,
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 0.6,
+                stagger: 0.05,
+                ease: "power4.out",
+                overwrite: true
+              });
+            },
+            onLeaveBack: () => {
+              // Exit downward
+              gsap.to(anims, {
+                y: 40,
+                opacity: 0,
+                filter: "blur(10px)",
+                duration: 0.5,
+                stagger: 0.03,
+                ease: "power3.in",
+                overwrite: true
+              });
+            }
+          });
         });
-      });
+      }
 
     }, containerRef);
 
