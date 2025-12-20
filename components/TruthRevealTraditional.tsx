@@ -6,13 +6,12 @@ export const TruthRevealTraditional: React.FC = () => {
         <div id="truth-reveal-traditional" className="relative bg-white">
 
             {/* SLIDE 1: Problem Statement - Improved 3-Column Design */}
-            <section className="relative min-h-screen flex items-center justify-center py-20 px-6 overflow-hidden bg-white">
+            <section className="relative min-h-screen flex items-center justify-center py-20 px-6 overflow-hidden bg-gray-50">
 
                 {/* Refined Background */}
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-orange/3 rounded-full blur-3xl"></div>
                     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-50/40 rounded-full blur-3xl"></div>
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,white_100%)] opacity-60"></div>
                 </div>
 
                 <div className="container mx-auto max-w-7xl relative z-10">
@@ -323,7 +322,7 @@ export const TruthRevealTraditional: React.FC = () => {
                                     Dynamic Scoring
                                 </span>
                                 <span className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600">
-                                    Global Standard
+                                    Global Standards
                                 </span>
                             </div>
 

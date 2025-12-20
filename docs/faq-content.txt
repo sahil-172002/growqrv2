@@ -1,0 +1,143 @@
+GrowQR FAQ - Current Questions and Answers
+==========================================
+
+Last Updated: December 20, 2025
+
+
+================================================================================
+CATEGORY: OVERVIEW
+================================================================================
+
+Q1: What exactly is GrowQR?
+A: GrowQR is the world's first AI-powered Skill Identity & Readiness platform. One lifetime QR Key links you forever to your dynamic Q-Score — a living, verifiable composite of 25+ readiness attributes (IQ, EQ, AQ, SQ, and more).
+
+---
+
+Q2: How is GrowQR different from Resumes or any other profile?
+A: Unlike static profiles or generic Resumes, your single GrowQR is a permanent, evolving digital identity. It powers real-time Q-Score updates, personalized AI coaching, crypto rewards for upskilling, and trusted matchmaking across individuals, organizations, institutions, and governments.
+
+---
+
+Q3: How do I get my unique GrowQR right now?
+A: The platform is in active development. Join the waitlist at growqr.ai — the earliest members will claim their lifetime QR first when we open private beta in Q1–Q2 2026.
+
+
+================================================================================
+CATEGORY: Q-SCORE
+================================================================================
+
+Q4: What is Q-Score?
+A: Q-Score is your Cumulative Readiness Quotient — an AI-computed single score that aggregates 25+ human capability dimensions (Adaptability, Social Branding, Perception, Body Language, Efficiency, Technical, Emotional, etc.) into one trusted, evolving metric.
+
+---
+
+Q5: How does my Q-Score improve over time?
+A: Through AI-powered assessments, micro-courses, real-world practice, and verified milestones. Your personal AI agent designs custom growth paths and rewards every step with badges and crypto.
+
+---
+
+Q6: Why is Q-Score more trusted than a resume or certificate?
+A: It's dynamic, multi-dimensional, and continuously verified — employers, universities, and governments see your real readiness, not just what you claim.
+
+
+================================================================================
+CATEGORY: ECOSYSTEM
+================================================================================
+
+Q7: How does the entire GrowQR ecosystem work together?
+A: One QR connects four pillars in real time: Individuals (grow & earn), Organizations (smart hiring), Institutions (curriculum & placement), and Governments/Smart Cities (citizen readiness & development programs).
+
+---
+
+Q8: What's in it for organizations and universities?
+A: Instant access to pre-verified talent via Q-Score filters, talent intelligence dashboards, industry-aligned training insights, and dramatically better hiring/placement outcomes.
+
+---
+
+Q9: Can governments and smart cities really use GrowQR?
+A: Yes — they use population-level Q-Score insights to design targeted upskilling programs, measure community readiness, and connect citizens to relevant jobs and opportunities at scale.
+
+
+================================================================================
+CATEGORY: AUDIENCE
+================================================================================
+
+Q10: Who can join GrowQR?
+A: Everyone: Individuals (professionals, students, career changers), Organizations (companies of any size), Institutions (universities, training providers), and Governments/Smart Cities.
+
+---
+
+Q11: As an individual, what do I actually gain?
+A: Your lifelong QR, a trusted Q-Score, a personal AI coach, crypto rewards for learning, and direct connections to verified roles and gigs that match your exact readiness.
+
+---
+
+Q12: Do organizations and institutions pay differently?
+A: Yes — individuals start free with limited access and pay for premium features. Organizations, universities, and government partners will have tailored enterprise plans (details released closer to launch).
+
+
+================================================================================
+END OF MAIN FAQ
+================================================================================
+
+
+
+
+################################################################################
+################################################################################
+##                                                                            ##
+##                    CHATBOT HARDCODED FAQ RESPONSES                         ##
+##                                                                            ##
+################################################################################
+################################################################################
+
+These are the quick FAQ responses shown in the chatbot widget before users
+start a conversation with the AI.
+
+
+================================================================================
+CHATBOT FAQ ITEM 1
+================================================================================
+
+Q: What is Q-SCORE™?
+A: Q-SCORE™ is your verified readiness metric that showcases your skills, experience, and potential to employers. It's calculated using AI-driven analysis of your verified credentials.
+
+
+================================================================================
+CHATBOT FAQ ITEM 2
+================================================================================
+
+Q: How do I get started?
+A: Getting started is easy! Simply click 'Get My Q-SCORE™' to begin your verification journey. You'll be guided through a quick onboarding process.
+
+
+================================================================================
+CHATBOT FAQ ITEM 3
+================================================================================
+
+Q: Is my data secure?
+A: Absolutely! We use 256-bit encryption and are GDPR compliant. You have full control over who sees your Q-SCORE™ and profile information.
+
+
+================================================================================
+CHATBOT FAQ ITEM 4
+================================================================================
+
+Q: Who uses GrowQR?
+A: GrowQR is used by individuals seeking opportunities, educational institutions, employers, and organizations looking for verified talent.
+
+
+================================================================================
+CHATBOT CATEGORY OPTIONS
+================================================================================
+
+1. Learn about Q-SCORE™
+2. For Organizations
+3. Getting Started
+4. Privacy & Security
+5. Other Questions
+
+
+================================================================================
+END OF FILE
+================================================================================
