@@ -70,8 +70,6 @@ const solutions = [
 
 export const SolutionsGrid: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const visualPanelRef = useRef<HTMLDivElement>(null);
-  const visualizerRef = useRef<HTMLDivElement>(null);
   const [activeStage, setActiveStage] = useState(0);
 
   // Handle URL hash to jump to specific solution
@@ -121,17 +119,6 @@ export const SolutionsGrid: React.FC = () => {
     if (!gsap || !ScrollTrigger || !containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Pin the visualizer (Right Side) only on desktop
-      if (window.innerWidth >= 768) {
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          pin: visualPanelRef.current,
-          pinSpacing: false,
-        });
-      }
-
       const slides = gsap.utils.toArray('.solution-slide');
 
       // 1. Active Stage Logic
@@ -214,97 +201,6 @@ export const SolutionsGrid: React.FC = () => {
       }
 
     }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Scroll-synchronized slide-up animation for visualizer
-  useLayoutEffect(() => {
-    const gsap = (window as any).gsap;
-    const ScrollTrigger = (window as any).ScrollTrigger;
-
-    if (!gsap || !ScrollTrigger || !visualizerRef.current || typeof window === 'undefined' || window.innerWidth < 768) return;
-
-    const ctx = gsap.context(() => {
-      const slides = gsap.utils.toArray('.solution-slide');
-
-      // Initial state - first plate visible
-      gsap.set(visualizerRef.current, {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-      });
-
-      slides.forEach((slide: any, index: number) => {
-        if (index === slides.length - 1) return; // Skip last slide (no transition after it)
-
-        ScrollTrigger.create({
-          trigger: slide,
-          start: "bottom center",
-          end: "bottom top",
-          onEnter: () => {
-            // Current plate moves up and fades out
-            gsap.to(visualizerRef.current, {
-              y: -150,
-              opacity: 0,
-              scale: 0.8,
-              duration: 0.6,
-              ease: "power2.in",
-              onComplete: () => {
-                // Update the stage to next
-                setActiveStage(index + 1);
-
-                // Reset position to bottom for slide-in
-                gsap.set(visualizerRef.current, {
-                  y: 150,
-                  opacity: 0,
-                  scale: 0.8,
-                });
-
-                // Slide in from bottom
-                gsap.to(visualizerRef.current, {
-                  y: 0,
-                  opacity: 1,
-                  scale: 1,
-                  duration: 0.8,
-                  ease: "power3.out",
-                });
-              }
-            });
-          },
-          onLeaveBack: () => {
-            // Scrolling back up - reverse animation
-            gsap.to(visualizerRef.current, {
-              y: 150,
-              opacity: 0,
-              scale: 0.8,
-              duration: 0.6,
-              ease: "power2.in",
-              onComplete: () => {
-                // Update to previous stage
-                setActiveStage(index);
-
-                // Reset position to top for slide-in
-                gsap.set(visualizerRef.current, {
-                  y: -150,
-                  opacity: 0,
-                  scale: 0.8,
-                });
-
-                // Slide in from top
-                gsap.to(visualizerRef.current, {
-                  y: 0,
-                  opacity: 1,
-                  scale: 1,
-                  duration: 0.8,
-                  ease: "power3.out",
-                });
-              }
-            });
-          }
-        });
-      });
-    }, visualizerRef);
 
     return () => ctx.revert();
   }, []);
@@ -574,142 +470,105 @@ export const SolutionsGrid: React.FC = () => {
 
   return (
     <section id="solutions" ref={containerRef} className="relative border-t border-gray-100 overflow-hidden">
-      {/* Premium Ambient Background - Left Side */}
-      <div className="absolute inset-0 md:w-1/2 pointer-events-none z-0">
-        {/* Floating Gradient Orbs (Hero-style) */}
-        <div className={`absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] rounded-full blur-[120px] mix-blend-multiply transition-all duration-1000 ${activeStage === 0 || activeStage === 2 ? 'bg-orange/20' : 'bg-blue-200/20'
-          } animate-[float_18s_ease-in-out_infinite]`} />
-        <div className="absolute bottom-[-10%] right-[-5%] w-[35vw] h-[35vw] bg-purple-100/25 rounded-full blur-[100px] mix-blend-multiply animate-[float_22s_ease-in-out_infinite_reverse]" />
-        <div className={`absolute top-1/2 left-1/3 w-[30vw] h-[30vw] rounded-full blur-[90px] mix-blend-multiply transition-all duration-1000 ${activeStage % 2 === 0 ? 'bg-orange/15' : 'bg-indigo-100/20'
-          } animate-pulse-slow`} />
-      </div>
 
-      <div className="flex flex-col md:flex-row relative">
+      {/* Each solution as a full section */}
+      {solutions.map((item, index) => {
+        const Icon = item.icon;
+        const isEven = index % 2 === 0;
 
-        {/* LEFT: Scrollable Content */}
-        <div className="w-full md:w-1/2 relative z-10 bg-white/80 backdrop-blur-sm scroll-smooth snap-y snap-mandatory md:snap-none overflow-y-auto md:overflow-visible">
-          {solutions.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div key={item.id} className="solution-slide min-h-[100vh] flex flex-col justify-center px-6 md:px-20 border-b border-gray-100/50 last:border-0 relative overflow-hidden py-20 md:py-0 snap-start snap-always">
+        return (
+          <div
+            key={item.id}
+            className={`solution-slide relative min-h-screen flex items-center justify-center overflow-hidden ${isEven ? 'bg-white' : 'bg-gray-50'}`}
+          >
+            {/* Ambient Background for each slide */}
+            <div className="absolute inset-0 pointer-events-none z-0">
+              {isEven ? (
+                <>
+                  <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-orange/10 rounded-full blur-[120px] animate-[float_18s_ease-in-out_infinite]" />
+                  <div className="absolute bottom-[-10%] right-[-5%] w-[35vw] h-[35vw] bg-purple-100/20 rounded-full blur-[100px] animate-[float_22s_ease-in-out_infinite_reverse]" />
+                </>
+              ) : (
+                <>
+                  <div className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-blue-100/15 rounded-full blur-[120px] animate-[float_20s_ease-in-out_infinite]" />
+                  <div className="absolute bottom-[-10%] left-[-5%] w-[35vw] h-[35vw] bg-indigo-100/15 rounded-full blur-[100px] animate-[float_25s_ease-in-out_infinite_reverse]" />
+                </>
+              )}
+            </div>
 
-                {/* Ambient Glow Effect on Active Slide */}
-                {activeStage === index && (
-                  <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-32 ${item.color === 'orange' ? 'bg-orange' : 'bg-black'
-                    } blur-sm animate-pulse`}></div>
-                )}
+            {/* Content Grid - Alternating layout */}
+            <div className="container mx-auto max-w-7xl px-6 py-20 relative z-10">
+              <div className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-20`}>
 
-                {/* Mobile Visualizer Injection */}
-                <div className="md:hidden w-full mb-10 sg-anim">
-                  {render3DObject(index, 0.7)}
-                </div>
+                {/* Content Side */}
+                <div className="w-full lg:w-1/2">
 
-                <div className="sg-anim inline-flex items-center gap-1.5 mb-4 md:mb-6 pl-2.5 pr-3 py-1.5 rounded-full bg-gray-900 border border-gray-800 shadow-lg w-fit">
-                  <div className={`p-1.5 rounded-full ${activeStage === index ? 'bg-orange text-white' : 'bg-gray-700 text-gray-300'} transition-all duration-500`}>
-                    <Icon size={14} strokeWidth={2.5} />
+                  <div className="sg-anim inline-flex items-center gap-1.5 mb-4 md:mb-6 pl-2.5 pr-3 py-1.5 rounded-full bg-gray-900 border border-gray-800 shadow-lg w-fit">
+                    <div className={`p-1.5 rounded-full ${activeStage === index ? 'bg-orange text-white' : 'bg-gray-700 text-gray-300'} transition-all duration-500`}>
+                      <Icon size={14} strokeWidth={2.5} />
+                    </div>
+                    <span className="text-sm font-bold tracking-wide uppercase text-white whitespace-nowrap">
+                      {item.label}
+                    </span>
                   </div>
-                  <span className="text-sm font-bold tracking-wide uppercase text-white whitespace-nowrap">
-                    {item.label}
-                  </span>
+
+                  <h2 className="sg-anim text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter text-black mb-4 md:mb-6 leading-[0.95] font-montreal whitespace-nowrap">
+                    {item.title}
+                  </h2>
+
+                  <div className="sg-anim space-y-3 sm:space-y-4 mb-6 md:mb-10">
+                    {item.features.map((feature, i) => (
+                      <div
+                        key={i}
+                        className="flex gap-3 sm:gap-4 items-start p-3 sm:p-4 rounded-xl bg-white/60 backdrop-blur-sm border border-gray-100 transition-all duration-300 hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 group"
+                      >
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 bg-orange shadow-md shadow-orange/30">
+                          {i + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-black text-sm sm:text-base md:text-lg leading-tight mb-1">{feature.title}</h4>
+                          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <h2 className="sg-anim text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-black tracking-tighter text-black mb-4 md:mb-6 leading-[0.95] font-montreal whitespace-nowrap">
-                  {item.title}
-                </h2>
+                {/* Visualizer Side */}
+                <div className="w-full lg:w-1/2 flex items-center justify-center">
+                  <div className="relative w-full max-w-xl lg:max-w-none lg:w-[500px] lg:h-[500px] aspect-square flex items-center justify-center">
+                    {/* Dark Container */}
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-gray-800 via-gray-900 to-gray-950 shadow-2xl overflow-hidden">
+                      {/* Background Effects */}
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-700/30 to-transparent"></div>
 
-                {/* <p className="sg-anim text-base md:text-lg text-gray-500 font-medium leading-relaxed mb-8 max-w-lg">
-                  {item.description}
-                </p> */}
+                      {/* Rotating Ambient Orbs */}
+                      <div className={`absolute top-1/4 left-1/4 w-48 h-48 rounded-full blur-[80px] ${index === 0 || index === 2 ? 'bg-orange/30' : 'bg-blue-400/20'} animate-[float_20s_ease-in-out_infinite]`}></div>
+                      <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-purple-400/15 rounded-full blur-[70px] animate-[float_25s_ease-in-out_infinite_reverse]"></div>
 
-                <div className="sg-anim space-y-3 sm:space-y-4 mb-6 md:mb-10">
-                  {item.features.map((feature, i) => (
-                    <div
-                      key={i}
-                      className="flex gap-3 sm:gap-4 items-start p-3 sm:p-4 rounded-xl bg-white/60 backdrop-blur-sm border border-gray-100 transition-all duration-300 hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 group"
-                    >
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold flex-shrink-0 transition-all duration-300 group-hover:scale-110 bg-orange shadow-md shadow-orange/30">
-                        {i + 1}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-black text-sm sm:text-base md:text-lg leading-tight mb-1">{feature.title}</h4>
-                        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">{feature.desc}</p>
-                      </div>
+                      {/* Cubes pattern */}
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
+
+                      {/* Pulsing Rings */}
+                      <div className="absolute inset-4 border border-white/5 rounded-full animate-[spin_30s_linear_infinite]"></div>
+                      <div className="absolute inset-12 border border-white/5 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
+
+                      {/* Glow Effect */}
+                      <div className={`absolute inset-0 rounded-full blur-3xl ${index === 0 || index === 2 ? 'bg-orange/15' : 'bg-white/10'} animate-pulse`}></div>
                     </div>
-                  ))}
+
+                    {/* 3D Object */}
+                    <div className="relative z-10">
+                      {render3DObject(index, 1)}
+                    </div>
+                  </div>
                 </div>
 
-                {/* <button className="sg-anim group relative px-8 py-4 bg-orange text-white rounded-full text-base font-bold overflow-hidden transition-all duration-300 hover:shadow-[0_10px_40px_rgba(255,106,47,0.6)] hover:scale-105 w-fit">
-                  <span className="relative z-10 flex items-center gap-2">
-                    Explore Solution
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </button> */}
               </div>
-            );
-          })}
-        </div>
-
-        {/* RIGHT: Holographic Projector (Pinned - Desktop Only) */}
-        <div ref={visualPanelRef} className="hidden md:flex w-1/2 h-screen sticky top-0 bg-gray-900 items-center justify-center overflow-hidden relative">
-          {/* Enhanced Background with Gradients */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 to-gray-950"></div>
-
-          {/* Rotating Ambient Orbs */}
-          <div className={`absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-[120px] transition-all duration-1000 ${activeStage === 0 || activeStage === 2 ? 'bg-orange/20' : 'bg-blue-400/15'
-            } animate-[float_20s_ease-in-out_infinite]`}></div>
-          <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-purple-400/10 rounded-full blur-[100px] animate-[float_25s_ease-in-out_infinite_reverse]"></div>
-
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
-          <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-gray-950 to-transparent"></div>
-
-          {/* Enhanced Visualization Container */}
-          <div className="relative w-[500px] h-[500px] flex items-center justify-center perspective-1000">
-            {/* Pulsing Rings */}
-            <div className="absolute inset-0 border border-white/5 rounded-full animate-[spin_30s_linear_infinite]"></div>
-            <div className="absolute inset-12 border border-white/5 rounded-full animate-[spin_20s_linear_infinite_reverse]"></div>
-
-            {/* Glow Effect Behind Active Tile */}
-            <div className={`absolute inset-0 rounded-full blur-3xl transition-all duration-1000 ${activeStage === 0 || activeStage === 2 ? 'bg-orange/20' : 'bg-white/10'
-              } animate-pulse`}></div>
-
-            <div ref={visualizerRef} className="relative transform-style-3d">
-              {render3DObject(activeStage)}
             </div>
           </div>
-
-          {/* Animated Progress Line & Dots */}
-          <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-6 items-center">
-            {/* Animated Progress Line */}
-            <div className="absolute top-0 bottom-0 w-px bg-gray-800 -z-10">
-              <div
-                className={`absolute top-0 left-0 w-full bg-gradient-to-b transition-all duration-700 ${activeStage === 0 || activeStage === 2 ? 'from-orange to-orange/50' : 'from-white to-white/50'
-                  }`}
-                style={{ height: `${((activeStage + 1) / solutions.length) * 100}%` }}
-              ></div>
-            </div>
-
-            {solutions.map((item, i) => {
-              const pluralLabels = ['Individuals', 'Enterprises', 'Institutions', 'Smart Cities'];
-              return (
-                <div key={i} className={`relative transition-all duration-500 ${activeStage === i ? 'scale-125' : 'scale-100 opacity-50'
-                  }`}>
-                  <div className={`w-3 h-3 rounded-full transition-all duration-300 ${activeStage === i ?
-                    (item.color === 'orange' ? 'bg-orange shadow-[0_0_15px_#FF6A2F] ring-4 ring-orange/30' :
-                      'bg-white shadow-[0_0_15px_white] ring-4 ring-white/30')
-                    : 'bg-gray-700'
-                    }`}></div>
-                  {activeStage === i && (
-                    <div className="absolute left-6 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-bold tracking-widest text-white/50 uppercase animate-fade-in">
-                      {pluralLabels[i]}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-      </div>
+        );
+      })}
 
       {/* Premium Custom Keyframe Animations */}
       <style>{`
@@ -755,6 +614,6 @@ export const SolutionsGrid: React.FC = () => {
           animation: pulse-slow 4s ease-in-out infinite;
         }
       `}</style>
-    </section>
+    </section >
   );
 };
