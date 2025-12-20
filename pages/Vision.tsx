@@ -1,6 +1,6 @@
 import React from 'react';
 import { Target, Rocket, Eye, Heart, CheckCircle2 } from 'lucide-react';
-import { Navbar } from '../components/Navbar';
+import { Navbar1 } from '../components/ui/navbar-1';
 import { Footer } from '../components/Footer';
 import { Calltoaction } from '../components/Calltoaction';
 
@@ -43,8 +43,8 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
-            <Navbar onOpenWaitlist={() => onOpenWaitlist('individual')} />
+        <div className="min-h-screen bg-white relative">
+            <Navbar1 onOpenWaitlist={() => onOpenWaitlist('individual')} />
 
             {/* Hero Section */}
             <section className="pt-32 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 relative overflow-hidden">

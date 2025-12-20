@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, MapPin, Send, MessageCircle, Clock, CheckCircle2, Loader2, Building } from 'lucide-react';
-import { Navbar } from '../components/Navbar';
+import { Navbar1 } from '../components/ui/navbar-1';
 import { Footer } from '../components/Footer';
 import { supabase } from '../lib/supabase';
 
@@ -124,8 +124,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
-            <Navbar onOpenWaitlist={() => onOpenWaitlist('individual')} />
+        <div className="min-h-screen bg-white relative">
+            <Navbar1 onOpenWaitlist={() => onOpenWaitlist('individual')} />
 
             {/* Hero Section */}
             <section className="pt-32 sm:pt-40 pb-12 sm:pb-16 px-4 sm:px-6 relative overflow-hidden">
