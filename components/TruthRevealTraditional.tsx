@@ -6,7 +6,7 @@ export const TruthRevealTraditional: React.FC = () => {
         <div id="truth-reveal-traditional" className="relative bg-white">
 
             {/* SLIDE 1: Problem Statement - Improved 3-Column Design */}
-            <section className="relative min-h-screen flex items-center justify-center py-20 px-6 overflow-hidden bg-gray-50">
+            <section className="relative min-h-screen flex items-center justify-center py-20 px-6 overflow-hidden bg-white">
 
                 {/* Refined Background */}
                 <div className="absolute inset-0 pointer-events-none">

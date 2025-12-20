@@ -150,11 +150,11 @@ export const EcosystemRing: React.FC = () => {
       <style>{ecosystemStyles}</style>
       <section
         ref={sectionRef}
-        className="relative min-h-screen bg-white overflow-hidden flex flex-col items-center justify-center py-16 md:py-24"
+        className="relative min-h-screen bg-gray-50 overflow-hidden flex flex-col items-center justify-center py-16 md:py-24"
       >
         {/* Background */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-50 via-white to-white"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-gray-50 to-gray-50"></div>
         </div>
 
         {/* Section Header - Modern & Clean */}
