@@ -1,14 +1,18 @@
 import React from 'react';
 import { Target, Rocket, Eye, Heart, CheckCircle2 } from 'lucide-react';
-import { Navbar1 } from '../components/ui/navbar-1';
+import { Navbar } from '../components/ui/navbar';
 import { Footer } from '../components/Footer';
 import { Calltoaction } from '../components/Calltoaction';
+import { useSEO, SEO_CONFIGS } from '../hooks/useSEO';
 
 interface VisionPageProps {
     onOpenWaitlist: (role: 'individual' | 'organization') => void;
 }
 
 export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
+    // SEO - Page-specific meta tags
+    useSEO(SEO_CONFIGS.vision);
+
     const pillars = [
         {
             icon: Eye,
@@ -44,7 +48,7 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
 
     return (
         <div className="min-h-screen bg-white relative">
-            <Navbar1 onOpenWaitlist={() => onOpenWaitlist('individual')} />
+            <Navbar onOpenWaitlist={() => onOpenWaitlist('individual')} />
 
             {/* Hero Section */}
             <section className="pt-32 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 relative overflow-hidden">

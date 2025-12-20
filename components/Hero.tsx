@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { QrCode, User, FileText, Shield, Zap, Code, Database, Cpu, Layers } from 'lucide-react';
-import { Navbar1 } from './ui/navbar-1';
+import { Navbar } from './ui/navbar';
 
 // Live Data Component for Animated Numbers
 const LiveDataStream = () => {
@@ -127,16 +127,40 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
+  // Responsive ring radius state
+  const [ringRadius, setRingRadius] = useState(224.25);
+  const [iconSize, setIconSize] = useState(20);
+
+  useEffect(() => {
+    const updateSizes = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setRingRadius(145); // 72.5% of 400px / 2
+        setIconSize(16);
+      } else if (width < 768) {
+        setRingRadius(174); // 72.5% of 480px / 2
+        setIconSize(18);
+      } else {
+        setRingRadius(224.25); // 72.5% of 620px / 2
+        setIconSize(20);
+      }
+    };
+
+    updateSizes();
+    window.addEventListener('resize', updateSizes);
+    return () => window.removeEventListener('resize', updateSizes);
+  }, []);
+
   // Icons for the rotating ring
   const orbitIcons = [
-    <User key="user" size={20} />,
-    <FileText key="file" size={20} />,
-    <Shield key="shield" size={20} />,
-    <Zap key="zap" size={20} />,
-    <Code key="code" size={20} />,
-    <Database key="database" size={20} />,
-    <Cpu key="cpu" size={20} />,
-    <Layers key="layers" size={20} />
+    <User key="user" size={iconSize} />,
+    <FileText key="file" size={iconSize} />,
+    <Shield key="shield" size={iconSize} />,
+    <Zap key="zap" size={iconSize} />,
+    <Code key="code" size={iconSize} />,
+    <Database key="database" size={iconSize} />,
+    <Cpu key="cpu" size={iconSize} />,
+    <Layers key="layers" size={iconSize} />
   ];
 
   return (
@@ -147,16 +171,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
 
 
         {/* Navbar positioned on top of hero */}
-        <Navbar1 onOpenWaitlist={onOpenWaitlist} />
+        <Navbar onOpenWaitlist={onOpenWaitlist} />
 
         {/* Main Content */}
         <div className="relative z-10 container mx-auto px-6 flex flex-col items-center justify-center text-center pt-16 pb-8">
 
           {/* Dynamic 3D QR Hero Element with Rotating Ring */}
-          <div className="relative z-30 mb-16 md:mb-20 group cursor-pointer animate-gentle-float">
+          <div className="relative z-30 mb-20 sm:mb-16 md:mb-20 group cursor-pointer animate-gentle-float">
 
-            {/* Rotating Ring Container - Behind the card - Centered with card - Reduced size to prevent text overlap */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] md:w-[620px] md:h-[620px] pointer-events-none -z-10">
+            {/* Rotating Ring Container - Behind the card - Centered with card - Responsive sizes */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] sm:w-[480px] sm:h-[480px] md:w-[620px] md:h-[620px] pointer-events-none -z-10">
 
               {/* Orbit Rings - Decorative */}
               <div className="absolute inset-0 flex items-center justify-center">
@@ -172,10 +196,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
               <div className="absolute inset-0 animate-spin-slow">
                 {orbitIcons.map((icon, i) => {
                   const angle = (i * (360 / orbitIcons.length)) * (Math.PI / 180);
-                  // Radius matches new ring (72.5% of container) - adjusted for smaller container
-                  const radius = typeof window !== 'undefined' && window.innerWidth < 768 ? 188.5 : 224.25; // 72.5% of 520px/620px / 2
-                  const x = Math.cos(angle) * radius;
-                  const y = Math.sin(angle) * radius;
+                  // Use responsive ring radius from state
+                  const x = Math.cos(angle) * ringRadius;
+                  const y = Math.sin(angle) * ringRadius;
 
                   return (
                     <div

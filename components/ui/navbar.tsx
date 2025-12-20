@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "motion/react"
 import { Menu, X } from "lucide-react"
 import { Link } from "react-router-dom"
 
-interface Navbar1Props {
+interface NavbarProps {
     onOpenWaitlist: () => void;
 }
 
-const Navbar1: React.FC<Navbar1Props> = ({ onOpenWaitlist }) => {
+const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
     const [isOpen, setIsOpen] = useState(false)
 
     const toggleMenu = () => setIsOpen(!isOpen)
@@ -188,4 +188,4 @@ const Navbar1: React.FC<Navbar1Props> = ({ onOpenWaitlist }) => {
     )
 }
 
-export { Navbar1 }
+export { Navbar }

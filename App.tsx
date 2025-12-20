@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { Navbar1 } from './components/ui/navbar-1';
 import { Hero } from './components/Hero';
 import { EcosystemRing } from './components/EcosystemRing';
 import { TruthRevealTraditional } from './components/TruthRevealTraditional';
@@ -23,6 +22,7 @@ import { WaitlistModal } from './components/WaitlistModal';
 import { AboutPage } from './pages/About';
 import { VisionPage } from './pages/Vision';
 import { ContactPage } from './pages/Contact';
+import { useSEO, SEO_CONFIGS } from './hooks/useSEO';
 
 // Scroll to top on route change
 function ScrollToTopOnMount() {
@@ -45,6 +45,9 @@ function LandingPage({
   perfClasses: string;
   isLoading: boolean;
 }) {
+  // SEO - Homepage meta tags
+  useSEO(SEO_CONFIGS.home);
+
   return (
     <main className={`bg-white min-h-screen text-black selection:bg-orange selection:text-white overflow-hidden ${perfClasses}
       ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-500'}`}>

@@ -295,8 +295,7 @@ export const TruthRevealTraditional: React.FC = () => {
                         <div className="relative z-10 flex flex-col items-center gap-6">
 
                             {/* Brand Name */}
-                            <div className="inline-flex items-center gap-3 px-6 py-3 bg-orange/10 rounded-full border border-orange/20">
-                                <BarChart3 className="w-6 h-6 text-orange" />
+                            <div className="inline-flex items-center px-6 py-3 bg-orange/10 rounded-full border border-orange/20">
                                 <span className="text-2xl md:text-4xl text-gray-900 font-montreal font-bold tracking-tight">
                                     Q-SCORE™
                                 </span>

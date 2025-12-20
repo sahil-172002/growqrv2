@@ -1,22 +1,9 @@
 
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { User, Building, GraduationCap, Globe, ArrowRight, Briefcase, Building2 } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from 'framer-motion';
-import {
-  Activity,
-  Zap,
-  Target,
-  PieChart,
-  ShieldCheck,
-  Clock,
-  Database,
-  QrCode,
-  Hexagon,
-  TrendingUp,
-  Users,
-  BookOpen,
-  BarChart3
-} from 'lucide-react';
+import { User, Building, GraduationCap, Briefcase, Building2 } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { QrCode, Hexagon, Users, BookOpen } from 'lucide-react';
+
 
 const solutions = [
   {

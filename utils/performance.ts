@@ -106,9 +106,6 @@ export const usePerformanceSettings = (): PerformanceSettings => {
         // Detect on client side
         const detected = getPerformanceSettings();
         setSettings(detected);
-
-        // Log for debugging
-        console.log(`[Performance] Detected tier: ${detected.tier}`);
     }, []);
 
     return settings;

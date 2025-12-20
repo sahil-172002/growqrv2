@@ -106,7 +106,7 @@ const ecosystemStyles = `
 
 export const EcosystemRing: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible] = useState(true); // Always visible - no loading animation
   const [isExiting, setIsExiting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -118,16 +118,15 @@ export const EcosystemRing: React.FC = () => {
     return () => window.removeEventListener('resize', checkSize);
   }, []);
 
-  // Intersection Observer for entry/exit animations
+  // Exit animation when scrolling past (optional - keeps exit animation only)
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          setIsExiting(false);
-        } else if (isVisible && entry.boundingClientRect.top < 0) {
+        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
           // Section is exiting upward (user scrolled past it)
           setIsExiting(true);
+        } else {
+          setIsExiting(false);
         }
       },
       {
@@ -141,7 +140,7 @@ export const EcosystemRing: React.FC = () => {
     }
 
     return () => observer.disconnect();
-  }, [isVisible]);
+  }, []);
 
   // Calculate feature positions
   const radius = isMobile ? 120 : 220;

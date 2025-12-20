@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, HelpCircle, Zap, Shield, Users, Globe } from 'lucide-react';
+import { Plus, Minus, HelpCircle, Zap, Users, Globe } from 'lucide-react';
 
 interface FAQItem {
     id: number;

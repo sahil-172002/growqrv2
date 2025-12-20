@@ -1,14 +1,18 @@
 import React from 'react';
 import { Users, Target, Lightbulb, Globe, Award, TrendingUp, ArrowRight, Zap } from 'lucide-react';
-import { Navbar1 } from '../components/ui/navbar-1';
+import { Navbar } from '../components/ui/navbar';
 import { Footer } from '../components/Footer';
 import { Calltoaction } from '../components/Calltoaction';
+import { useSEO, SEO_CONFIGS } from '../hooks/useSEO';
 
 interface AboutPageProps {
     onOpenWaitlist: (role: 'individual' | 'organization') => void;
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenWaitlist }) => {
+    // SEO - Page-specific meta tags
+    useSEO(SEO_CONFIGS.about);
+
     const stats = [
         { value: '25+', label: 'Skill Dimensions', description: 'Comprehensive assessment' },
         { value: '5+', label: 'Countries', description: 'Global credential network' },
@@ -39,7 +43,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenWaitlist }) => {
 
     return (
         <div className="min-h-screen bg-white relative">
-            <Navbar1 onOpenWaitlist={() => onOpenWaitlist('individual')} />
+            <Navbar onOpenWaitlist={() => onOpenWaitlist('individual')} />
 
             {/* Hero Section */}
             <section className="pt-32 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 overflow-hidden">

@@ -1,4 +1,4 @@
-import { Navbar1 } from "@/components/ui/navbar-1"
+import { Navbar } from "@/components/ui/navbar"
 
 const Demo = () => {
     // Example: Pass a no-op function or actual waitlist handler
@@ -8,7 +8,7 @@ const Demo = () => {
 
     return (
         <>
-            <Navbar1 onOpenWaitlist={handleWaitlist} />
+            <Navbar onOpenWaitlist={handleWaitlist} />
         </>
     )
 }

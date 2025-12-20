@@ -7,7 +7,7 @@
   <!-- Homepage - Highest Priority -->
   <url>
     <loc>https://growqr.ai/</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,7 +15,7 @@
   <!-- About Page -->
   <url>
     <loc>https://growqr.ai/about</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -23,7 +23,7 @@
   <!-- Vision Page -->
   <url>
     <loc>https://growqr.ai/vision</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -31,7 +31,7 @@
   <!-- Contact Page -->
   <url>
     <loc>https://growqr.ai/contact</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -39,37 +39,46 @@
   <!-- Section anchors for deep linking -->
   <url>
     <loc>https://growqr.ai/#qscore</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   
+  <!-- FAQ Section -->
+  <url>
+    <loc>https://growqr.ai/#faq</loc>
+    <lastmod>2025-12-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
   <url>
     <loc>https://growqr.ai/#solutions-individuals</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>https://growqr.ai/#solutions-enterprises</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>https://growqr.ai/#solutions-institutions</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
     <loc>https://growqr.ai/#solutions-cities</loc>
-    <lastmod>2025-12-09</lastmod>
+    <lastmod>2025-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
 </urlset>
+

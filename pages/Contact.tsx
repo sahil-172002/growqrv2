@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Mail, MapPin, Send, MessageCircle, Clock, CheckCircle2, Loader2, Building } from 'lucide-react';
-import { Navbar1 } from '../components/ui/navbar-1';
+import { Navbar } from '../components/ui/navbar';
 import { Footer } from '../components/Footer';
 import { supabase } from '../lib/supabase';
+import { useSEO, SEO_CONFIGS } from '../hooks/useSEO';
 
 interface ContactPageProps {
     onOpenWaitlist: (role: 'individual' | 'organization') => void;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
+    // SEO - Page-specific meta tags
+    useSEO(SEO_CONFIGS.contact);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -125,7 +129,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenWaitlist }) => {
 
     return (
         <div className="min-h-screen bg-white relative">
-            <Navbar1 onOpenWaitlist={() => onOpenWaitlist('individual')} />
+            <Navbar onOpenWaitlist={() => onOpenWaitlist('individual')} />
 
             {/* Hero Section */}
             <section className="pt-32 sm:pt-40 pb-12 sm:pb-16 px-4 sm:px-6 relative overflow-hidden">
