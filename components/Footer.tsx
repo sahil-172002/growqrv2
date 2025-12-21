@@ -169,7 +169,7 @@ export const Footer: React.FC = () => {
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Company</h3>
             <ul className="space-y-3">
               <li><a href="/#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-SCORE™</a></li>
-              <li><Link to="/about" className="text-sm text-gray-600 hover:text-orange transition-colors">About</Link></li>
+              <li><Link to="/about" className="text-sm text-gray-600 hover:text-orange transition-colors">About Us</Link></li>
               <li><Link to="/vision" className="text-sm text-gray-600 hover:text-orange transition-colors">Vision</Link></li>
               <li><Link to="/contact" className="text-sm text-gray-600 hover:text-orange transition-colors">Contact Us</Link></li>
             </ul>
