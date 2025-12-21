@@ -15,8 +15,8 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
 
     const navLinks = [
         { label: "Vision", to: "/vision" },
-        { label: "About", to: "/about" },
-        { label: "Contact", to: "/contact" }
+        { label: "About Us", to: "/about" },
+        { label: "Contact Us", to: "/contact" }
     ];
 
     return (

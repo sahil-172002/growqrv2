@@ -182,10 +182,8 @@ export const Qscore: React.FC = () => {
       });
 
       gsap.set(centralHub, {
-        scale: 0,
+        scale: 0.8,
         opacity: 0,
-        rotateY: isMobileView ? 360 : 720,
-        z: isMobileView ? -400 : -800,
         force3D: true
       });
 
@@ -208,10 +206,8 @@ export const Qscore: React.FC = () => {
       tl.to(centralHub, {
         scale: 1,
         opacity: 1,
-        rotateY: 0,
-        z: 0,
-        duration: isMobileView ? 2 : 3,
-        ease: "expo.out",
+        duration: isMobileView ? 1.5 : 2,
+        ease: "power3.out",
         force3D: true
       }, "start");
 
