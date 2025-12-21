@@ -335,6 +335,7 @@ export const Chatbot: React.FC = () => {
                 {/* Floating Button inside hover container */}
                 <button
                     onClick={handleOpenChat}
+                    aria-label="Open chat assistant"
                     className={`
                         flex items-center justify-center
                         transition-all duration-500 ease-out
