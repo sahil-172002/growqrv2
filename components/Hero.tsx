@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { QrCode, User, FileText, Shield, Zap, Code, Database, Cpu, Layers } from 'lucide-react';
 import { Navbar } from './ui/navbar';
 
@@ -82,8 +82,18 @@ const HeroBackground: React.FC = () => (
   </div>
 );
 
-// Gentle float animation CSS
+// Gentle float animation CSS with webkit prefixes
 const heroStyles = `
+  @-webkit-keyframes gentle-float {
+    0%, 100% {
+      -webkit-transform: translateY(0px);
+      transform: translateY(0px);
+    }
+    50% {
+      -webkit-transform: translateY(-8px);
+      transform: translateY(-8px);
+    }
+  }
   @keyframes gentle-float {
     0%, 100% {
       transform: translateY(0px);
@@ -93,31 +103,51 @@ const heroStyles = `
     }
   }
   .animate-gentle-float {
+    -webkit-animation: gentle-float 6s ease-in-out infinite;
     animation: gentle-float 6s ease-in-out infinite;
+  }
+  @-webkit-keyframes float {
+    0%, 100% { -webkit-transform: translate(0, 0); transform: translate(0, 0); }
+    50% { -webkit-transform: translate(10px, -10px); transform: translate(10px, -10px); }
   }
   @keyframes float {
     0%, 100% { transform: translate(0, 0); }
     50% { transform: translate(10px, -10px); }
   }
+  @-webkit-keyframes scan {
+    0%, 100% { top: 0; }
+    50% { top: 100%; }
+  }
   @keyframes scan {
     0%, 100% { top: 0; }
     50% { top: 100%; }
   }
+  @-webkit-keyframes spin-slow {
+    from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  }
   @keyframes spin-slow {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+  @-webkit-keyframes spin-reverse {
+    from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+    to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
   }
   @keyframes spin-reverse {
     from { transform: rotate(360deg); }
     to { transform: rotate(0deg); }
   }
   .animate-spin-slow {
+    -webkit-animation: spin-slow 40s linear infinite;
     animation: spin-slow 40s linear infinite;
   }
   .animate-spin-reverse {
+    -webkit-animation: spin-reverse 35s linear infinite;
     animation: spin-reverse 35s linear infinite;
   }
   .animate-counter-spin {
+    -webkit-animation: spin-reverse 40s linear infinite;
     animation: spin-reverse 40s linear infinite;
   }
 `;
@@ -135,13 +165,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
     const updateSizes = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setRingRadius(145); // 72.5% of 400px / 2
+        setRingRadius(145);
         setIconSize(16);
       } else if (width < 768) {
-        setRingRadius(174); // 72.5% of 480px / 2
+        setRingRadius(174);
         setIconSize(18);
       } else {
-        setRingRadius(224.25); // 72.5% of 620px / 2
+        setRingRadius(224.25);
         setIconSize(20);
       }
     };
@@ -151,8 +181,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
     return () => window.removeEventListener('resize', updateSizes);
   }, []);
 
-  // Icons for the rotating ring
-  const orbitIcons = [
+  // Memoize icons to prevent recreation on every render
+  const orbitIcons = useMemo(() => [
     <User key="user" size={iconSize} />,
     <FileText key="file" size={iconSize} />,
     <Shield key="shield" size={iconSize} />,
@@ -161,7 +191,18 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
     <Database key="database" size={iconSize} />,
     <Cpu key="cpu" size={iconSize} />,
     <Layers key="layers" size={iconSize} />
-  ];
+  ], [iconSize]);
+
+  // Memoize icon positions
+  const iconPositions = useMemo(() =>
+    orbitIcons.map((_, i) => {
+      const angle = (i * (360 / orbitIcons.length)) * (Math.PI / 180);
+      return {
+        x: Math.cos(angle) * ringRadius,
+        y: Math.sin(angle) * ringRadius
+      };
+    }), [orbitIcons.length, ringRadius]
+  );
 
   return (
     <>
@@ -195,10 +236,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
               {/* Rotating Icons - Attached to New Ring (72.5%) */}
               <div className="absolute inset-0 animate-spin-slow">
                 {orbitIcons.map((icon, i) => {
-                  const angle = (i * (360 / orbitIcons.length)) * (Math.PI / 180);
-                  // Use responsive ring radius from state
-                  const x = Math.cos(angle) * ringRadius;
-                  const y = Math.sin(angle) * ringRadius;
+                  const { x, y } = iconPositions[i];
 
                   return (
                     <div
@@ -208,6 +246,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
                         top: '50%',
                         left: '50%',
                         transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                        WebkitTransform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
                       }}
                     >
                       {/* Counter-rotate to keep icons upright */}
@@ -254,8 +293,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
 
                   <div className="absolute top-0 left-0 w-full h-1 bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.4)] animate-[scan_3s_ease-in-out_infinite] z-20"></div>
 
-                  <div className="flex-1 w-full flex items-center justify-center pt-12">
-                    <QrCode className="w-28 h-28 md:w-40 md:h-40 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
+                  <div className="flex-1 w-full flex items-center justify-center pt-8 md:pt-12">
+                    <QrCode className="w-24 h-24 md:w-40 md:h-40 text-white drop-shadow-2xl relative z-10" strokeWidth={1.5} />
                   </div>
 
                   <div className="h-28 w-full relative z-20">

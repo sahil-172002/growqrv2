@@ -1,6 +1,6 @@
 import * as React from "react"
-import { useState } from "react"
-import { motion, AnimatePresence } from "motion/react"
+import { useState, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { Link } from "react-router-dom"
 
@@ -11,7 +11,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
     const [isOpen, setIsOpen] = useState(false)
 
-    const toggleMenu = () => setIsOpen(!isOpen)
+    const toggleMenu = useCallback(() => setIsOpen(prev => !prev), [])
 
     const navLinks = [
         { label: "Vision", to: "/vision" },
@@ -53,7 +53,9 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
                                 onClick={toggleMenu}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                aria-label="Toggle menu"
+                                aria-label={isOpen ? "Close menu" : "Open menu"}
+                                aria-expanded={isOpen}
+                                aria-controls="main-navigation"
                             >
                                 <div className="relative w-5 h-5 flex items-center justify-center">
                                     {/* Animated Icon Container */}
@@ -138,7 +140,7 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
                         >
                             <div className="container mx-auto max-w-7xl px-4 pt-20 pb-6">
                                 {/* Menu Links - Full width rows */}
-                                <nav className="flex flex-col">
+                                <nav id="main-navigation" className="flex flex-col" aria-label="Main navigation">
                                     {navLinks.map((item, i) => (
                                         <motion.div
                                             key={item.label}

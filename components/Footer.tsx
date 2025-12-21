@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
 
             {/* Newsletter Signup */}
             <div className="mb-5">
-              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Stay Updated</h4>
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Stay Updated</h3>
               <form onSubmit={handleSubscribe} className="flex gap-1.5">
                 <div className="relative">
                   <input
@@ -75,6 +75,7 @@ export const Footer: React.FC = () => {
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(null); }}
                     placeholder="Your email"
+                    aria-label="Email address"
                     disabled={isLoading || isSuccess}
                     className="w-36 sm:w-40 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400
                       focus:outline-none focus:border-orange/50 focus:bg-white transition-all duration-200
@@ -155,7 +156,7 @@ export const Footer: React.FC = () => {
           {/* Links Columns */}
           {/* Links Columns */}
           <div className="col-span-1 md:col-span-2">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Product</h4>
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Product</h3>
             <ul className="space-y-3">
               <li><a href="/#solutions-individuals" className="text-sm text-gray-600 hover:text-orange transition-colors">Individuals</a></li>
               <li><a href="/#solutions-enterprises" className="text-sm text-gray-600 hover:text-orange transition-colors">Enterprises</a></li>
@@ -165,7 +166,7 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="col-span-1 md:col-span-2">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Company</h4>
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Company</h3>
             <ul className="space-y-3">
               <li><a href="/#qscore" className="text-sm text-gray-600 hover:text-orange transition-colors">Q-SCORE™</a></li>
               <li><Link to="/about" className="text-sm text-gray-600 hover:text-orange transition-colors">About</Link></li>
@@ -176,7 +177,7 @@ export const Footer: React.FC = () => {
 
           {/* Offices Column */}
           <div className="col-span-2 md:col-span-4">
-            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Offices</h4>
+            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4">Offices</h3>
             <div className="space-y-4">
               <div className="group">
                 <div className="flex items-center gap-2 mb-1">

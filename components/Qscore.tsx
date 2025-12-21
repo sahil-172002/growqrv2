@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
+import React, { useRef, useLayoutEffect, useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Brain, Heart, RefreshCw, Lightbulb, Flag,
   BarChart3, Scan, Timer, GraduationCap, Trophy, QrCode
@@ -26,6 +26,7 @@ export const Qscore: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [gsapReady, setGsapReady] = useState(false);
 
   // Detect screen size
   useEffect(() => {
@@ -38,6 +39,40 @@ export const Qscore: React.FC = () => {
     return () => window.removeEventListener('resize', checkSize);
   }, []);
 
+  // Check if GSAP is available
+  useEffect(() => {
+    const checkGsap = () => {
+      const gsap = (window as any).gsap;
+      const ScrollTrigger = (window as any).ScrollTrigger;
+      if (gsap && ScrollTrigger) {
+        setGsapReady(true);
+        return true;
+      }
+      return false;
+    };
+
+    // Check immediately
+    if (checkGsap()) return;
+
+    // Also check if window signals gsap is ready
+    if ((window as any).gsapReady) {
+      setGsapReady(true);
+      return;
+    }
+
+    // Listen for gsapReady event
+    const handleGsapReady = () => setGsapReady(true);
+    window.addEventListener('gsapReady', handleGsapReady);
+
+    // Fallback: check after delay
+    const timer = setTimeout(checkGsap, 1000);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('gsapReady', handleGsapReady);
+    };
+  }, []);
+
   // Handle hash navigation and cleanup
   useEffect(() => {
     const handleHash = () => {
@@ -46,7 +81,6 @@ export const Qscore: React.FC = () => {
         if (element) {
           setTimeout(() => {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // Clear hash after scroll completes
             setTimeout(() => {
               window.history.replaceState(null, '', window.location.pathname);
             }, 800);
@@ -64,38 +98,40 @@ export const Qscore: React.FC = () => {
   const leftItems = attributes.slice(0, 5);
   const rightItems = attributes.slice(5, 10);
 
-  // RESPONSIVE Layout Configuration
-  const getLayoutConfig = () => {
-    if (typeof window === 'undefined') return { xOffset: 420, ySpacing: 90, tokenWidth: 180, tokenHeight: 60 };
+  // RESPONSIVE Layout Configuration - memoized
+  const getLayoutConfig = useCallback(() => {
+    if (typeof window === 'undefined') return { xOffset: 420, ySpacing: 90 };
 
     const width = window.innerWidth;
     if (width < 640) {
-      // Mobile: Compact vertical stacking
-      return { xOffset: 130, ySpacing: 52, tokenWidth: 110, tokenHeight: 44 };
+      return { xOffset: 130, ySpacing: 52 };
     } else if (width < 1024) {
-      // Tablet
-      return { xOffset: 280, ySpacing: 70, tokenWidth: 150, tokenHeight: 52 };
+      return { xOffset: 280, ySpacing: 70 };
     } else {
-      // Desktop
-      return { xOffset: 420, ySpacing: 90, tokenWidth: 180, tokenHeight: 60 };
+      return { xOffset: 420, ySpacing: 90 };
     }
-  };
+  }, []);
 
-  const config = getLayoutConfig();
-
+  // GSAP animations - only if GSAP is available
   useLayoutEffect(() => {
+    if (!gsapReady || !containerRef.current) return;
+
     const gsap = (window as any).gsap;
     const ScrollTrigger = (window as any).ScrollTrigger;
 
-    if (!gsap || !ScrollTrigger || !containerRef.current) return;
+    if (!gsap || !ScrollTrigger) return;
 
-    // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobileView = window.innerWidth < 640;
 
     const ctx = gsap.context(() => {
-      const layoutConfig = getLayoutConfig();
-      const { xOffset, ySpacing } = layoutConfig;
+      const { xOffset, ySpacing } = getLayoutConfig();
+
+      // CACHE DOM QUERIES
+      const leftNodes = gsap.utils.toArray(".left-node");
+      const rightNodes = gsap.utils.toArray(".right-node");
+      const connections = gsap.utils.toArray(".connection-line");
+      const beams = gsap.utils.toArray(".beam-line");
 
       // === HELPER: Get element's actual center position relative to SVG ===
       const getNodeCenter = (node: Element) => {
@@ -113,15 +149,12 @@ export const Qscore: React.FC = () => {
       const updateAllPaths = () => {
         [...leftNodes, ...rightNodes].forEach((node: any, index: number) => {
           const pos = getNodeCenter(node);
-
-          // Bezier curve control points for smooth arc
           const cp1x = pos.x * 0.4;
           const cp1y = 0;
           const cp2x = pos.x * 0.6;
           const cp2y = pos.y;
           const pathData = `M 0 0 C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${pos.x} ${pos.y}`;
 
-          // Update both connection and beam paths
           if (connections[index]) {
             gsap.set(connections[index], { attr: { d: pathData } });
           }
@@ -140,28 +173,15 @@ export const Qscore: React.FC = () => {
           scrub: prefersReducedMotion ? 0 : (isMobileView ? 1 : 2),
           fastScrollEnd: true,
           preventOverlaps: true,
-
-          // Update paths on every scroll frame for perfect alignment
           onUpdate: () => {
             if (!prefersReducedMotion) {
               updateAllPaths();
             }
           },
-
-          // Initial path update when entering
           onEnter: () => updateAllPaths(),
           onEnterBack: () => updateAllPaths()
         }
       });
-
-      // CACHE DOM QUERIES
-      const leftNodes = gsap.utils.toArray(".left-node");
-      const rightNodes = gsap.utils.toArray(".right-node");
-      const connections = gsap.utils.toArray(".connection-line");
-      const beams = gsap.utils.toArray(".beam-line");
-      const centralHub = document.querySelector(".qscore-hub");
-
-      // === INITIAL STATE: Tiles already in position (no hidden state) ===
 
       // Set tiles to their final positions immediately
       [...leftNodes, ...rightNodes].forEach((node: any, i: number) => {
@@ -174,54 +194,29 @@ export const Qscore: React.FC = () => {
           x: targetX,
           y: targetY,
           scale: 1,
-          opacity: 1,
-          rotateY: 0,
-          z: 0,
-          force3D: true
+          opacity: 1
         });
       });
 
-      gsap.set(centralHub, {
-        scale: 0.8,
-        opacity: 0,
-        force3D: true
-      });
-
+      // Set connection lines to VISIBLE immediately (not hidden)
       gsap.set(connections, {
-        attr: { d: "M 0 0 C 0 0 0 0 0 0" },
-        opacity: 0
+        opacity: 0.3 // Always visible at final opacity
       });
 
       gsap.set(beams, {
-        attr: { d: "M 0 0 C 0 0 0 0 0 0" },
-        opacity: 0,
         strokeDasharray: 1000,
-        strokeDashoffset: 1000
+        strokeDashoffset: 1000,
+        opacity: 0
       });
 
-      // Update all paths immediately
+      // Update all paths immediately - this draws them with their correct geometry
       updateAllPaths();
 
-      // === PHASE 1: HUB ENTRY (0-20% scroll) ===
-      tl.to(centralHub, {
-        scale: 1,
-        opacity: 1,
-        duration: isMobileView ? 1.5 : 2,
-        ease: "power3.out",
-        force3D: true
-      }, "start");
+      // Also update after a tiny delay to ensure DOM layout is complete
+      gsap.delayedCall(0.1, updateAllPaths);
+      gsap.delayedCall(0.5, updateAllPaths);
 
-      // === PHASE 2: CONNECTION DRAWING (20-50% scroll) ===
-      connections.forEach((path: any, i: number) => {
-        tl.to(path, {
-          opacity: 0.3,
-          duration: isMobileView ? 2 : 3,
-          ease: "power1.inOut",
-        }, `start+=1+=${i * 0.08}`);
-      });
-
-      // === CONTINUOUS BEAM LOOP (Runs independent of scroll) ===
-      // Skip beam animation on mobile for better performance
+      // === CONTINUOUS BEAM LOOP (starts immediately, no scroll dependency) ===
       if (!isMobileView && !prefersReducedMotion) {
         const beamTl = gsap.timeline({
           repeat: -1,
@@ -269,35 +264,36 @@ export const Qscore: React.FC = () => {
         }
       }
 
-      // === PHASE 3: IDLE PRESENCE (animations continue playing) ===
       tl.to({}, { duration: isMobileView ? 2 : 3 });
-
 
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [gsapReady]);
 
-  // Responsive token dimensions
-  const tokenWidth = isMobile ? 100 : isTablet ? 140 : 180;
-  const tokenHeight = isMobile ? 40 : isTablet ? 50 : 60;
-  const tokenMarginX = isMobile ? -50 : isTablet ? -70 : -90;
-  const tokenMarginY = isMobile ? -20 : isTablet ? -25 : -30;
+  // Memoize responsive dimensions
+  const dimensions = useMemo(() => ({
+    tokenWidth: isMobile ? 100 : isTablet ? 140 : 180,
+    tokenHeight: isMobile ? 40 : isTablet ? 50 : 60,
+    tokenMarginX: isMobile ? -50 : isTablet ? -70 : -90,
+    tokenMarginY: isMobile ? -20 : isTablet ? -25 : -30
+  }), [isMobile, isTablet]);
+
+  const { tokenWidth, tokenHeight, tokenMarginX, tokenMarginY } = dimensions;
+
+  // Fixed positions for CSS fallback (when GSAP not available)
+  const config = getLayoutConfig();
 
   return (
     <section id="qscore" ref={containerRef} className="py-12 sm:py-16 md:py-24 bg-white overflow-hidden relative min-h-[80vh] sm:min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center mb-4 sm:mb-6 relative z-20">
-        {/* <h1 className="text-2xl sm:text-3xl md:text-6xl font-semibold text-gray-900 mb-1 sm:mb-2 font-montreal">
-          Deconstructing Skill Identity
-        </h1> */}
         <h1 className="text-xl sm:text-2xl md:text-5xl font-semibold text-gray-900 mb-2 font-montreal">
           The Dimensions of <span className="text-orange">Q-SCORE™</span>
         </h1>
       </div>
 
-      <div className="relative w-full h-[450px] sm:h-[550px] md:h-[800px] -mt-8 sm:-mt-16 md:-mt-24 flex items-center justify-center perspective-1000">
-        {/* Removed scale hack - now properly sized */}
-        <div className="relative w-full h-full flex items-center justify-center transform-style-3d will-animate">
+      <div className="relative w-full h-[450px] sm:h-[550px] md:h-[800px] -mt-8 sm:-mt-16 md:-mt-24 flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center">
 
           {/* SVG Connections Layer */}
           <svg className="qscore-svg absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible">
@@ -328,7 +324,7 @@ export const Qscore: React.FC = () => {
                   opacity="0.3"
                 />
               ))}
-              {/* Beam Overlays - Hidden on mobile for performance */}
+              {/* Beam Overlays - Hidden on mobile */}
               {!isMobile && attributes.map((_, i) => (
                 <path
                   key={`beam-${i}`}
@@ -344,11 +340,11 @@ export const Qscore: React.FC = () => {
             </g>
           </svg>
 
-          {/* --- CENTRAL HUB --- */}
+          {/* --- CENTRAL HUB --- Always visible, no animation dependency */}
           <div className={`qscore-hub relative z-30 flex items-center justify-center
             ${isMobile ? 'w-28 h-28' : isTablet ? 'w-40 h-40' : 'w-56 h-56'}`}>
-            <div className="relative w-full h-full group cursor-pointer will-animate">
-              <div className={`absolute inset-0 bg-orange/30 rounded-full animate-pulse-slow
+            <div className="relative w-full h-full group cursor-pointer">
+              <div className={`absolute inset-0 bg-orange/30 rounded-full animate-pulse
                 ${isMobile ? 'blur-[30px]' : 'blur-[60px]'}`}></div>
 
               {/* Core Sphere */}
@@ -356,8 +352,8 @@ export const Qscore: React.FC = () => {
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 rounded-full"></div>
                 {!isMobile && (
                   <>
-                    <div className="absolute inset-4 border border-white/20 rounded-full animate-spin-slow"></div>
-                    <div className="absolute inset-8 border border-white/10 rounded-full animate-[spin_8s_linear_infinite_reverse]"></div>
+                    <div className="absolute inset-4 border border-white/20 rounded-full animate-[spin_20s_linear_infinite]"></div>
+                    <div className="absolute inset-8 border border-white/10 rounded-full animate-[spin_25s_linear_infinite_reverse]"></div>
                   </>
                 )}
 
@@ -373,44 +369,70 @@ export const Qscore: React.FC = () => {
             </div>
           </div>
 
-          {/* --- LEFT NODES --- */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d z-20 will-animate">
-            {leftItems.map((item, i) => (
-              <div
-                key={`left-${i}`}
-                className="left-node absolute pointer-events-auto"
-                style={{ left: '50%', top: '50%', marginLeft: `${tokenMarginX}px`, marginTop: `${tokenMarginY}px` }}
-              >
-                <EcoToken3D
-                  label={item.label}
-                  icon={item.icon}
-                  width={tokenWidth}
-                  height={tokenHeight}
-                  layout="icon-text"
-                  isActive={false}
-                />
-              </div>
-            ))}
+          {/* --- LEFT NODES --- CSS positioned as fallback, GSAP animates if available */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+            {leftItems.map((item, i) => {
+              // Calculate CSS fallback position
+              const targetY = (i - 2) * config.ySpacing;
+              const targetX = -config.xOffset;
+
+              return (
+                <div
+                  key={`left-${i}`}
+                  className="left-node absolute pointer-events-auto transition-transform duration-300"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    marginLeft: `${tokenMarginX}px`,
+                    marginTop: `${tokenMarginY}px`,
+                    // CSS fallback position (will be overridden by GSAP if available)
+                    transform: gsapReady ? undefined : `translate(${targetX}px, ${targetY}px)`
+                  }}
+                >
+                  <EcoToken3D
+                    label={item.label}
+                    icon={item.icon}
+                    width={tokenWidth}
+                    height={tokenHeight}
+                    layout="icon-text"
+                    isActive={false}
+                  />
+                </div>
+              );
+            })}
           </div>
 
-          {/* --- RIGHT NODES --- */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none transform-style-3d z-20 will-animate">
-            {rightItems.map((item, i) => (
-              <div
-                key={`right-${i}`}
-                className="right-node absolute pointer-events-auto"
-                style={{ left: '50%', top: '50%', marginLeft: `${tokenMarginX}px`, marginTop: `${tokenMarginY}px` }}
-              >
-                <EcoToken3D
-                  label={item.label}
-                  icon={item.icon}
-                  width={tokenWidth}
-                  height={tokenHeight}
-                  layout="text-icon"
-                  isActive={false}
-                />
-              </div>
-            ))}
+          {/* --- RIGHT NODES --- CSS positioned as fallback, GSAP animates if available */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+            {rightItems.map((item, i) => {
+              // Calculate CSS fallback position
+              const targetY = (i - 2) * config.ySpacing;
+              const targetX = config.xOffset;
+
+              return (
+                <div
+                  key={`right-${i}`}
+                  className="right-node absolute pointer-events-auto transition-transform duration-300"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    marginLeft: `${tokenMarginX}px`,
+                    marginTop: `${tokenMarginY}px`,
+                    // CSS fallback position (will be overridden by GSAP if available)
+                    transform: gsapReady ? undefined : `translate(${targetX}px, ${targetY}px)`
+                  }}
+                >
+                  <EcoToken3D
+                    label={item.label}
+                    icon={item.icon}
+                    width={tokenWidth}
+                    height={tokenHeight}
+                    layout="text-icon"
+                    isActive={false}
+                  />
+                </div>
+              );
+            })}
           </div>
 
         </div>
@@ -418,4 +440,3 @@ export const Qscore: React.FC = () => {
     </section>
   );
 };
-

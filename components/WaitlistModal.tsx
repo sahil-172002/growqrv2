@@ -120,6 +120,7 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
                 {/* Close Button - Outside scrollable area */}
                 <button
                     onClick={onClose}
+                    aria-label="Close"
                     className="absolute top-5 right-5 p-2 text-gray-400 hover:text-black rounded-full hover:bg-gray-50 transition-all duration-300 z-20"
                 >
                     <X size={20} strokeWidth={1.5} />

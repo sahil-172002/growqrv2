@@ -1,5 +1,5 @@
 
-import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useState, useLayoutEffect, useEffect, useCallback, useMemo } from 'react';
 import { User, Building, GraduationCap, Briefcase, Building2 } from 'lucide-react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { QrCode, Hexagon, Users, BookOpen } from 'lucide-react';
@@ -132,67 +132,38 @@ export const SolutionsGrid: React.FC = () => {
         });
       });
 
-      // 2. SNAPPY TEXT ANIMATIONS (TruthReveal-style) - Desktop only
+      // 2. SUBTLE TEXT ANIMATIONS - Desktop only (no initial hiding)
+      // Content is visible by default, animations just add subtle entrance effects
       if (window.innerWidth >= 768) {
         slides.forEach((slide: HTMLElement) => {
           const anims = slide.querySelectorAll('.sg-anim');
 
-          // Set initial state
-          gsap.set(anims, {
-            y: 40,
-            opacity: 0,
-            filter: "blur(10px)"
-          });
-
+          // DO NOT hide content initially - it breaks if GSAP doesn't fire
+          // Just add subtle animation when entering viewport
           ScrollTrigger.create({
             trigger: slide,
             start: "top 70%",
             end: "bottom 30%",
             onEnter: () => {
-              // Quick, snappy entrance
-              gsap.to(anims, {
-                y: 0,
-                opacity: 1,
-                filter: "blur(0px)",
-                duration: 0.6,
-                stagger: 0.05,
-                ease: "power4.out",
-                overwrite: true
-              });
-            },
-            onLeave: () => {
-              // Exit upward
-              gsap.to(anims, {
-                y: -30,
-                opacity: 0,
-                filter: "blur(10px)",
-                duration: 0.5,
-                stagger: 0.03,
-                ease: "power3.in",
-                overwrite: true
-              });
+              // Subtle entrance animation (content already visible)
+              gsap.fromTo(anims,
+                { y: 20, opacity: 0.7 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration: 0.5,
+                  stagger: 0.05,
+                  ease: "power3.out",
+                  overwrite: true
+                }
+              );
             },
             onEnterBack: () => {
-              // Re-enter quickly
               gsap.to(anims, {
                 y: 0,
                 opacity: 1,
-                filter: "blur(0px)",
-                duration: 0.6,
-                stagger: 0.05,
-                ease: "power4.out",
-                overwrite: true
-              });
-            },
-            onLeaveBack: () => {
-              // Exit downward
-              gsap.to(anims, {
-                y: 40,
-                opacity: 0,
-                filter: "blur(10px)",
-                duration: 0.5,
-                stagger: 0.03,
-                ease: "power3.in",
+                duration: 0.3,
+                ease: "power2.out",
                 overwrite: true
               });
             }
@@ -252,13 +223,13 @@ export const SolutionsGrid: React.FC = () => {
     //   }
     // });
 
-    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    const handleMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
       e.stopPropagation();
       setIsDragging(true);
       const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
       const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
       lastMousePos.current = { x: clientX, y: clientY };
-    };
+    }, []);
 
     useEffect(() => {
       const handleMouseMove = (e: MouseEvent | TouchEvent) => {
@@ -344,7 +315,8 @@ export const SolutionsGrid: React.FC = () => {
           style={{
             rotateX: smoothRotateX,
             rotateY: smoothRotateY,
-            transformStyle: "preserve-3d"
+            transformStyle: "preserve-3d",
+            WebkitTransformStyle: "preserve-3d" as any,
           }}
         >
           {[...Array(depth)].map((_, i) => (
@@ -368,6 +340,7 @@ export const SolutionsGrid: React.FC = () => {
               borderRadius: radius,
               transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
               backfaceVisibility: 'visible',
+              WebkitBackfaceVisibility: 'visible' as any,
               background: material === 'glass' ? 'linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%)' : undefined
             }}
           >

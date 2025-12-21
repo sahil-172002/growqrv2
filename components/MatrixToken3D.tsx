@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useSpring, useMotionValue, useAnimationFrame } from 'framer-motion';
 import { Hexagon } from 'lucide-react';
 
@@ -37,13 +37,13 @@ const use360Rotation = (idleSpeed = 0.05, enableSpin = false, forceFlip = false)
         }
     });
 
-    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    const handleMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
         e.stopPropagation();
         setIsDragging(true);
         const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
         const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
         lastMousePos.current = { x: clientX, y: clientY };
-    };
+    }, []);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent | TouchEvent) => {
@@ -109,13 +109,14 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
     const layerSpacing = 1;
     const radius = "50%";
 
-    // Responsive text size based on tile size
-    const textSize = size < 100 ? "text-[8px]" : "text-[10px]";
+    // Responsive layout tuning
+    const textSize = size < 100 ? "text-[8.5px]" : "text-[10px]";
+    const padding = size < 100 ? "p-1" : "p-2";
 
     return (
         <div
-            className={`relative perspective-800 select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-            style={{ width: size, height: size }}
+            className={`relative select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            style={{ width: size, height: size, perspective: '800px', WebkitPerspective: '800px' }}
             onMouseDown={handleMouseDown}
             onTouchStart={handleMouseDown}
             onMouseEnter={() => setIsHovered(true)}
@@ -127,6 +128,7 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
                     rotateX: smoothRotateX,
                     rotateY: smoothRotateY,
                     transformStyle: "preserve-3d",
+                    WebkitTransformStyle: "preserve-3d" as any,
                 }}
             >
                 {/* SHADOW */}
@@ -157,6 +159,7 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
                     style={{
                         transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
                         backfaceVisibility: 'visible',
+                        WebkitBackfaceVisibility: 'visible' as any,
                         background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)',
                         boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.2)"
                     }}
@@ -188,13 +191,13 @@ export const MatrixToken3D: React.FC<MatrixTokenProps> = ({
                     <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                     <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-transparent opacity-70 pointer-events-none z-30 mix-blend-overlay"></div>
 
-                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-2 gap-1">
+                    <div className={`relative z-10 w-full h-full flex flex-col items-center justify-center ${padding} gap-1`}>
                         {/* Icon Container */}
                         <div className="w-10 h-10 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center shadow-inner relative overflow-hidden group flex-shrink-0">
                             <div className="absolute inset-0 bg-orange/10"></div>
                             <Icon size={18} className="relative z-10 text-orange" />
                         </div>
-                        <span className={`${textSize} font-bold uppercase tracking-wide text-gray-600 text-center leading-tight subpixel-antialiased w-full px-1 font-poppins`}>
+                        <span className={`${textSize} font-bold uppercase ${size < 100 ? 'tracking-normal' : 'tracking-wide'} text-gray-600 text-center leading-tight subpixel-antialiased w-full px-0.5 font-poppins`}>
                             {label}
                         </span>
                     </div>

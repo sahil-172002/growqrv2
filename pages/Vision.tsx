@@ -88,9 +88,9 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
                     </div>
 
                     {/* Vision Title */}
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-center text-gray-600 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal max-w-6xl mx-auto">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-center text-gray-600 mb-6 sm:mb-8 tracking-tight leading-[1.1] font-montreal max-w-6xl mx-auto">
                         To enable a world where every skill is recognized, talent is verified and opportunity is unlocked.
-                    </h1>
+                    </h2>
                 </div>
             </section>
 

@@ -4,11 +4,21 @@ import { CompactIDCard3D } from './EcoToken3D';
 
 // --- CSS for magical beam animations (inject into head) ---
 const beamStyles = `
+@-webkit-keyframes energyPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
 @keyframes energyPulse {
     0%, 100% { opacity: 0.4; }
     50% { opacity: 1; }
 }
 
+@-webkit-keyframes particleFlow {
+    0% { offset-distance: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+}
 @keyframes particleFlow {
     0% { offset-distance: 0%; opacity: 0; }
     10% { opacity: 1; }
@@ -16,11 +26,20 @@ const beamStyles = `
     100% { offset-distance: 100%; opacity: 0; }
 }
 
+@-webkit-keyframes beamGlow {
+    0%, 100% { -webkit-filter: drop-shadow(0 0 4px rgba(255, 106, 47, 0.6)); filter: drop-shadow(0 0 4px rgba(255, 106, 47, 0.6)); }
+    50% { -webkit-filter: drop-shadow(0 0 12px rgba(255, 106, 47, 0.9)); filter: drop-shadow(0 0 12px rgba(255, 106, 47, 0.9)); }
+}
 @keyframes beamGlow {
     0%, 100% { filter: drop-shadow(0 0 4px rgba(255, 106, 47, 0.6)); }
     50% { filter: drop-shadow(0 0 12px rgba(255, 106, 47, 0.9)); }
 }
 
+@-webkit-keyframes gradientShift {
+    0% { stop-opacity: 0.3; }
+    50% { stop-opacity: 1; }
+    100% { stop-opacity: 0.3; }
+}
 @keyframes gradientShift {
     0% { stop-opacity: 0.3; }
     50% { stop-opacity: 1; }
@@ -28,14 +47,17 @@ const beamStyles = `
 }
 
 .beam-container {
+    -webkit-animation: beamGlow 2s ease-in-out infinite;
     animation: beamGlow 2s ease-in-out infinite;
 }
 
 .energy-particle {
+    -webkit-animation: particleFlow 2s linear infinite;
     animation: particleFlow 2s linear infinite;
 }
 
 .beam-pulse {
+    -webkit-animation: energyPulse 1.5s ease-in-out infinite;
     animation: energyPulse 1.5s ease-in-out infinite;
 }
 `;
@@ -54,8 +76,17 @@ const Monolith3D: React.FC<{ icon: any; label: string; sub: string; isConnected?
     const subSize = isMobile ? 'text-[7px]' : 'text-[9px]';
 
     return (
-        <div className={`group relative ${size} perspective-1000 transition-transform duration-700 hover:-translate-y-4`}>
-            <div className="relative w-full h-full transform-style-3d transition-transform duration-700 group-hover:rotate-x-6 group-hover:rotate-y-6">
+        <div
+            className={`group relative ${size} transition-transform duration-700 hover:-translate-y-4`}
+            style={{ perspective: '1000px', WebkitPerspective: '1000px' }}
+        >
+            <div
+                className="relative w-full h-full transition-transform duration-700 group-hover:rotate-x-6 group-hover:rotate-y-6"
+                style={{
+                    transformStyle: 'preserve-3d',
+                    WebkitTransformStyle: 'preserve-3d'
+                }}
+            >
 
                 {/* Shadow (Floor) */}
                 <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-black/20 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -64,7 +95,13 @@ const Monolith3D: React.FC<{ icon: any; label: string; sub: string; isConnected?
                 <div className={`absolute inset-0 rounded-xl transition-all duration-700 ${isConnected ? 'opacity-100 shadow-[0_0_30px_rgba(255,106,47,0.4)]' : 'opacity-0'}`}></div>
 
                 {/* Front Face */}
-                <div className={`absolute inset-0 bg-white rounded-xl border shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-3 z-20 backface-hidden overflow-hidden transition-all duration-500 ${isConnected ? 'border-orange/30' : 'border-white/50'}`}>
+                <div
+                    className={`absolute inset-0 bg-white rounded-xl border shadow-2xl flex flex-col items-center justify-center gap-2 sm:gap-3 z-20 overflow-hidden transition-all duration-500 ${isConnected ? 'border-orange/30' : 'border-white/50'}`}
+                    style={{
+                        backfaceVisibility: 'hidden',
+                        WebkitBackfaceVisibility: 'hidden'
+                    }}
+                >
                     {/* Glass Sheen */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-white/80 via-white/20 to-transparent opacity-50"></div>
 
@@ -84,8 +121,8 @@ const Monolith3D: React.FC<{ icon: any; label: string; sub: string; isConnected?
                 </div>
 
                 {/* Side Face (Thickness) */}
-                <div className="absolute inset-0 bg-gray-100 rounded-xl transform translate-z-[-8px] translate-x-[4px] border border-gray-200"></div>
-                <div className="absolute inset-0 bg-gray-200 rounded-xl transform translate-z-[-16px] translate-x-[8px] border border-gray-300 shadow-xl"></div>
+                <div className="absolute inset-0 bg-gray-100 rounded-xl border border-gray-200" style={{ transform: 'translateZ(-8px) translateX(4px)' }}></div>
+                <div className="absolute inset-0 bg-gray-200 rounded-xl border border-gray-300 shadow-xl" style={{ transform: 'translateZ(-16px) translateX(8px)' }}></div>
             </div>
         </div>
     );
@@ -134,21 +171,18 @@ const MagicalBeam: React.FC<{
 
     return (
         <g className="beam-container" style={{ opacity: isVisible ? 1 : 0, transition: `opacity 0.8s ease ${delay}s` }}>
-            {/* Glow background path */}
+            {/* Glow background path - Thicker for visibility */}
             <path
                 d={pathD}
                 fill="none"
-                stroke="rgba(255, 106, 47, 0.2)"
-                strokeWidth={isMobile ? "10" : "20"}
+                stroke="#FF6A2F"
+                strokeWidth="12"
                 strokeLinecap="round"
-                style={{
-                    filter: isMobile ? 'blur(4px)' : 'blur(8px)',
-                    opacity: isVisible ? 0.6 : 0,
-                    transition: `opacity 0.8s ease ${delay}s`
-                }}
+                opacity="0.2"
+                style={{ filter: 'url(#glow)' }}
             />
 
-            {/* Main beam path */}
+            {/* Main beam path with gradient */}
             <path
                 ref={pathRef}
                 d={pathD}
@@ -161,7 +195,7 @@ const MagicalBeam: React.FC<{
                     strokeDasharray: pathLength,
                     strokeDashoffset: isVisible ? 0 : pathLength,
                     transition: `stroke-dashoffset 1.2s ease-out ${delay}s`,
-                    filter: 'drop-shadow(0 0 6px rgba(255, 106, 47, 0.8))'
+                    // Removed drop-shadow to prevent Safari artifacts, glow path handles the bloom
                 }}
             />
 
@@ -180,17 +214,18 @@ const MagicalBeam: React.FC<{
                 }}
             />
 
-            {/* Animated particles along path */}
+            {/* Animated particles along path - Safari Safe */}
             {isVisible && [0, 1, 2].map((i) => (
                 <circle
                     key={i}
+                    cx="0"
+                    cy="0"
                     r="4"
                     fill="#FF6A2F"
                     style={{
                         offsetPath: `path('${pathD}')`,
                         animation: `particleFlow 2s linear infinite`,
                         animationDelay: `${delay + i * 0.6}s`,
-                        filter: 'drop-shadow(0 0 6px rgba(255, 106, 47, 1))'
                     }}
                 >
                     <animate
@@ -202,7 +237,7 @@ const MagicalBeam: React.FC<{
                 </circle>
             ))}
 
-            {/* End point glow */}
+            {/* End point glow - SVG Filter */}
             <circle
                 cx={endX}
                 cy={endY}
@@ -211,7 +246,7 @@ const MagicalBeam: React.FC<{
                 style={{
                     opacity: isVisible ? 1 : 0,
                     transition: `opacity 0.5s ease ${delay + 0.8}s`,
-                    filter: 'blur(4px)'
+                    filter: 'url(#glow)'
                 }}
             >
                 <animate
@@ -245,12 +280,23 @@ export const Growth: React.FC = () => {
         return () => window.removeEventListener('resize', checkSize);
     }, []);
 
-    // Inject styles
+    // Inject styles with cleanup
     useEffect(() => {
         const styleSheet = document.createElement('style');
+        styleSheet.id = 'growth-beam-styles';
         styleSheet.textContent = beamStyles;
-        document.head.appendChild(styleSheet);
-        return () => { document.head.removeChild(styleSheet); };
+
+        // Only append if not already present
+        if (!document.getElementById('growth-beam-styles')) {
+            document.head.appendChild(styleSheet);
+        }
+
+        return () => {
+            const existingStyle = document.getElementById('growth-beam-styles');
+            if (existingStyle && existingStyle.parentNode) {
+                existingStyle.parentNode.removeChild(existingStyle);
+            }
+        };
     }, []);
 
     // Responsive layout values
@@ -307,8 +353,7 @@ export const Growth: React.FC = () => {
                 gsap.set(".monolith-right-1", { x: layoutValues.far, scale: 1, opacity: 1 });
             }
 
-            gsap.set(".growth-text", { opacity: 0, y: 30 });
-            gsap.set(cardRef.current, { scale: 0.7, opacity: 0 });
+            // DO NOT hide text and card - they should be visible by default
             setBeamsVisible(false);
             setMonolithsConnected(false);
 
@@ -316,16 +361,24 @@ export const Growth: React.FC = () => {
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top 80%", // Triggers when section is 80% from top of viewport
-                    once: true, // Only plays once
+                    start: "top 80%",
+                    once: true,
                 }
             });
 
-            // PHASE 1: TEXT ENTRY
-            tl.to(".growth-text", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
+            // PHASE 1: TEXT ENTRY - use fromTo so content doesn't start hidden
+            tl.fromTo(".growth-text",
+                { opacity: 0.7, y: 15 },
+                { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+                0
+            );
 
-            // PHASE 2: CARD ENTRY
-            tl.to(cardRef.current, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.2)" }, 0.1);
+            // PHASE 2: CARD ENTRY - use fromTo
+            tl.fromTo(cardRef.current,
+                { scale: 0.9, opacity: 0.7 },
+                { scale: 1, opacity: 1, duration: 0.6, ease: "power2.out" },
+                0.1
+            );
 
             // PHASE 3: BEAMS APPEAR (monoliths already visible)
             tl.call(() => {
@@ -396,11 +449,12 @@ export const Growth: React.FC = () => {
                         ? 'w-full max-w-[350px] h-[360px] mt-24'
                         : 'w-full max-w-[1400px] h-[600px] mt-32 md:mt-40'}`}>
 
-                    {/* MAGICAL BEAMS SVG */}
+                    {/* MAGICAL BEAMS SVG - Safari Compatible */}
                     <svg
-                        className="absolute inset-0 w-full h-full z-[5] pointer-events-none overflow-visible"
+                        className="absolute inset-0 w-full h-full z-[5] pointer-events-none overflow-visible will-change-transform"
                         viewBox={`0 0 ${layout.stageWidth} ${layout.stageHeight}`}
                         preserveAspectRatio="xMidYMid meet"
+                        style={{ overflow: 'visible' }} // Explicit inline style for Safari
                     >
                         <defs>
                             {/* Main gradient for beams */}
@@ -422,8 +476,8 @@ export const Growth: React.FC = () => {
                                 <stop offset="100%" stopColor="#FF6A2F" stopOpacity="0" />
                             </radialGradient>
 
-                            {/* Glow filter */}
-                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                            {/* Standard Glow Filter - Simplified for compatibility */}
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox">
                                 <feGaussianBlur stdDeviation={isMobile ? "2" : "4"} result="coloredBlur" />
                                 <feMerge>
                                     <feMergeNode in="coloredBlur" />

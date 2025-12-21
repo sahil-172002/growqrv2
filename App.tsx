@@ -1,27 +1,27 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Hero } from './components/Hero';
 import { EcosystemRing } from './components/EcosystemRing';
 import { TruthRevealTraditional } from './components/TruthRevealTraditional';
-
-import { SolutionsGrid } from './components/SolutionsGrid';
-
-import { TechEngine } from './components/TechEngine';
 import { Footer } from './components/Footer';
-
-import { Qscore } from './components/Qscore';
-import { Growth } from './components/Growth';
-import { Calltoaction } from './components/Calltoaction';
-import { Chatbot } from './components/Chatbot';
-import { FAQ } from './components/FAQ';
 import { LoadingScreen, ScrollProgress, ScrollToTop } from './components/ui/PageUtils';
 import { WaitlistModal } from './components/WaitlistModal';
 
-// Page imports
-import { AboutPage } from './pages/About';
-import { VisionPage } from './pages/Vision';
-import { ContactPage } from './pages/Contact';
+// Lazy load heavy components
+const SolutionsGrid = React.lazy(() => import('./components/SolutionsGrid').then(module => ({ default: module.SolutionsGrid })));
+const TechEngine = React.lazy(() => import('./components/TechEngine').then(module => ({ default: module.TechEngine })));
+const Growth = React.lazy(() => import('./components/Growth').then(module => ({ default: module.Growth })));
+const Chatbot = React.lazy(() => import('./components/Chatbot').then(module => ({ default: module.Chatbot })));
+const FAQ = React.lazy(() => import('./components/FAQ').then(module => ({ default: module.FAQ })));
+const Qscore = React.lazy(() => import('./components/Qscore').then(module => ({ default: module.Qscore })));
+const Calltoaction = React.lazy(() => import('./components/Calltoaction').then(module => ({ default: module.Calltoaction })));
+
+// Lazy load Pages
+const AboutPage = React.lazy(() => import('./pages/About').then(module => ({ default: module.AboutPage })));
+const VisionPage = React.lazy(() => import('./pages/Vision').then(module => ({ default: module.VisionPage })));
+const ContactPage = React.lazy(() => import('./pages/Contact').then(module => ({ default: module.ContactPage })));
+
 import { useSEO, SEO_CONFIGS } from './hooks/useSEO';
 
 // Scroll to top on route change
@@ -55,20 +55,21 @@ function LandingPage({
       <Hero onOpenWaitlist={() => handleOpenWaitlist('individual')} />
       <EcosystemRing />
       <TruthRevealTraditional />
-      <Qscore />
-      <Growth />
 
-      <SolutionsGrid />
-
-      <TechEngine />
-
-      <FAQ />
-
-      <Calltoaction onOpenWaitlist={handleOpenWaitlist} />
+      <Suspense fallback={null}>
+        <Qscore />
+        <Growth />
+        <SolutionsGrid />
+        <TechEngine />
+        <FAQ />
+        <Calltoaction onOpenWaitlist={handleOpenWaitlist} />
+      </Suspense>
 
       <Footer />
 
-      <Chatbot />
+      <Suspense fallback={null}>
+        <Chatbot />
+      </Suspense>
     </main>
   );
 }
@@ -135,37 +136,39 @@ export default function App() {
       {/* Scroll to top on route change */}
       <ScrollToTopOnMount />
 
-      <Routes>
-        {/* Landing Page */}
-        <Route
-          path="/"
-          element={
-            <LandingPage
-              handleOpenWaitlist={handleOpenWaitlist}
-              perfClasses={perfClasses}
-              isLoading={isLoading}
-            />
-          }
-        />
+      <Suspense fallback={<div className="min-h-screen bg-white" />}>
+        <Routes>
+          {/* Landing Page */}
+          <Route
+            path="/"
+            element={
+              <LandingPage
+                handleOpenWaitlist={handleOpenWaitlist}
+                perfClasses={perfClasses}
+                isLoading={isLoading}
+              />
+            }
+          />
 
-        {/* About Page */}
-        <Route
-          path="/about"
-          element={<AboutPage onOpenWaitlist={handleOpenWaitlist} />}
-        />
+          {/* About Page */}
+          <Route
+            path="/about"
+            element={<AboutPage onOpenWaitlist={handleOpenWaitlist} />}
+          />
 
-        {/* Vision Page */}
-        <Route
-          path="/vision"
-          element={<VisionPage onOpenWaitlist={handleOpenWaitlist} />}
-        />
+          {/* Vision Page */}
+          <Route
+            path="/vision"
+            element={<VisionPage onOpenWaitlist={handleOpenWaitlist} />}
+          />
 
-        {/* Contact Page */}
-        <Route
-          path="/contact"
-          element={<ContactPage onOpenWaitlist={handleOpenWaitlist} />}
-        />
-      </Routes>
+          {/* Contact Page */}
+          <Route
+            path="/contact"
+            element={<ContactPage onOpenWaitlist={handleOpenWaitlist} />}
+          />
+        </Routes>
+      </Suspense>
 
       {/* Waitlist Modal - Global */}
       <WaitlistModal

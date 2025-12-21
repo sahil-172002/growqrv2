@@ -1,6 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, useSpring, useMotionValue, useAnimationFrame, useTransform } from 'framer-motion';
 import { Hexagon, QrCode, Wifi, Fingerprint, Activity } from 'lucide-react';
+
+// CSS styles for cross-browser 3D transforms
+const transform3DStyles = `
+  .preserve-3d {
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .backface-visible {
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+  }
+  .perspective-800 {
+    perspective: 800px;
+    -webkit-perspective: 800px;
+  }
+`;
 
 // --- SHARED 360° PHYSICS HOOK ---
 const use360Rotation = (idleSpeed = 0.05, enableSpin = false, forceFlip = false, enableBreathing = true) => {
@@ -40,13 +60,13 @@ const use360Rotation = (idleSpeed = 0.05, enableSpin = false, forceFlip = false,
         }
     });
 
-    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    const handleMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
         e.stopPropagation(); // Prevent bubbling
         setIsDragging(true);
         const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
         const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
         lastMousePos.current = { x: clientX, y: clientY };
-    };
+    }, []);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent | TouchEvent) => {
@@ -135,15 +155,28 @@ export const CompactIDCard3D: React.FC = () => {
     // DISABLED CONTINUOUS SPIN for Hub (User Request)
     const { isDragging, handleMouseDown, smoothRotateX, smoothRotateY } = use360Rotation(0.04, false, false, false);
 
-    // Responsive Dimensions
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const width = isMobile ? "100px" : "150px";
-    const height = isMobile ? "150px" : "225px";
-    const depth = isMobile ? 8 : 12;
-    const radius = isMobile ? "16px" : "24px";
-    const layerSpacing = 1;
-    const qrSize = isMobile ? 60 : 100;
-    const scoreSize = isMobile ? "text-2xl" : "text-3xl";
+    // Responsive Dimensions with proper SSR handling
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkSize = () => setIsMobile(window.innerWidth < 768);
+        checkSize();
+        window.addEventListener('resize', checkSize);
+        return () => window.removeEventListener('resize', checkSize);
+    }, []);
+
+    // Memoize dimensions to prevent recalculation on every render
+    const dimensions = useMemo(() => ({
+        width: isMobile ? "100px" : "150px",
+        height: isMobile ? "150px" : "225px",
+        depth: isMobile ? 8 : 12,
+        radius: isMobile ? "16px" : "24px",
+        layerSpacing: 1,
+        qrSize: isMobile ? 60 : 100,
+        scoreSize: isMobile ? "text-2xl" : "text-3xl"
+    }), [isMobile]);
+
+    const { width, height, depth, radius, layerSpacing, qrSize, scoreSize } = dimensions;
 
     const shadowScale = useTransform(smoothRotateX, (v) => 1 - Math.abs(Math.sin(v * Math.PI / 180)) * 0.2);
 
@@ -160,144 +193,149 @@ export const CompactIDCard3D: React.FC = () => {
     }, []);
 
     return (
-        <div
-            className={`relative perspective-800 select-none group ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-            style={{ width, height }}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleMouseDown}
-        >
-            <motion.div
-                className="relative w-full h-full"
-                style={{
-                    rotateX: smoothRotateX,
-                    rotateY: smoothRotateY,
-                    transformStyle: "preserve-3d",
-                }}
+        <>
+            <style>{transform3DStyles}</style>
+            <div
+                className={`relative perspective-800 select-none group ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                style={{ width, height, perspective: '800px', WebkitPerspective: '800px' }}
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleMouseDown}
             >
-                {/* SHADOW */}
                 <motion.div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[20%] bg-black/30 blur-xl rounded-[100%]"
+                    className="relative w-full h-full preserve-3d"
                     style={{
-                        transform: `translateZ(-60px) translateY(${isMobile ? 80 : 120}px)`,
-                        scale: shadowScale,
+                        rotateX: smoothRotateX,
+                        rotateY: smoothRotateY,
+                        transformStyle: "preserve-3d",
+                        WebkitTransformStyle: "preserve-3d" as any,
                     }}
-                />
-
-                {/* --- THICKNESS LAYERS --- */}
-                {[...Array(depth)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute inset-0 bg-gray-300 border border-gray-400"
+                >
+                    {/* SHADOW */}
+                    <motion.div
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[20%] bg-black/30 blur-xl rounded-[100%]"
                         style={{
-                            borderRadius: radius,
-                            transform: `translateZ(${-i * layerSpacing}px)`,
-                            zIndex: -i,
-                            filter: `brightness(${0.8 - (i * 0.02)})`
+                            transform: `translateZ(-60px) translateY(${isMobile ? 80 : 120}px)`,
+                            scale: shadowScale,
                         }}
                     />
-                ))}
 
-                {/* --- BACK FACE (LIGHT GRAY THEME - SAME CONTENT) --- */}
-                <div
-                    className="absolute inset-0 border border-gray-300 overflow-hidden"
-                    style={{
-                        borderRadius: radius,
-                        transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
-                        backfaceVisibility: 'visible',
-                        background: 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)',
-                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)"
-                    }}
-                >
-                    <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+                    {/* --- THICKNESS LAYERS --- */}
+                    {[...Array(depth)].map((_, i) => (
+                        <div
+                            key={i}
+                            className="absolute inset-0 bg-gray-300 border border-gray-400"
+                            style={{
+                                borderRadius: radius,
+                                transform: `translateZ(${-i * layerSpacing}px)`,
+                                zIndex: -i,
+                                filter: `brightness(${0.8 - (i * 0.02)})`
+                            }}
+                        />
+                    ))}
 
-                    {/* Removed scale-x-[-1] as it was causing double-mirroring (inversion) */}
-                    <div className="w-full h-full flex flex-col items-center justify-center p-4 text-gray-800">
-                        <div className="relative mb-2">
-                            <div className="absolute inset-0 bg-orange/5 blur-xl rounded-full"></div>
-                            {/* QR Code in Dark Gray/Black */}
-                            <QrCode size={qrSize} className="relative text-gray-800 drop-shadow-sm" />
-                        </div>
+                    {/* --- BACK FACE (LIGHT GRAY THEME - SAME CONTENT) --- */}
+                    <div
+                        className="absolute inset-0 border border-gray-300 overflow-hidden backface-visible"
+                        style={{
+                            borderRadius: radius,
+                            transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
+                            backfaceVisibility: 'visible',
+                            WebkitBackfaceVisibility: 'visible' as any,
+                            background: 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)',
+                            boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)"
+                        }}
+                    >
+                        <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
 
-                        {/* Mini Data Stream (Dark Theme Version) */}
-                        <div className="flex flex-col items-center justify-center w-full mt-2">
-                            {/* Label */}
-                            <div className="flex items-center gap-1 mb-1 opacity-60">
-                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-600 tracking-[0.2em] uppercase font-bold`}>Q-SCORE™</span>
+                        {/* Removed scale-x-[-1] as it was causing double-mirroring (inversion) */}
+                        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-gray-800">
+                            <div className="relative mb-2">
+                                <div className="absolute inset-0 bg-orange/5 blur-xl rounded-full"></div>
+                                {/* QR Code in Dark Gray/Black */}
+                                <QrCode size={qrSize} className="relative text-gray-800 drop-shadow-sm" />
                             </div>
 
-                            {/* Score Display */}
-                            <div className="flex items-baseline gap-1 relative mb-2">
-                                <span className={`font-mono ${scoreSize} font-black text-gray-900 tracking-tighter drop-shadow-sm`}>
-                                    {score}
-                                </span>
-                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-500 font-bold`}>/ 100</span>
-                            </div>
+                            {/* Mini Data Stream (Dark Theme Version) */}
+                            <div className="flex flex-col items-center justify-center w-full mt-2">
+                                {/* Label */}
+                                <div className="flex items-center gap-1 mb-1 opacity-60">
+                                    <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-600 tracking-[0.2em] uppercase font-bold`}>Q-SCORE™</span>
+                                </div>
 
-                            {/* Frequency Visualizer (Dark Bars) */}
-                            <div className={`flex items-end justify-center gap-[2px] ${isMobile ? 'h-2 w-12' : 'h-3 w-16'} opacity-60`}>
-                                {bars.map((h, i) => (
-                                    <div key={i}
-                                        className="w-[2px] bg-gray-800 rounded-full transition-all duration-75 ease-linear"
-                                        style={{
-                                            height: `${h}%`,
-                                            opacity: Math.max(0.4, h / 100)
-                                        }}
-                                    ></div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                {/* Score Display */}
+                                <div className="flex items-baseline gap-1 relative mb-2">
+                                    <span className={`font-mono ${scoreSize} font-black text-gray-900 tracking-tighter drop-shadow-sm`}>
+                                        {score}
+                                    </span>
+                                    <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-gray-500 font-bold`}>/ 100</span>
+                                </div>
 
-                {/* --- FRONT FACE (ORANGE - QR CODE) --- */}
-                <div
-                    className="absolute inset-0 border border-orange-600 bg-orange"
-                    style={{
-                        borderRadius: radius,
-                        transform: "translateZ(1px)",
-                        background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)'
-                    }}
-                >
-                    <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white">
-                        <div className="relative mb-2">
-                            <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
-                            {/* Increased QR Code Size */}
-                            <QrCode size={qrSize} className="relative text-white/90 drop-shadow-md" />
-                        </div>
-
-                        {/* New Mini Data Stream */}
-                        <div className="flex flex-col items-center justify-center w-full mt-2">
-                            {/* Label */}
-                            <div className="flex items-center gap-1 mb-1 opacity-80">
-                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white tracking-[0.2em] uppercase font-bold`}>Q-SCORE™</span>
-                            </div>
-
-                            {/* Score Display */}
-                            <div className="flex items-baseline gap-1 relative mb-2">
-                                <span className={`font-mono ${scoreSize} font-black text-white tracking-tighter drop-shadow-md`}>
-                                    {score}
-                                </span>
-                                <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white/60 font-bold`}>/ 100</span>
-                            </div>
-
-                            {/* Frequency Visualizer */}
-                            <div className={`flex items-end justify-center gap-[2px] ${isMobile ? 'h-2 w-12' : 'h-3 w-16'} opacity-80`}>
-                                {bars.map((h, i) => (
-                                    <div key={i}
-                                        className="w-[2px] bg-white rounded-full transition-all duration-75 ease-linear"
-                                        style={{
-                                            height: `${h}%`,
-                                            opacity: Math.max(0.4, h / 100)
-                                        }}
-                                    ></div>
-                                ))}
+                                {/* Frequency Visualizer (Dark Bars) */}
+                                <div className={`flex items-end justify-center gap-[2px] ${isMobile ? 'h-2 w-12' : 'h-3 w-16'} opacity-60`}>
+                                    {bars.map((h, i) => (
+                                        <div key={i}
+                                            className="w-[2px] bg-gray-800 rounded-full transition-all duration-75 ease-linear"
+                                            style={{
+                                                height: `${h}%`,
+                                                opacity: Math.max(0.4, h / 100)
+                                            }}
+                                        ></div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </motion.div>
-        </div>
+                    {/* --- FRONT FACE (ORANGE - QR CODE) --- */}
+                    <div
+                        className="absolute inset-0 border border-orange-600 bg-orange"
+                        style={{
+                            borderRadius: radius,
+                            transform: "translateZ(1px)",
+                            background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)'
+                        }}
+                    >
+                        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-white">
+                            <div className="relative mb-2">
+                                <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
+                                {/* Increased QR Code Size */}
+                                <QrCode size={qrSize} className="relative text-white/90 drop-shadow-md" />
+                            </div>
+
+                            {/* New Mini Data Stream */}
+                            <div className="flex flex-col items-center justify-center w-full mt-2">
+                                {/* Label */}
+                                <div className="flex items-center gap-1 mb-1 opacity-80">
+                                    <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white tracking-[0.2em] uppercase font-bold`}>Q-SCORE™</span>
+                                </div>
+
+                                {/* Score Display */}
+                                <div className="flex items-baseline gap-1 relative mb-2">
+                                    <span className={`font-mono ${scoreSize} font-black text-white tracking-tighter drop-shadow-md`}>
+                                        {score}
+                                    </span>
+                                    <span className={`${isMobile ? 'text-[6px]' : 'text-[8px]'} font-mono text-white/60 font-bold`}>/ 100</span>
+                                </div>
+
+                                {/* Frequency Visualizer */}
+                                <div className={`flex items-end justify-center gap-[2px] ${isMobile ? 'h-2 w-12' : 'h-3 w-16'} opacity-80`}>
+                                    {bars.map((h, i) => (
+                                        <div key={i}
+                                            className="w-[2px] bg-white rounded-full transition-all duration-75 ease-linear"
+                                            style={{
+                                                height: `${h}%`,
+                                                opacity: Math.max(0.4, h / 100)
+                                            }}
+                                        ></div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </motion.div>
+            </div>
+        </>
     );
 };
 
@@ -351,18 +389,19 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
     return (
         <div
             className={`eco-token-wrapper relative perspective-800 select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-            style={{ width: w, height: h }}
+            style={{ width: w, height: h, perspective: '800px', WebkitPerspective: '800px' }}
             onMouseDown={handleMouseDown}
             onTouchStart={handleMouseDown}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             <motion.div
-                className="relative w-full h-full"
+                className="relative w-full h-full preserve-3d"
                 style={{
                     rotateX: smoothRotateX,
                     rotateY: smoothRotateY,
-                    transformStyle: "preserve-3d", // CRITICAL FOR THICKNESS
+                    transformStyle: "preserve-3d",
+                    WebkitTransformStyle: "preserve-3d" as any,
                 }}
             >
                 {/* SHADOW */}
@@ -392,11 +431,12 @@ export const EcoToken3D: React.FC<EcoToken3DProps> = ({
 
                 {/* --- BACK FACE (Orange Theme) --- */}
                 <div
-                    className="absolute inset-0 border border-orange-600 overflow-hidden"
+                    className="absolute inset-0 border border-orange-600 overflow-hidden backface-visible"
                     style={{
                         borderRadius: borderRadius,
                         transform: `translateZ(${-depth * layerSpacing - 1}px) rotateY(180deg)`,
                         backfaceVisibility: 'visible',
+                        WebkitBackfaceVisibility: 'visible' as any,
                         background: 'linear-gradient(135deg, #FF6A2F 0%, #E65100 100%)',
                         boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.2)"
                     }}

@@ -15,13 +15,7 @@ export const Calltoaction: React.FC<CalltoactionProps> = ({ onOpenWaitlist }) =>
         if (!gsap || !ScrollTrigger || !sectionRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Set initial states
-            gsap.set('.cta-eyebrow', { y: 20, opacity: 0 });
-            gsap.set('.cta-title', { y: 40, opacity: 0 });
-            gsap.set('.cta-subtitle', { y: 30, opacity: 0 });
-            gsap.set('.cta-buttons', { y: 30, opacity: 0 });
-
-            // Create timeline
+            // Create timeline with fromTo - no initial hidden state needed
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: sectionRef.current,
@@ -31,30 +25,20 @@ export const Calltoaction: React.FC<CalltoactionProps> = ({ onOpenWaitlist }) =>
                 }
             });
 
-            tl.to('.cta-eyebrow', {
-                y: 0,
-                opacity: 1,
-                duration: 0.6,
-                ease: "power3.out"
-            })
-                .to('.cta-title', {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out"
-                }, "-=0.4")
-                .to('.cta-subtitle', {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.7,
-                    ease: "power3.out"
-                }, "-=0.5")
-                .to('.cta-buttons', {
-                    y: 0,
-                    opacity: 1,
-                    duration: 0.6,
-                    ease: "power3.out"
-                }, "-=0.4");
+            tl.fromTo('.cta-eyebrow',
+                { y: 20, opacity: 0.5 },
+                { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+            )
+                .fromTo('.cta-title',
+                    { y: 30, opacity: 0.5 },
+                    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+                    "-=0.3"
+                )
+                .fromTo('.cta-buttons',
+                    { y: 20, opacity: 0.7 },
+                    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+                    "-=0.3"
+                );
 
         }, sectionRef);
 

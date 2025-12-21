@@ -227,7 +227,7 @@ export const Chatbot: React.FC = () => {
         }
     };
 
-    const handleKeyPress = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSendMessage(inputValue);
@@ -497,7 +497,7 @@ export const Chatbot: React.FC = () => {
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            onKeyPress={handleKeyPress}
+                            onKeyDown={handleKeyDown}
                             placeholder="Type your question here..."
                             className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl
                                 text-sm text-gray-700 placeholder-gray-400

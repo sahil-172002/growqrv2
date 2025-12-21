@@ -3,9 +3,12 @@ import { QrCode, Brain, Hash, Link2, Atom, Fingerprint } from 'lucide-react';
 
 // Premium 3D Glass Tile Component
 const TechTile = ({ icon: Icon, label, desc, index }: { icon: any, label: string, desc: string, index: number }) => (
-  <div className="tech-tile group relative perspective-1000">
+  <div className="tech-tile group relative" style={{ perspective: '1000px', WebkitPerspective: '1000px' }}>
     {/* Main Tile Container */}
-    <div className="relative w-full aspect-square rounded-2xl ease-out transform-style-3d group-hover:-translate-y-3 group-hover:rotate-x-2 group-hover:rotate-y-2 hover:transition-all hover:duration-500">
+    <div
+      className="relative w-full aspect-square rounded-2xl ease-out group-hover:-translate-y-3 group-hover:rotate-x-2 group-hover:rotate-y-2 hover:transition-all hover:duration-500"
+      style={{ transformStyle: 'preserve-3d', WebkitTransformStyle: 'preserve-3d' }}
+    >
 
       {/* Outer Glow on Hover */}
       <div className="absolute -inset-1 bg-gradient-to-br from-orange/20 via-orange/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500"></div>
@@ -98,15 +101,10 @@ export const TechEngine: React.FC = () => {
       // Get all tiles
       const tiles = gsap.utils.toArray('.tech-tile');
 
-      // Set initial states - tiles immediately visible
-      gsap.set(badgeRef.current, { y: 30, opacity: 0 });
-      gsap.set(titleRef.current, { y: 50, opacity: 0 });
-      gsap.set(subtitleRef.current, { y: 40, opacity: 0 });
-      // Tiles start fully visible - no animation
+      // Tiles start fully visible - no animation needed
       gsap.set(tiles, { y: 0, opacity: 1, scale: 1, rotateX: 0 });
-      gsap.set(footerRef.current, { y: 30, opacity: 0 });
 
-      // Create master timeline
+      // Create master timeline with fromTo animations (no hidden state)
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -116,35 +114,28 @@ export const TechEngine: React.FC = () => {
         }
       });
 
-      // Animate header elements
-      tl.to(badgeRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power3.out"
-      })
-        .to(titleRef.current, {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out"
-        }, "-=0.4")
-        .to(subtitleRef.current, {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          ease: "power3.out"
-        }, "-=0.5");
-
-      // No tile animation - they're already visible
+      // Animate header elements with fromTo (content visible by default)
+      tl.fromTo(badgeRef.current,
+        { y: 15, opacity: 0.7 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+      )
+        .fromTo(titleRef.current,
+          { y: 25, opacity: 0.7 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+          "-=0.3"
+        )
+        .fromTo(subtitleRef.current,
+          { y: 20, opacity: 0.7 },
+          { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+          "-=0.4"
+        );
 
       // Footer animation
-      tl.to(footerRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power3.out"
-      }, "-=0.3");
+      tl.fromTo(footerRef.current,
+        { y: 15, opacity: 0.7 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+        "-=0.2"
+      );
 
     }, sectionRef);
 
@@ -170,7 +161,13 @@ export const TechEngine: React.FC = () => {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gray-200/50 rounded-full blur-[80px]"></div>
 
         {/* Subtle Noise Texture */}
-        <div className="absolute inset-0 opacity-[0.015]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\' x=\'0\' y=\'0\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")' }}></div>
+        <div
+          className="absolute inset-0 opacity-[0.015]"
+          style={{
+            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\' x=\'0\' y=\'0\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+            WebkitBackdropFilter: 'blur(0px)' // Force layer creation for Safari
+          }}
+        ></div>
       </div>
 
       {/* === MAIN CONTENT === */}

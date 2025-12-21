@@ -18,35 +18,60 @@ const features = [
 
 const ecosystemStyles = `
   /* Continuous Orbit Rotations - Like Original */
+  @-webkit-keyframes spin-clockwise {
+    from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  }
   @keyframes spin-clockwise {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+  @-webkit-keyframes spin-counter {
+    from { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+    to { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
   }
   @keyframes spin-counter {
     from { transform: rotate(360deg); }
     to { transform: rotate(0deg); }
   }
   .orbit-spin {
+    -webkit-animation: spin-clockwise 120s linear infinite;
     animation: spin-clockwise 120s linear infinite;
   }
   .orbit-spin-reverse {
+    -webkit-animation: spin-counter 120s linear infinite;
     animation: spin-counter 120s linear infinite;
   }
   
   /* Counter-rotate to keep content upright */
   .counter-rotate {
+    -webkit-animation: spin-counter 120s linear infinite;
     animation: spin-counter 120s linear infinite;
   }
   
   /* Ring container spins, features counter-rotate */
   .ring-container {
+    -webkit-animation: spin-clockwise 120s linear infinite;
     animation: spin-clockwise 120s linear infinite;
   }
   .feature-rotator {
+    -webkit-animation: spin-counter 120s linear infinite;
     animation: spin-counter 120s linear infinite;
   }
   
   /* Entry animations */
+  @-webkit-keyframes scale-in-center {
+    0% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
   @keyframes scale-in-center {
     0% {
       transform: scale(0);
@@ -58,16 +83,18 @@ const ecosystemStyles = `
     }
   }
   
-  @keyframes expand-from-center {
+  @-webkit-keyframes ring-expand {
     0% {
-      transform: translate(-50%, -50%) translate(0px, 0px) scale(0);
+      -webkit-transform: scale(0);
+      transform: scale(0);
       opacity: 0;
     }
     100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
       opacity: 1;
     }
   }
-  
   @keyframes ring-expand {
     0% {
       transform: scale(0);
@@ -80,6 +107,18 @@ const ecosystemStyles = `
   }
   
   /* Exit animations - fade up and out */
+  @-webkit-keyframes fade-up-out {
+    0% {
+      opacity: 1;
+      -webkit-transform: translateY(0) scale(1);
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      -webkit-transform: translateY(-50px) scale(0.9);
+      transform: translateY(-50px) scale(0.9);
+    }
+  }
   @keyframes fade-up-out {
     0% {
       opacity: 1;
@@ -92,14 +131,17 @@ const ecosystemStyles = `
   }
   
   .ring-enter {
+    -webkit-animation: ring-expand 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     animation: ring-expand 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
   
   .hub-enter {
+    -webkit-animation: scale-in-center 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     animation: scale-in-center 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
   
   .section-exit {
+    -webkit-animation: fade-up-out 0.5s ease-out forwards;
     animation: fade-up-out 0.5s ease-out forwards;
   }
 `;
@@ -143,7 +185,7 @@ export const EcosystemRing: React.FC = () => {
   }, []);
 
   // Calculate feature positions
-  const radius = isMobile ? 120 : 220;
+  const radius = isMobile ? 145 : 220;
 
   return (
     <>
@@ -179,8 +221,8 @@ export const EcosystemRing: React.FC = () => {
           className={`relative flex items-center justify-center transition-all duration-700 ${isExiting ? 'section-exit' : ''
             }`}
           style={{
-            width: isMobile ? '320px' : '600px',
-            height: isMobile ? '320px' : '600px',
+            width: isMobile ? '380px' : '600px',
+            height: isMobile ? '380px' : '600px',
             opacity: isVisible && !isExiting ? 1 : 0,
             transform: isVisible && !isExiting ? 'scale(1)' : 'scale(0.8)',
             transition: 'opacity 0.6s ease-out, transform 0.6s ease-out'
@@ -190,8 +232,8 @@ export const EcosystemRing: React.FC = () => {
           <div
             className={`absolute border border-dashed border-gray-300 rounded-full ${isVisible ? 'orbit-spin' : ''}`}
             style={{
-              width: isMobile ? '280px' : '540px',
-              height: isMobile ? '280px' : '540px',
+              width: isMobile ? '330px' : '540px',
+              height: isMobile ? '330px' : '540px',
               animationDuration: '40s',
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'scale(1)' : 'scale(0)',
@@ -203,8 +245,8 @@ export const EcosystemRing: React.FC = () => {
           <div
             className={`absolute border border-gray-300 rounded-full ${isVisible ? 'orbit-spin-reverse' : ''}`}
             style={{
-              width: isMobile ? '200px' : '360px',
-              height: isMobile ? '200px' : '360px',
+              width: isMobile ? '240px' : '360px',
+              height: isMobile ? '240px' : '360px',
               animationDuration: '25s',
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'scale(1)' : 'scale(0)',
@@ -216,9 +258,8 @@ export const EcosystemRing: React.FC = () => {
           <div
             className="relative z-20"
             style={{
-              transform: `scale(${isMobile ? 0.45 : 0.85}) ${isVisible ? 'scale(1)' : 'scale(0)'}`,
-              opacity: isVisible ? 1 : 0,
-              transition: 'opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s'
+              transform: `scale(${isMobile ? 0.5 : 0.85})`,
+              opacity: 1,
             }}
           >
             <CompactIDCard3D />
@@ -238,12 +279,12 @@ export const EcosystemRing: React.FC = () => {
                   key={`feature-${i}`}
                   className="absolute pointer-events-auto"
                   style={{
-                    width: isMobile ? 70 : 110,
-                    height: isMobile ? 70 : 110,
+                    width: isMobile ? 80 : 110,
+                    height: isMobile ? 80 : 110,
                     left: '50%',
                     top: '50%',
-                    marginLeft: isMobile ? -35 : -55,
-                    marginTop: isMobile ? -35 : -55,
+                    marginLeft: isMobile ? -40 : -55,
+                    marginTop: isMobile ? -40 : -55,
                     transform: `translate(${x}px, ${y}px) ${isVisible ? 'scale(1)' : 'scale(0)'}`,
                     opacity: isVisible ? 1 : 0,
                     transition: `opacity 0.5s ease-out ${0.5 + i * 0.05}s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.5 + i * 0.05}s`
@@ -254,7 +295,7 @@ export const EcosystemRing: React.FC = () => {
                     <MatrixToken3D
                       label={item.label}
                       icon={item.icon}
-                      size={isMobile ? 70 : 110}
+                      size={isMobile ? 80 : 110}
                       enableIdleSpin={false}
                     />
                   </div>
