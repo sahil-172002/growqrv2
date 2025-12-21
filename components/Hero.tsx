@@ -236,15 +236,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenWaitlist }) => {
                 <div className="absolute inset-[6px] bg-white/10 backdrop-blur-md rounded-[2.2rem] border border-white/25 flex flex-col items-center overflow-hidden">
 
                   {/* Unified ID Badge - Inside card at top */}
-                  <div className="absolute top-5 left-0 w-full flex justify-center z-30 pointer-events-none">
-                    <div className="flex justify-center">
-                      <div className="bg-orange px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 pointer-events-auto">
-                        <div className="flex items-center gap-2">
-                          <span className="relative flex h-2 w-2">
+                  <div className="absolute top-3 left-0 w-full flex justify-center z-30 pointer-events-none">
+                    <div className="flex justify-center scale-90">
+                      <div className="bg-orange px-3.5 py-1 rounded-full shadow-lg flex items-center gap-1.5 pointer-events-auto">
+                        <div className="flex items-center gap-1.5">
+                          <span className="relative flex h-1.5 w-1.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
                           </span>
-                          <span className="text-[10px] font-bold tracking-widest text-white uppercase font-montreal">
+                          <span className="text-[9px] font-bold tracking-widest text-white uppercase font-montreal">
                             Unified QR
                           </span>
                         </div>

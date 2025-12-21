@@ -128,17 +128,17 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
                             exit={{ opacity: 0 }}
                         ></motion.div>
 
-                        {/* Dropdown Panel */}
+                        {/* Dropdown Panel - Full screen elegant overlay */}
                         <motion.div
-                            className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-2xl"
+                            className="absolute inset-x-0 top-0 bg-white shadow-2xl"
                             initial={{ y: "-100%", opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: "-100%", opacity: 0 }}
                             transition={{ type: "spring", damping: 30, stiffness: 300 }}
                         >
-                            <div className="container mx-auto max-w-7xl px-6 pt-24 pb-8">
-                                {/* Menu Links */}
-                                <nav className="flex flex-col space-y-1">
+                            <div className="container mx-auto max-w-7xl px-4 pt-20 pb-6">
+                                {/* Menu Links - Full width rows */}
+                                <nav className="flex flex-col">
                                     {navLinks.map((item, i) => (
                                         <motion.div
                                             key={item.label}
@@ -149,7 +149,7 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
                                         >
                                             <Link
                                                 to={item.to}
-                                                className="group block py-4 px-6 text-2xl md:text-3xl font-light text-gray-800 hover:text-orange hover:bg-orange/5 rounded-xl transition-all duration-300"
+                                                className="group flex items-center justify-center w-full py-4 px-4 text-xl font-medium text-gray-800 hover:text-orange hover:bg-orange/5 rounded-xl transition-all duration-300 border-b border-gray-100 last:border-b-0"
                                                 onClick={toggleMenu}
                                             >
                                                 <span className="relative">
@@ -160,25 +160,6 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
                                         </motion.div>
                                     ))}
                                 </nav>
-
-                                {/* CTA in Dropdown - Always shown */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.4 }}
-                                    exit={{ opacity: 0, y: 20 }}
-                                    className="mt-6 pt-6 border-t border-gray-200 md:hidden"
-                                >
-                                    <button
-                                        onClick={() => {
-                                            toggleMenu();
-                                            onOpenWaitlist();
-                                        }}
-                                        className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-orange to-orange/90 text-white text-base font-semibold rounded-xl shadow-lg shadow-orange/25 hover:shadow-orange/40 hover:scale-105 transition-all duration-300"
-                                    >
-                                        Get Early Access
-                                    </button>
-                                </motion.div>
                             </div>
                         </motion.div>
                     </motion.div>
@@ -189,3 +170,4 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
 }
 
 export { Navbar }
+
