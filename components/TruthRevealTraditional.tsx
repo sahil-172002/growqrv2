@@ -26,156 +26,72 @@ export const TruthRevealTraditional: React.FC = () => {
                         </h2>
                     </div>
 
-                    {/* Premium Dark Glassmorphism 3-Column Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                    {/* Minimal Text Layout - Clean & Professional */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20 max-w-6xl mx-auto">
 
-                        {/* Card 1: HIDDEN */}
-                        <div className="group relative">
-                            {/* Glass container with inner border */}
-                            <div className="relative h-full bg-gradient-to-br from-gray-900/95 via-gray-900/90 to-black/95 rounded-3xl overflow-hidden backdrop-blur-xl border border-white/[0.08] transition-all duration-300 ease-out group-hover:border-white/[0.15] group-hover:scale-[1.02]">
-
-                                {/* Inner glass stroke */}
-                                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none"></div>
-
-                                {/* Radial spotlight on hover */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out pointer-events-none bg-[radial-gradient(600px_circle_at_var(--mouse-x)_var(--mouse-y),rgba(255,106,47,0.06),transparent_40%)]"></div>
-
-                                {/* Orange light leak */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                {/* Enormous watermark number */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[16rem] font-black text-white/[0.02] leading-none pointer-events-none select-none font-montreal">
-                                    01
-                                </div>
-
-                                {/* Content */}
-                                <div className="relative p-10 flex flex-col h-full">
-
-                                    {/* Minimal icon */}
-                                    <div className="mb-auto">
-                                        <svg className="w-12 h-12 text-white/40 group-hover:text-orange/60 transition-colors duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                                            <path d="M2 17l10 5 10-5" />
-                                            <path d="M2 12l10 5 10-5" />
-                                        </svg>
-                                    </div>
-
-                                    {/* Text content */}
-                                    <div className="mt-16 space-y-3">
-                                        <h3 className="text-3xl md:text-4xl font-light text-white font-montreal tracking-tight">
-                                            Hidden
-                                        </h3>
-                                        <p className="text-base text-gray-400 font-light leading-relaxed font-montreal">
-                                            Behind Unclear Pathways.
-                                        </p>
-                                    </div>
-
-                                    {/* Subtle accent line with gradient */}
-                                    <div className="mt-6 h-[1px] w-16 bg-gradient-to-r from-orange/40 via-orange/20 to-transparent group-hover:w-24 transition-all duration-300 ease-out"></div>
-                                </div>
-
-                                {/* Bottom light leak */}
-                                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange/20 to-transparent"></div>
+                        {/* Item 1: Hidden */}
+                        <div className="flex flex-col items-center text-center group cursor-default">
+                            {/* Icon with subtle scale effect */}
+                            <div className="mb-5 p-4 bg-orange/5 rounded-full text-orange opacity-80 group-hover:opacity-100 group-hover:bg-orange/10 group-hover:scale-110 transition-all duration-300 ease-out">
+                                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                </svg>
                             </div>
+
+                            {/* Larger, sharper heading */}
+                            <h3 className="text-3xl font-medium text-black font-montreal mb-3 tracking-tight">
+                                Hidden
+                            </h3>
+
+                            {/* Dynamic dividing line */}
+                            <div className="h-px w-12 bg-orange/30 mb-4 group-hover:w-24 transition-all duration-300 ease-out"></div>
+
+                            {/* Refined description text */}
+                            <p className="text-lg text-gray-500 font-montreal font-light leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                                Behind Unclear Pathways.
+                            </p>
                         </div>
 
-                        {/* Card 2: BURIED */}
-                        <div className="group relative">
-                            {/* Glass container with inner border */}
-                            <div className="relative h-full bg-gradient-to-br from-gray-900/95 via-gray-900/90 to-black/95 rounded-3xl overflow-hidden backdrop-blur-xl border border-white/[0.08] transition-all duration-300 ease-out group-hover:border-white/[0.15] group-hover:scale-[1.02]">
-
-                                {/* Inner glass stroke */}
-                                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none"></div>
-
-                                {/* Radial spotlight on hover */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out pointer-events-none bg-[radial-gradient(600px_circle_at_var(--mouse-x)_var(--mouse-y),rgba(255,106,47,0.06),transparent_40%)]"></div>
-
-                                {/* Orange light leak */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                {/* Enormous watermark number */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[16rem] font-black text-white/[0.02] leading-none pointer-events-none select-none font-montreal">
-                                    02
-                                </div>
-
-                                {/* Content */}
-                                <div className="relative p-10 flex flex-col h-full">
-
-                                    {/* Minimal icon */}
-                                    <div className="mb-auto">
-                                        <svg className="w-12 h-12 text-white/40 group-hover:text-orange/60 transition-colors duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" />
-                                            <path d="M3 9h18" />
-                                            <path d="M9 21V9" />
-                                        </svg>
-                                    </div>
-
-                                    {/* Text content */}
-                                    <div className="mt-16 space-y-3">
-                                        <h3 className="text-3xl md:text-4xl font-light text-white font-montreal tracking-tight">
-                                            Buried
-                                        </h3>
-                                        <p className="text-base text-gray-400 font-light leading-relaxed font-montreal">
-                                            In Broken Systems.
-                                        </p>
-                                    </div>
-
-                                    {/* Subtle accent line with gradient */}
-                                    <div className="mt-6 h-[1px] w-16 bg-gradient-to-r from-orange/40 via-orange/20 to-transparent group-hover:w-24 transition-all duration-300 ease-out"></div>
-                                </div>
-
-                                {/* Bottom light leak */}
-                                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange/20 to-transparent"></div>
+                        {/* Item 2: Buried */}
+                        <div className="flex flex-col items-center text-center group cursor-default">
+                            <div className="mb-5 p-4 bg-orange/5 rounded-full text-orange opacity-80 group-hover:opacity-100 group-hover:bg-orange/10 group-hover:scale-110 transition-all duration-300 ease-out">
+                                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <path d="M3 9h18" />
+                                    <path d="M9 21V9" />
+                                </svg>
                             </div>
+
+                            <h3 className="text-3xl font-medium text-black font-montreal mb-3 tracking-tight">
+                                Buried
+                            </h3>
+
+                            <div className="h-px w-12 bg-orange/30 mb-4 group-hover:w-24 transition-all duration-300 ease-out"></div>
+
+                            <p className="text-lg text-gray-500 font-montreal font-light leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                                In Broken Systems.
+                            </p>
                         </div>
 
-                        {/* Card 3: LOST */}
-                        <div className="group relative">
-                            {/* Glass container with inner border */}
-                            <div className="relative h-full bg-gradient-to-br from-gray-900/95 via-gray-900/90 to-black/95 rounded-3xl overflow-hidden backdrop-blur-xl border border-white/[0.08] transition-all duration-300 ease-out group-hover:border-white/[0.15] group-hover:scale-[1.02]">
-
-                                {/* Inner glass stroke */}
-                                <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none"></div>
-
-                                {/* Radial spotlight on hover */}
-                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out pointer-events-none bg-[radial-gradient(600px_circle_at_var(--mouse-x)_var(--mouse-y),rgba(255,106,47,0.06),transparent_40%)]"></div>
-
-                                {/* Orange light leak */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                {/* Enormous watermark number */}
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[16rem] font-black text-white/[0.02] leading-none pointer-events-none select-none font-montreal">
-                                    03
-                                </div>
-
-                                {/* Content */}
-                                <div className="relative p-10 flex flex-col h-full">
-
-                                    {/* Minimal icon */}
-                                    <div className="mb-auto">
-                                        <svg className="w-12 h-12 text-white/40 group-hover:text-orange/60 transition-colors duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                            <circle cx="12" cy="12" r="10" />
-                                            <path d="M12 6v6l4 2" />
-                                        </svg>
-                                    </div>
-
-                                    {/* Text content */}
-                                    <div className="mt-16 space-y-3">
-                                        <h3 className="text-3xl md:text-4xl font-light text-white font-montreal tracking-tight">
-                                            Lost
-                                        </h3>
-                                        <p className="text-base text-gray-400 font-light leading-relaxed font-montreal">
-                                            In The Noise.
-                                        </p>
-                                    </div>
-
-                                    {/* Subtle accent line with gradient */}
-                                    <div className="mt-6 h-[1px] w-16 bg-gradient-to-r from-orange/40 via-orange/20 to-transparent group-hover:w-24 transition-all duration-300 ease-out"></div>
-                                </div>
-
-                                {/* Bottom light leak */}
-                                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange/20 to-transparent"></div>
+                        {/* Item 3: Lost */}
+                        <div className="flex flex-col items-center text-center group cursor-default">
+                            <div className="mb-5 p-4 bg-orange/5 rounded-full text-orange opacity-80 group-hover:opacity-100 group-hover:bg-orange/10 group-hover:scale-110 transition-all duration-300 ease-out">
+                                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M12 6v6l4 2" />
+                                </svg>
                             </div>
+
+                            <h3 className="text-3xl font-medium text-black font-montreal mb-3 tracking-tight">
+                                Lost
+                            </h3>
+
+                            <div className="h-px w-12 bg-orange/30 mb-4 group-hover:w-24 transition-all duration-300 ease-out"></div>
+
+                            <p className="text-lg text-gray-500 font-montreal font-light leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                                In The Noise.
+                            </p>
                         </div>
 
                     </div>

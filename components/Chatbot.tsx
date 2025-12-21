@@ -16,27 +16,26 @@ const FAQ_ITEMS = [
     {
         id: 1,
         icon: HelpCircle,
-        question: "What exactly is GrowQR?",
-        answer: "GrowQR is the world’s first AI-powered Skill Identity & Readiness platform linking you to your dynamic Q-Score — a living composite of 25+ readiness attributes."
+        question: "What is GrowQR?",
+        answer: "GrowQR is the world’s first AI-powered Skill Identity & Readiness platform. One lifetime QR Key links you to your dynamic Q-Score™ — a living composite of 25+ readiness attributes that evolves with you."
     },
     {
         id: 2,
         icon: Zap,
-        question: "What is Q-SCORE™?",
-        answer: "Q-Score is your Cumulative Readiness Quotient — an AI-computed score aggregating 25+ dimensions (Adaptability, Technical, Emotional, etc.) into one trusted metric."
+        question: "What is Q-Score™?",
+        answer: "Q-Score™ is your single, verified readiness metric. It’s an AI-driven composite score (out of 100) combining 25+ attributes like IQ, EQ, Adaptability (AQ), and Technical skills into one trusted proof-of-skill."
     },
-
+    {
+        id: 3,
+        icon: Users,
+        question: "Who can use GrowQR?",
+        answer: "Everyone! Individuals chasing dreams, Enterprises building teams, Institutions empowering students, and Smart Cities driving progress. It's a unified ecosystem for growth."
+    },
     {
         id: 4,
-        icon: Users,
-        question: "Who can join GrowQR?",
-        answer: "Everyone! Individuals (students, professionals), Organizations (hiring), Institutions (universities), and Governments (smart cities) all connect in one ecosystem."
-    },
-    {
-        id: 5,
         icon: MessageSquare,
         question: "How do I get started?",
-        answer: "The platform is in active development. Join the waitlist at growqr.ai — early members get priority access when private beta opens in Q1–Q2 2026."
+        answer: "Head to growqr.ai and sign up for the waitlist! Be first in line to claim your lifetime QR Key when our private beta opens in Q1–Q2 2026."
     },
 ];
 
@@ -379,6 +378,7 @@ export const Chatbot: React.FC = () => {
                     /* Desktop: Floating Bubble */
                     sm:fixed sm:bottom-24 sm:right-6 sm:left-auto
                     sm:w-[380px] sm:max-w-[calc(100vw-48px)]
+                    sm:max-h-[70vh] /* Prevent overlap with navbar */
 
                     bg-white backdrop-blur-xl
                     overflow-hidden
@@ -389,7 +389,7 @@ export const Chatbot: React.FC = () => {
                     }`}
             >
                 {/* Header */}
-                <div className="bg-gray-900 px-5 py-4 relative overflow-hidden">
+                <div className="bg-gray-900 px-5 py-4 relative overflow-hidden flex-shrink-0">
                     <div className="absolute inset-0 bg-gradient-to-br from-orange/10 via-transparent to-transparent" />
 
                     <div className="relative flex items-center gap-3">
@@ -422,7 +422,7 @@ export const Chatbot: React.FC = () => {
                 </div>
 
                 {/* Messages Container */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50/50 to-white sm:h-[340px]">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50/50 to-white h-[300px] sm:h-[320px]">
                     {messages.map((message, index) => (
                         <div
                             key={message.id}

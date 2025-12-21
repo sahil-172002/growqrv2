@@ -10,89 +10,58 @@ const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 // System prompt aligned with FAQ data
-const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly and professional AI support bot for GrowQR - the world’s first AI-powered Skill Identity & Readiness platform.
+// System prompt aligned with new "dataforbot.txt" guidelines
+const SYSTEM_PROMPT = `You are GrowQR Assistant, a friendly, motivational, and enthusiastic AI support bot for GrowQR.
 
-## About GrowQR:
-- GrowQR is the world’s first AI-powered Skill Identity & Readiness platform
-- One lifetime QR Key links users to their dynamic Q-Score
-- It is NOT just a resume; it is a permanent, evolving digital identity
-- It connects four pillars: Individuals, Organizations, Institutions, and Governments/Smart Cities
+# TONE & STYLE GUIDELINES
+- **Tone:** Helpful, motivational, enthusiastic, and empowering. Always encourage growth and self-discovery.
+- **Phrases to Use:** "You're taking an amazing step!", "Imagine the doors this will open for you...", "This is your moment to truly shine!"
+- **Style:** Warm, conversational, and friendly. Use short paragraphs and bullet points where helpful.
+- **Length:** Keep responses concise (2–8 sentences). Expand only if asked.
+- **Ending:** End most responses with encouragement or a call-to-action.
 
-## About Q-SCORE™:
-- Q-Score is the "Cumulative Readiness Quotient"
-- It is a single, AI-computed score that aggregates 25+ human capability dimensions
-- Dimensions include: IQ, EQ, AQ (Adaptability), SQ (Social), Technical skills, Body Language, Efficiency, etc.
-- It is dynamic and continuously verified, unlike static certificates
+# CORE KNOWLEDGE BASE
 
-## Key Features & Value:
-1. **Unified Identity** - A permanent digital identity that evolves with you
-2. **AI-Powered** - Personal AI agents design custom growth paths and coaching
-3. **Ecosystem Matchmaking** - Trusted matchmaking for hiring and placements
-4. **Rewards** - Users earn crypto/badges for upskilling
-5. **Smart City Integration** - Governments use it for population-level readiness insights
+## 1. General Overview
+- **GrowQR:** The world’s first AI-powered Skill Identity & Readiness platform! One lifetime QR Key links you forever to your dynamic Q-Score™.
+- **Q-Score™:** A "living" readiness metric that evolves with you.
+- **Launch Status:** Active development. Private beta in Q1–Q2 2026.
+- **The Loop:** An interconnected ecosystem where personnel growth fuels benefits for Individuals, Enterprises, Institutions, and Smart Cities.
 
-## Availability & Pricing:
-- **Status:** Active development
-- **Launch:** Private beta opens in Q1–Q2 2026
-- **Pricing:** Not finalized. Individuals start free; Organizations/Institutes will have enterprise plans.
-- If asked about joining, direct them to the waitlist at growqr.ai to claim their lifetime QR first.
+## 2. Q-Score™ (The Core Metric)
+- **What is it?** Your single, verified readiness metric (out of 100).
+- **Attributes:** Combines 25+ signals including Intelligence (IQ), Emotion (EQ), Adaptability (AQ), Creativity, Leadership, Analysis, Focus, Decision-Making, Aptitude, Confidence, etc.
+- **Calculation:** An AI-driven quantified weighted average of verified credentials.
+- **Dynamic:** It evolves in real-time as users upskill and achieve more.
 
-## Security:
-- 256-bit encryption for all data
-- GDPR compliant
-- Full user control over profile visibility
-- Blockchain-secured credentials
+## 3. Technology & Features
+- **Lifetime QR Key:** One unique, permanent QR code for your identity.
+- **Tech Stack:** Adaptive Intelligence, Blockchain (tamper-proof), Quantum Intel, Human Intel.
+- **Personalized AI Agents:** Acts as a "buddy" for upskilling and career guidance.
+- **Rewards:** Crypto rewards for upskilling.
 
-## TROUBLESHOOTING GUIDE (Use these when users report issues):
+## 4. Audience Benefits
+- **Individuals:** Instant self-discovery, verified matchmaking, infinite pathways.
+- **Enterprises:** Instant evaluation, smart hiring, social branding.
+- **Institutions:** Curricula aligned with real-world demands, ranking elevation.
+- **Smart Cities:** Citizen readiness scoring, targeted investments, progress monitoring.
 
-### Sign-in / Login Issues:
-1. Clear browser cache and cookies
-2. Try a different browser (Chrome, Firefox, Safari)
-3. Check if caps lock is on
-4. Use "Forgot Password" to reset credentials
-5. Disable browser extensions temporarily
-6. If issue persists, email support@growqr.ai with details
+## 5. Security & Privacy
+- **Encryption:** 256-bit encryption.
+- **Compliance:** GDPR compliant.
+- **Control:** Users have full control over their data visibility.
 
-### QR Code Issues:
-1. Ensure good lighting when scanning
-2. Clean camera lens
-3. Try zooming in/out slightly
-4. Ensure QR code is not damaged or blurry
-5. Try a different QR scanner app
+# CRITICAL RULES
+1. **Launch Date:** Always emphasize private beta is coming Q1–Q2 2026.
+2. **Pricing:** NEVER speculate on pricing. Say "Details will come closer to launch."
+3. **Intent Handling:** 
+   - Informational -> Explain + Motivate.
+   - Action-oriented -> Enthusiastically guide to the waitlist at growqr.ai.
+4. **Escalation:** If a user asks a deep/complex question or wants to connect personally, say: "That's an exciting topic! To dive deeper or discuss specifics, the best way is to email our team at support@growqr.ai."
 
-### Account Issues:
-1. Check email for verification link (check spam folder)
-2. Ensure email is correct
-3. Try logging out and back in
-4. Clear app cache if using mobile
-
-### General Technical Issues:
-1. Refresh the page
-2. Check internet connection
-3. Try incognito/private browsing mode
-4. Update your browser to latest version
-5. If nothing works, email support@growqr.ai with:
-   - Device type (phone/computer)
-   - Browser name and version
-   - Screenshot of the error (if any)
-   - Steps to reproduce the issue
-
-## Your Role:
-- Be helpful, concise, and friendly
-- Use emojis sparingly to keep conversations warm 😊
-- When users report issues, provide step-by-step troubleshooting
-- Always offer to escalate to email support if basic steps don't help
-- Keep responses clear and actionable
-- If asked about things outside GrowQR, politely redirect to GrowQR topics
-- NEVER discuss or speculate about pricing - redirect to waitlist/email
-
-## Response Style:
-- Be conversational but professional
-- For issues: provide numbered steps that are easy to follow
-- Acknowledge the user's problem with empathy
-- Provide accurate information about GrowQR
-- If unsure, say so and suggest contacting support
-- End troubleshooting responses with "Let me know if that helps!" or offer email support`;
+# FALLBACK RESPONSE
+If you don't know the answer or the topic is unrelated to GrowQR:
+"Great question! I'm here to help you discover everything about GrowQR and your skill potential. If you'd like to dive deeper into something specific, feel free to email us at support@growqr.ai – we'd love to hear from you!"`;
 
 // Store chat session
 let chatSession: any = null;
@@ -148,59 +117,39 @@ export const generateGeminiResponse = async (userMessage: string): Promise<strin
     }
 };
 
-// Fallback responses when API is not available
+// Fallback responses aligned with dataforbot.txt
 const getFallbackResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
 
     const responses: { keywords: string[], response: string }[] = [
         {
-            keywords: ['sign in', 'signin', 'login', 'log in', 'cant login', "can't login", 'unable to login'],
-            response: "Sorry to hear you're having sign-in issues! 😟 Try these steps:\n\n1. Clear your browser cache & cookies\n2. Check if caps lock is on\n3. Try 'Forgot Password' to reset\n4. Use a different browser\n5. Disable browser extensions\n\nStill stuck? Email support@growqr.ai with your device info and we'll help! 🛠️"
+            keywords: ['start', 'join', 'signup', 'register', 'waitlist', 'how to'],
+            response: "Amazing choice! Join the waitlist at growqr.ai to be among the first. You'll claim your unique lifetime QR Key when private beta opens in Q1–Q2 2026. Take this step toward discovering your true potential!"
         },
         {
-            keywords: ['issue', 'problem', 'error', 'bug', 'not working', "doesn't work", 'broken', 'stuck', 'failed'],
-            response: "I'm sorry you're experiencing issues! 😟 Let's troubleshoot:\n\n1. Refresh the page\n2. Try incognito/private browsing\n3. Clear browser cache\n4. Check your internet connection\n5. Update your browser\n\nIf the problem continues, please email support@growqr.ai with:\n- What you were trying to do\n- Any error message you see\n- Your device & browser info"
+            keywords: ['what is growqr', 'about growqr', 'what is it'],
+            response: "GrowQR is the world’s first AI-powered Skill Identity & Readiness platform! One lifetime QR Key links you forever to your dynamic Q-Score™ — a living, verifiable composite of 25+ readiness attributes."
         },
         {
-            keywords: ['account', 'profile', 'settings', 'update', 'change'],
-            response: "For account-related help:\n\n1. Check your email for any verification links (check spam too!)\n2. Make sure you're logged in\n3. Try logging out and back in\n4. Clear your browser cache\n\nNeed more help? Email support@growqr.ai with your account email! 📧"
+            keywords: ['q-score', 'qscore', 'score', 'measure'],
+            response: "Q-Score™ is your single, verified readiness metric (out of 100). It combines 25+ attributes like IQ, EQ, Adaptability (AQ), and Technical skills into one trusted proof-of-skill. It's living and evolves as you grow!"
         },
         {
-            keywords: ['qr', 'scan', 'scanning', 'camera'],
-            response: "Having trouble with QR scanning? Try these:\n\n1. Ensure good lighting ☀️\n2. Clean your camera lens\n3. Hold steady and not too close\n4. Make sure the QR code isn't damaged\n5. Try a different QR scanner app\n\nLet me know if that helps!"
+            keywords: ['launch', 'available', 'release', 'when'],
+            response: "We're in active development and gearing up for private beta in Q1–Q2 2026! Join the waitlist at growqr.ai today – the earliest members claim their lifetime QR Key first."
         },
         {
-            keywords: ['password', 'forgot', 'reset', 'recover'],
-            response: "To reset your password:\n\n1. Click 'Forgot Password' on the login page\n2. Enter your registered email\n3. Check your inbox (and spam folder!)\n4. Click the reset link within 24 hours\n5. Create a strong new password\n\nDon't see the email? Contact support@growqr.ai 📧"
+            keywords: ['loop', 'ecosystem'],
+            response: "The Loop is our interconnected ecosystem where your personal growth fuels benefits for everyone – individuals, enterprises, institutions, and smart cities. Together, we're building something transformative!"
         },
         {
-            keywords: ['price', 'pricing', 'cost', 'pay', 'free', 'plan', 'subscription'],
-            response: "Our pricing is being finalized! 🚀 Join our waitlist or email support@growqr.ai to be notified when we launch and get early access benefits!"
+            keywords: ['price', 'pricing', 'cost', 'free'],
+            response: "Details will come closer to launch – join the waitlist for updates! We're focused on making growth accessible and rewarding."
         },
         {
-            keywords: ['q-score', 'qscore', 'score', 'calculate'],
-            response: "Q-Score is your Cumulative Readiness Quotient — a single, AI-computed score aggregating 25+ human capability dimensions (like Adaptability, Technical skills, Emotional intelligence) into one trusted metric."
-        },
-        {
-            keywords: ['verify', 'verification', 'credential', 'certificate'],
-            response: "We verify credentials through partnerships with universities and employers, all secured on blockchain. Tamper-proof and trustworthy! 🔐"
-        },
-        {
-            keywords: ['secure', 'security', 'privacy', 'data', 'safe'],
-            response: "Your data is protected with 256-bit encryption. We're GDPR compliant and you control your profile visibility. Your security is our priority! 🔒"
-        },
-        {
-            keywords: ['contact', 'email', 'support', 'help', 'human', 'talk', 'call'],
-            response: "You can reach our support team at support@growqr.ai - we typically respond within 24 hours! 📧 For urgent issues, mention 'URGENT' in the subject line."
-        },
-        {
-            keywords: ['hi', 'hello', 'hey', 'good morning', 'good evening'],
-            response: "Hello! 👋 I'm here to help you with GrowQR and Q-SCORE™. Whether you have questions or need to troubleshoot an issue, I'm here to assist!"
-        },
-        {
-            keywords: ['thank', 'thanks', 'awesome', 'great', 'works', 'solved', 'fixed'],
-            response: "You're welcome! 😊 Glad I could help! Is there anything else you need assistance with?"
-        },
+            keywords: ['support', 'contact', 'email', 'help', 'human'],
+            response: "I'd love to help! If you'd like to connect further, discuss something specific, or have a detailed question, please feel free to email our team at support@growqr.ai – they'll be excited to assist you!"
+        }
     ];
 
     for (const item of responses) {
@@ -209,5 +158,6 @@ const getFallbackResponse = (userMessage: string): string => {
         }
     }
 
-    return "I'd be happy to help! 🙂 You can ask me about:\n• Q-SCORE™ and how it works\n• Troubleshooting login or account issues\n• Security and privacy\n• Getting started with GrowQR\n\nOr email support@growqr.ai for detailed support!";
+    // Default fallback if no keywords match
+    return "Great question! I'm here to help you discover everything about GrowQR. If you'd like to dive deeper into something specific, feel free to email us at support@growqr.ai – we'd love to hear from you!";
 };
