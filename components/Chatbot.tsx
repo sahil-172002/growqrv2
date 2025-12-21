@@ -11,30 +11,32 @@ interface Message {
 }
 
 // FAQ Data with icons
+// FAQ Data with icons
 const FAQ_ITEMS = [
     {
         id: 1,
         icon: HelpCircle,
-        question: "What is Q-SCORE™?",
-        answer: "Q-SCORE™ is your verified readiness metric that showcases your skills, experience, and potential to employers. It's calculated using AI-driven analysis of your verified credentials."
+        question: "What exactly is GrowQR?",
+        answer: "GrowQR is the world’s first AI-powered Skill Identity & Readiness platform linking you to your dynamic Q-Score — a living composite of 25+ readiness attributes."
     },
     {
         id: 2,
         icon: Zap,
-        question: "How do I get started?",
-        answer: "Getting started is easy! Simply click 'Get My Q-SCORE™' to begin your verification journey. You'll be guided through a quick onboarding process."
+        question: "What is Q-SCORE™?",
+        answer: "Q-Score is your Cumulative Readiness Quotient — an AI-computed score aggregating 25+ dimensions (Adaptability, Technical, Emotional, etc.) into one trusted metric."
     },
-    {
-        id: 3,
-        icon: Shield,
-        question: "Is my data secure?",
-        answer: "Absolutely! We use 256-bit encryption and are GDPR compliant. You have full control over who sees your Q-SCORE™ and profile information."
-    },
+
     {
         id: 4,
         icon: Users,
-        question: "Who uses GrowQR?",
-        answer: "GrowQR is used by individuals seeking opportunities, educational institutions, employers, and organizations looking for verified talent."
+        question: "Who can join GrowQR?",
+        answer: "Everyone! Individuals (students, professionals), Organizations (hiring), Institutions (universities), and Governments (smart cities) all connect in one ecosystem."
+    },
+    {
+        id: 5,
+        icon: MessageSquare,
+        question: "How do I get started?",
+        answer: "The platform is in active development. Join the waitlist at growqr.ai — early members get priority access when private beta opens in Q1–Q2 2026."
     },
 ];
 
