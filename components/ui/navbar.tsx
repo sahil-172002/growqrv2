@@ -161,6 +161,23 @@ const Navbar: React.FC<NavbarProps> = ({ onOpenWaitlist }) => {
                                             </Link>
                                         </motion.div>
                                     ))}
+
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: navLinks.length * 0.08 + 0.2, duration: 0.3 }}
+                                        className="mt-6 px-4 md:hidden"
+                                    >
+                                        <button
+                                            onClick={() => {
+                                                onOpenWaitlist();
+                                                toggleMenu();
+                                            }}
+                                            className="w-full py-4 bg-gray-900 text-white text-lg font-semibold rounded-2xl shadow-lg shadow-gray-200 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2"
+                                        >
+                                            Early Access
+                                        </button>
+                                    </motion.div>
                                 </nav>
                             </div>
                         </motion.div>

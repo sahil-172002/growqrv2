@@ -1,7 +1,81 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Check, Loader2, User, Building2 } from 'lucide-react';
+import { X, Check, Loader2, User, Building2, MapPin } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import countryList from 'country-list-js';
+
+// Get sorted list of countries
+const countries = countryList.names().sort();
+
+interface CountryAutocompleteProps {
+    value: string;
+    onChange: (value: string) => void;
+    required?: boolean;
+}
+
+const CountryAutocomplete: React.FC<CountryAutocompleteProps> = ({ value, onChange, required }) => {
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        onChange(val);
+
+        if (val.length > 0) {
+            const filtered = countries.filter(c =>
+                c.toLowerCase().includes(val.toLowerCase())
+            );
+            setSuggestions(filtered);
+            setShowSuggestions(true);
+        } else {
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSelect = (country: string) => {
+        onChange(country);
+        setShowSuggestions(false);
+    };
+
+    // Close suggestions on blur (with delay to allow click)
+    const handleBlur = () => {
+        setTimeout(() => setShowSuggestions(false), 200);
+    };
+
+    return (
+        <div className="relative group">
+            <input
+                type="text"
+                required={required}
+                value={value}
+                onChange={handleInput}
+                onFocus={(e) => {
+                    if (e.target.value) setShowSuggestions(true);
+                }}
+                onBlur={handleBlur}
+                className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-orange/20 focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-sm"
+                placeholder="Start typing your country..."
+                autoComplete="off"
+            />
+            <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none transition-colors group-focus-within:text-orange" size={16} />
+
+            {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 left-0 right-0 mt-2 bg-white rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 max-h-48 overflow-y-auto overflow-x-hidden">
+                    {suggestions.map((country) => (
+                        <button
+                            key={country}
+                            type="button"
+                            onClick={() => handleSelect(country)}
+                            className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-orange/5 hover:text-orange transition-colors border-b border-gray-50 last:border-0"
+                        >
+                            {country}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 interface WaitlistModalProps {
     isOpen: boolean;
@@ -259,13 +333,10 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
 
                                         <div className="space-y-1.5">
                                             <label className="block text-sm font-semibold text-gray-900 ml-1">Country <span className="text-red-500">*</span></label>
-                                            <input
-                                                type="text"
-                                                required
+                                            <CountryAutocomplete
                                                 value={country}
-                                                onChange={(e) => setCountry(e.target.value)}
-                                                className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-orange/20 focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-sm"
-                                                placeholder="United States"
+                                                onChange={setCountry}
+                                                required
                                             />
                                         </div>
                                     </>
@@ -321,13 +392,10 @@ export const WaitlistModal: React.FC<WaitlistModalProps> = ({
 
                                         <div className="space-y-1.5">
                                             <label className="block text-sm font-semibold text-gray-900 ml-1">Country <span className="text-red-500">*</span></label>
-                                            <input
-                                                type="text"
-                                                required
+                                            <CountryAutocomplete
                                                 value={orgCountry}
-                                                onChange={(e) => setOrgCountry(e.target.value)}
-                                                className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-orange/20 focus:ring-4 focus:ring-orange/5 outline-none transition-all placeholder:text-gray-300 text-sm"
-                                                placeholder="United States"
+                                                onChange={setOrgCountry}
+                                                required
                                             />
                                         </div>
 
