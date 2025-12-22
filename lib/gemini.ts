@@ -401,6 +401,19 @@ export const resetChatHistory = () => {
 };
 
 // ============================================================================
+// RATE LIMITING & RETRY LOGIC
+// ============================================================================
+const MAX_RETRIES = 3;
+const BASE_DELAY_MS = 1000; // 1 second base delay
+
+// Helper to delay execution
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Track last request time to throttle requests
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL_MS = 500; // Minimum 500ms between requests
+
+// ============================================================================
 // MAIN FUNCTION
 // ============================================================================
 export const generateGeminiResponse = async (userMessage: string): Promise<string> => {
@@ -416,34 +429,62 @@ export const generateGeminiResponse = async (userMessage: string): Promise<strin
         return ANSWERS.FALLBACK;
     }
 
-    // STEP 3: Use AI for truly unknown questions
-    try {
-        if (!chatSession) {
-            chatSession = model.startChat({
-                history: [
-                    { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
-                    { role: "model", parts: [{ text: "Understood! I will identify intent AND context to select the correct approved answer." }] },
-                ],
-                generationConfig: {
-                    maxOutputTokens: 600,
-                    temperature: 0.1,
-                },
-            });
-        }
-
-        const result = await chatSession.sendMessage(userMessage);
-        const response = await result.response;
-        return response.text();
-
-    } catch (error: any) {
-        // Check if it's a rate limit error
-        if (error?.message?.includes('429') || error?.message?.includes('quota')) {
-            console.warn('⚠️ Gemini API rate limit reached. Using fallback responses.');
-        } else {
-            console.error('❌ Gemini Error:', error?.message || error);
-        }
-        // Reset chat session on error to allow fresh start
-        chatSession = null;
-        return ANSWERS.FALLBACK;
+    // STEP 3: Throttle requests to prevent rate limiting
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTime;
+    if (timeSinceLastRequest < MIN_REQUEST_INTERVAL_MS) {
+        await delay(MIN_REQUEST_INTERVAL_MS - timeSinceLastRequest);
     }
+    lastRequestTime = Date.now();
+
+    // STEP 4: Use AI for truly unknown questions with retry logic
+    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+        try {
+            if (!chatSession) {
+                chatSession = model.startChat({
+                    history: [
+                        { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
+                        { role: "model", parts: [{ text: "Understood! I will identify intent AND context to select the correct approved answer." }] },
+                    ],
+                    generationConfig: {
+                        maxOutputTokens: 600,
+                        temperature: 0.1,
+                    },
+                });
+            }
+
+            const result = await chatSession.sendMessage(userMessage);
+            const response = await result.response;
+            return response.text();
+
+        } catch (error: any) {
+            const isRateLimitError = error?.message?.includes('429') ||
+                error?.message?.includes('quota') ||
+                error?.status === 429;
+
+            if (isRateLimitError && attempt < MAX_RETRIES - 1) {
+                // Exponential backoff: 1s, 2s, 4s
+                const waitTime = BASE_DELAY_MS * Math.pow(2, attempt);
+                console.warn(`⚠️ Rate limit hit (attempt ${attempt + 1}/${MAX_RETRIES}). Retrying in ${waitTime}ms...`);
+                // Reset chat session before retry
+                chatSession = null;
+                await delay(waitTime);
+                continue;
+            }
+
+            // Final attempt failed or non-retryable error
+            if (isRateLimitError) {
+                console.warn('⚠️ Gemini API rate limit reached after all retries. Using fallback response.');
+            } else {
+                console.error('❌ Gemini Error:', error?.message || error);
+            }
+
+            // Reset chat session on error to allow fresh start
+            chatSession = null;
+            return ANSWERS.FALLBACK;
+        }
+    }
+
+    // Should never reach here, but just in case
+    return ANSWERS.FALLBACK;
 };
