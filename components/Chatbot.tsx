@@ -10,32 +10,31 @@ interface Message {
     timestamp: Date;
 }
 
-// FAQ Data with icons
-// FAQ Data with icons
+// FAQ Data with icons - Aligned with latestchatbot.txt v2.2
 const FAQ_ITEMS = [
     {
         id: 1,
         icon: HelpCircle,
         question: "What is GrowQR?",
-        answer: "GrowQR is the world’s first AI-powered Skill Identity & Readiness platform. One lifetime QR Key links you to your dynamic Q-Score™ — a living composite of 25+ readiness attributes that evolves with you."
+        answer: "GrowQR is the world's first AI-powered Skill Identity & Readiness platform! One lifetime QR Key links you forever to your dynamic Q-Score™ — a living, verifiable composite of 25+ readiness attributes. You're about to unlock a future where your skills truly shine!"
     },
     {
         id: 2,
         icon: Zap,
         question: "What is Q-Score™?",
-        answer: "Q-Score™ is your single, verified readiness metric. It’s an AI-driven composite score (out of 100) combining 25+ attributes like IQ, EQ, Adaptability (AQ), and Technical skills into one trusted proof-of-skill."
+        answer: "Q-Score™ is your single, verified readiness metric (out of 100). It combines 25+ attributes like IQ, EQ, Adaptability (AQ), Creativity, and Leadership into one trusted proof-of-skill. It evolves in real-time as you grow!"
     },
     {
         id: 3,
         icon: Users,
         question: "Who can use GrowQR?",
-        answer: "Everyone! Individuals chasing dreams, Enterprises building teams, Institutions empowering students, and Smart Cities driving progress. It's a unified ecosystem for growth."
+        answer: "Everyone! Individuals chasing dreams, enterprises building teams, institutions empowering students, and smart cities driving progress. Wherever you are, GrowQR helps you grow!"
     },
     {
         id: 4,
         icon: MessageSquare,
         question: "How do I get started?",
-        answer: "Head to growqr.ai and sign up for the waitlist! Be first in line to claim your lifetime QR Key when our private beta opens in Q1–Q2 2026."
+        answer: "Amazing choice! Join the waitlist at growqr.ai to be among the first. You'll claim your unique lifetime QR Key when private beta opens in Q1–Q2 2026. Take this step toward discovering your true potential!"
     },
 ];
 

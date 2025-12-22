@@ -34,8 +34,10 @@ export const TruthRevealTraditional: React.FC = () => {
                             {/* Icon with subtle scale effect */}
                             <div className="mb-5 p-4 bg-orange/5 rounded-full text-orange opacity-80 group-hover:opacity-100 group-hover:bg-orange/10 group-hover:scale-110 transition-all duration-300 ease-out">
                                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-                                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                    <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                                    <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                                    <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.749 10.749 0 0 1 4.446-5.143" />
+                                    <path d="m2 2 20 20" />
                                 </svg>
                             </div>
 
@@ -57,9 +59,10 @@ export const TruthRevealTraditional: React.FC = () => {
                         <div className="flex flex-col items-center text-center group cursor-default">
                             <div className="mb-5 p-4 bg-orange/5 rounded-full text-orange opacity-80 group-hover:opacity-100 group-hover:bg-orange/10 group-hover:scale-110 transition-all duration-300 ease-out">
                                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <path d="M3 9h18" />
-                                    <path d="M9 21V9" />
+                                    {/* Layers/Stack icon - represents buried in broken systems */}
+                                    <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                                    <path d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59" />
+                                    <path d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59" />
                                 </svg>
                             </div>
 
@@ -78,8 +81,10 @@ export const TruthRevealTraditional: React.FC = () => {
                         <div className="flex flex-col items-center text-center group cursor-default">
                             <div className="mb-5 p-4 bg-orange/5 rounded-full text-orange opacity-80 group-hover:opacity-100 group-hover:bg-orange/10 group-hover:scale-110 transition-all duration-300 ease-out">
                                 <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <path d="M12 6v6l4 2" />
+                                    {/* Audio/Noise waves with X - represents lost in the noise */}
+                                    <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+                                    <line x1="22" y1="9" x2="16" y2="15" />
+                                    <line x1="16" y1="9" x2="22" y2="15" />
                                 </svg>
                             </div>
 
