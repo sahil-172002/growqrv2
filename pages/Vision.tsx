@@ -40,10 +40,8 @@ export const VisionPage: React.FC<VisionPageProps> = ({ onOpenWaitlist }) => {
     const goals = [
         'Verify 1 million credentials by 2026',
         'Partner with 500+ institutions globally',
-        'Enable $1B+ in hiring matches',
+        'Enable 1B+ in hiring matches',
         'Launch in 100+ countries',
-        'Achieve carbon-neutral operations',
-        'Open-source our verification protocol',
     ];
 
     return (
